@@ -1,0 +1,5 @@
+Metadata-Version: 2.1
+Name: hx711
+Version: 0.1
+Summary: HX711 Python Library for Raspberry Pi
+License-File: LICENSE
