@@ -2,7 +2,7 @@
 Scripts for running automated CBI device.
 
 ## Setup
-Run on the following commands on the Raspberry Pi to clone the repository, setup a virtual environment, and install the required packages:
+Run on the following commands on the Raspberry Pi to clone the repository, create a virtual environment, and install the required packages:
 
 ```
 git clone https://github.com/teamuroflo/uroflo.git
