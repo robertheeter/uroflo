@@ -14,5 +14,5 @@ pip install -r requirements.txt
 
 ## Files/Folders
 The folders contain the following contents:
-* ```pump```: scripts for peristaltic pump
-* ```scale```: scripts for weight scale
+* ```pump/```: scripts for peristaltic pump
+* ```scale/```: scripts for weight scale
