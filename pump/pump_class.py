@@ -39,7 +39,7 @@ class Pump:
 
         Input: time (seconds)
         '''
-        print(f'Running at {self.flow_rate} for {time} seconds')
+        print(f'Running at {self.flow_rate} mL/min for {time} seconds')
         total_steps = int(time/(2*self.speed))
         self.motor.motor_go(False, "Full", total_steps, self.speed, False, 0)
 
