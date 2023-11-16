@@ -4,6 +4,11 @@ Scripts for running automated CBI device.
 ## Setup
 Run on the following commands on your *local computer* to clone the repository, create a virtual environment, and install the required packages:
 
+
+
+Deprecated; use Version Control Information document in Google Drive.
+
+
 ```
 git clone https://github.com/teamuroflo/uroflo.git
 cd uroflo/
