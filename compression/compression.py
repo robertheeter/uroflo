@@ -62,15 +62,15 @@ while(True):
         x='z'
     elif x=='l':
         print("low")
-        p.ChangeDutyCycle(20)
+        p.ChangeDutyCycle(10)
         x='z'
     elif x=='m':
         print("medium")
-        p.ChangeDutyCycle(60)
+        p.ChangeDutyCycle(50)
         x='z'
     elif x=='h':
         print("high")
-        p.ChangeDutyCycle(100)
+        p.ChangeDutyCycle(90)
         x='z'
     elif x=='e':
         GPIO.cleanup()
