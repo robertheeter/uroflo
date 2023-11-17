@@ -1,39 +1,13 @@
 # uroflo
-Scripts for running automated CBI device.
+Design of an automated continuous bladder irrigation device at Rice University in partnership with Texas Children's Hospital.
 
-## Setup on local computer
-Run on the following commands on your *local computer* to clone the repository, create a virtual environment, and install the required packages:
-
-```
-git clone https://github.com/teamuroflo/uroflo.git
-cd uroflo/
-python -m venv protoenv/
-source protoenv/bin/activate
-pip install -r requirements.txt
-```
-
-## Setup on Raspberry Pi
-1. Install [GitHub CLI](https://github.com/cli/cli/blob/trunk/docs/install_linux.md)
-2. Run `gh auth login`
-   * Use *GitHub.com*
-   * Use *HTTPS*
-   * Select *yes*, use GitHub credentials to authenticate Git
-   * Login with a web browser to authenticate and use one-time code
-3. Run the following commands to clone repository, create a virtual environment, and install the requirement packages:
-  ```
-  cd Documents/
-  gh repo clone teamuroflo/uroflo
-  cd uroflo/
-  python -m venv protoenv/
-  source protoenv/bin/activate
-  pip install -r requirements.txt
-  ```
-
-
+## Setup
+See [this Google Document](https://docs.google.com/document/d/1xNtN-FHFRW5H-90g1Pd7Hx-gocUcX_xOV-3cxWXmEgg/edit) to use this repository on the Raspberry Pi.
 
 ## Folders
-The folders contain the following contents:
-* ```pump/```: scripts for peristaltic pump
-* ```scale/```: scripts for weight scale
-* ```hematuria/```: scripts for hematuria measurement
-* ```notif/```: scripts for notification system
+- `pump/`: scripts for peristaltic pump
+- `scale/``: scripts for weight scale
+- `hematuria/`: scripts for hematuria measurement
+- `compression/`: scripts for tube compression
+- `interface/`: scripts for user interface
+- `notification/': scripts for notification system
