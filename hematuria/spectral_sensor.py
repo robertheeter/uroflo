@@ -1,52 +1,55 @@
-# SPDX-FileCopyrightText: 2020 ladyada for Adafruit Industries
-# SPDX-License-Identifier: MIT
+'''
+Documentation
+https://docs.circuitpython.org/projects/as726x/en/latest/api.html#adafruit_as726x.AS726x.read_calibrated_value
+
+Python GitHub
+https://github.com/adafruit/Adafruit_CircuitPython_AS726x
+
+Visible Datasheet
+https://cdn.sparkfun.com/assets/f/b/c/c/f/AS7262.pdf?_gl=1*12hia0d*_ga*ODIxNjU4Nzk4LjE3MDAyMDk5MjU.*_ga_T369JS7J9N*MTcwMDIwOTkyNS4xLjAuMTcwMDIwOTkyNS42MC4wLjA.
+
+NIR Datasheet
+https://cdn.sparkfun.com/assets/1/b/7/3/b/AS7263.pdf?_gl=1*1v54ztc*_ga*ODIxNjU4Nzk4LjE3MDAyMDk5MjU.*_ga_T369JS7J9N*MTcwMDIwOTkyNS4xLjEuMTcwMDIxMDM2NS42MC4wLjA.
+
+Arduino GitHub
+https://github.com/adafruit/Adafruit_AS726x/tree/master
+
+'''
 
 import time
 import board
 
-# for I2C use:
 from adafruit_as726x import AS726x_I2C
 
-# for UART use:
-# from adafruit_as726x import AS726x_UART
+sensor_type = 'VIS'
 
-# maximum value for sensor reading
-max_val = 16000
-
-# max number of characters in each graph
-max_graph = 80
-
-
-def graph_map(x):
-    return min(int(x * max_graph / max_val), max_graph)
-
-
-# for I2C use:
 i2c = board.I2C()  # uses board.SCL and board.SDA
-# i2c = board.STEMMA_I2C()  # For using the built-in STEMMA QT connector on a microcontroller
 sensor = AS726x_I2C(i2c)
+sensor.conversion_mode = sensor.MODE_2
 
 print('Temperature: {0}C'.format(sensor.temperature))
 
-# for UART use:
-# uart = board.UART()
-# sensor = AS726x_UART(uart)
-
-sensor.conversion_mode = sensor.MODE_2
-
 while True:
-    # Wait for data to be ready
+
+    # wait for sensor to be ready
     while not sensor.data_ready:
         time.sleep(1)
 
-    # plot plot the data
     print("\n")
-    print("V: " + graph_map(sensor.violet) * "=")
-    print("B: " + graph_map(sensor.blue) * "=")
-    print("G: " + graph_map(sensor.green) * "=")
-    print("Y: " + graph_map(sensor.yellow) * "=")
-    print("O: " + graph_map(sensor.orange) * "=")
-    print("R: " + graph_map(sensor.red) * "=")
+    if sensor_type == 'VIS':
+        print("V: " + sensor.violet) # 450 nm
+        print("B: " + sensor.blue) # 500 nm
+        print("G: " + sensor.green) # 550 nm
+        print("Y: " + sensor.yellow) # 570 nm
+        print("O: " + sensor.orange) # 600 nm
+        print("R: " + sensor.red) # 650 nm
+
+    elif sensor_type == 'NIR':
+        print("610: " + sensor.violet) # 610 nm
+        print("680: " + sensor.blue) # 680 nm
+        print("730: " + sensor.green) # 730 nm
+        print("760: " + sensor.yellow) # 760 nm
+        print("810: " + sensor.orange) # 810 nm
+        print("860: " + sensor.red) # 860 nm
 
     time.sleep(1)
-
