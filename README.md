@@ -10,4 +10,4 @@ See [this Google Document](https://docs.google.com/document/d/1xNtN-FHFRW5H-90g1
 - `hematuria/`: scripts for hematuria measurement
 - `compression/`: scripts for tube compression
 - `interface/`: scripts for user interface
-- `notification/': scripts for notification system
+- `notification/`: scripts for notification system
