@@ -1,4 +1,6 @@
 '''
+SPECTRAL SENSOR
+
 Documentation
 https://docs.circuitpython.org/projects/as726x/en/latest/api.html#adafruit_as726x.AS726x.read_calibrated_value
 
