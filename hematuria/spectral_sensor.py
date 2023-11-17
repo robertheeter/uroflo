@@ -26,6 +26,8 @@ i2c = board.I2C()  # uses board.SCL and board.SDA
 # i2c = board.STEMMA_I2C()  # For using the built-in STEMMA QT connector on a microcontroller
 sensor = AS726x_I2C(i2c)
 
+print('Temperature: {0}C'.format(sensor.temperature))
+
 # for UART use:
 # uart = board.UART()
 # sensor = AS726x_UART(uart)
