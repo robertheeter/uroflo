@@ -1,5 +1,0 @@
-adafruit_as726x==0.1
-Adafruit_Blinka==8.25.0
-RPi.GPIO==0.7.1
-rpimotorlib==3.2
-setuptools==66.1.1
