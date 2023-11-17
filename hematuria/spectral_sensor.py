@@ -39,19 +39,19 @@ while True:
 
     print("\n")
     if sensor_type == 'VIS':
-        print("V: " + sensor.violet) # 450 nm
-        print("B: " + sensor.blue) # 500 nm
-        print("G: " + sensor.green) # 550 nm
-        print("Y: " + sensor.yellow) # 570 nm
-        print("O: " + sensor.orange) # 600 nm
-        print("R: " + sensor.red) # 650 nm
+        print("V: " + str(sensor.violet)) # 450 nm
+        print("B: " + str(sensor.blue)) # 500 nm
+        print("G: " + str(sensor.green)) # 550 nm
+        print("Y: " + str(sensor.yellow)) # 570 nm
+        print("O: " + str(sensor.orange)) # 600 nm
+        print("R: " + str(sensor.red)) # 650 nm
 
     elif sensor_type == 'NIR':
-        print("610: " + sensor.violet) # 610 nm
-        print("680: " + sensor.blue) # 680 nm
-        print("730: " + sensor.green) # 730 nm
-        print("760: " + sensor.yellow) # 760 nm
-        print("810: " + sensor.orange) # 810 nm
-        print("860: " + sensor.red) # 860 nm
+        print("610: " + str(sensor.violet)) # 610 nm
+        print("680: " + str(sensor.blue)) # 680 nm
+        print("730: " + str(sensor.green)) # 730 nm
+        print("760: " + str(sensor.yellow)) # 760 nm
+        print("810: " + str(sensor.orange)) # 810 nm
+        print("860: " + str(sensor.red)) # 860 nm
 
     time.sleep(1)
