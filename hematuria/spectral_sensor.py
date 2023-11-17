@@ -37,7 +37,7 @@ sensor.conversion_mode = sensor.MODE_2
 while True:
     # Wait for data to be ready
     while not sensor.data_ready:
-        time.sleep(0.1)
+        time.sleep(1)
 
     # plot plot the data
     print("\n")
