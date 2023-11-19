@@ -7,10 +7,10 @@ About
 
 Notes
 - The linear actuator takes dur = 4.4-4.6 s at speed = 100 to extend or retract fully
-- Recommended to use PWM freq = 1000
+- Recommend PWM freq = 1000
 
 Documentation
-- https://www.electronicshub.org/raspberry-pi-l298n-interface-tutorial-control-dc-motor-l298n-raspberry-pi/
+- Guide: https://www.electronicshub.org/raspberry-pi-l298n-interface-tutorial-control-dc-motor-l298n-raspberry-pi/
 
 '''
 
@@ -36,7 +36,7 @@ class LinearActuator():
 
         GPIO.setmode(GPIO.BCM)
 
-        GPIO.setup(self.in1, GPIO.OUT) # setup pins
+        GPIO.setup(self.in1, GPIO.OUT) # set up pins
         GPIO.setup(self.in2, GPIO.OUT)
         GPIO.setup(self.en, GPIO.OUT)
 
@@ -75,8 +75,8 @@ class LinearActuator():
         GPIO.output(self.in1, GPIO.LOW)
         GPIO.output(self.in2, GPIO.LOW)
 
-    def cleanup(self):
-        print(f"LinearActuator: cleanup")
+    def off(self):
+        print(f"LinearActuator: off")
         GPIO.cleanup() # cleans GPIO
 
 # testing
@@ -94,3 +94,4 @@ if __name__ == '__main__':
     la.run('forward', 60) # run continuously if dur <= 0
     time.sleep(10) # wait
     la.stop()
+    la.off()
