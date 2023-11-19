@@ -15,7 +15,7 @@ Documentation
 development notes
 
 - https://docs.djangoproject.com/en/4.2/contents/
-    - left off at part 2, introducing the Django Admin
+    - left off at part 7, customize the admin form
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
