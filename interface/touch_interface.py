@@ -22,6 +22,9 @@ development notes
 - to continually update website: use Django channels or AJAX
     - https://channels.readthedocs.io/en/stable/
     - Django channels might be best
+        - Django channels tutorial: https://www.youtube.com/watch?v=jsxFEONN_yo
+
+
 
 
 - https://docs.djangoproject.com/en/4.2/intro/tutorial01/
