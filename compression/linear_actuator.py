@@ -70,7 +70,7 @@ class LinearActuator():
 
 la = LinearActuator(pins=[23, 24, 25], freq=1000, verbose=True)
 la.run('backward', 100, 6)
-la.run('forward', 100, 4.5)
+la.run('forward', 100, 4.4)
 time.sleep(1)
 la.run('forward', 100, 2)
 time.sleep(1)
