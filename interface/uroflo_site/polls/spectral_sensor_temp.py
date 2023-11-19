@@ -44,7 +44,7 @@ class SpectralSensor():
 
         GPIO.setmode(GPIO.BCM) # set up GPIO LED pin
         GPIO.setup(self.led_pin, GPIO.OUT)
-        GPIO.output(self.led_pin, GPIO.HIGH)
+        GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
         
         if self.verbose:
             print("SpectralSensor: temperature = {0}°C".format(self.sensor.temperature))
@@ -71,13 +71,15 @@ class SpectralSensor():
             GPIO.output(self.led_pin, GPIO.LOW) # turn on LED
             time.sleep(0.1)
             vals = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values with LED
+            time.sleep(0.1)
             GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
 
         else:
             GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
             time.sleep(0.1)
             vals = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values without LED
-        
+            time.sleep(0.1)
+            
         if self.verbose:
             print(f"SpectralSensor: reading raw vals = {vals}")
         
@@ -97,7 +99,7 @@ class SpectralSensor():
 
     def stop(self):
         print(f"SpectralSensor: stop")
-        GPIO.output(self.led_pin, GPIO.HIGH)
+        GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
 
 # testing
 if __name__ == '__main__':
