@@ -10,16 +10,16 @@ from .models import Choice, Question
 
 
 from django.http import HttpResponse
-# from .spectral_sensor import SpectralSensor
+from .spectral_sensor import SpectralSensor
 import time
 
 def index(request):
     
-    # ss = SpectralSensor(led_pin=4, sensor_type='VIS', range=[0, 100], max=16000, verbose=True)
-    time.sleep(1)
+    ss = SpectralSensor(led_pin=4, sensor_type='VIS', range=[0, 100], max=16000, verbose=True)
+    # time.sleep(1)
     # for i in range(10):
-    # readings = ss.read(use_led=True)
-    readings = [1,2,3,4]
+    readings = ss.read(use_led=True)
+    # readings = [1,2,3,4]
     # print(readings)
     # time.sleep(1) # wait
     return HttpResponse(f"{str(readings)} ello, world. You're at the polls index.")
