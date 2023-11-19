@@ -46,6 +46,11 @@ class SpectralSensor():
         if (self.sensor.temperature < 18) or (self.sensor.temperature > 30):
             raise Exception("SpectralSensor: temperature too hot (>30°C) or cold (<18°C)'")
 
+        if not self.sensor.data_ready:
+            if self.verbose:
+                print("SpectralSensor: data not ready; waiting...")
+            time.sleep(1)
+
     def rescale(self, val, range, max):
         return min(int((val * (range[1] - range[0]) / max) + range[0]), range[1])
     
