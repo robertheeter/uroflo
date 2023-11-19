@@ -7,16 +7,38 @@ from django.utils import timezone
 from .models import Choice, Question
 
 
-class IndexView(generic.ListView):
-    template_name = "polls/index.html"
-    context_object_name = "latest_question_list"
 
-    def get_queryset(self):
-        """
-        Return the last five published questions (not including those set to be
-        published in the future).
-        """
-        return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[:5]
+
+from django.http import HttpResponse
+# from .spectral_sensor import SpectralSensor
+import time
+
+def index(request):
+    
+    # ss = SpectralSensor(led_pin=4, sensor_type='VIS', range=[0, 100], max=16000, verbose=True)
+    time.sleep(1)
+    # for i in range(10):
+    # readings = ss.read(use_led=True)
+    readings = [1,2,3,4]
+    # print(readings)
+    # time.sleep(1) # wait
+    return HttpResponse(f"{str(readings)} ello, world. You're at the polls index.")
+
+
+
+
+
+
+# class IndexView(generic.ListView):
+#     template_name = "polls/index.html"
+#     context_object_name = "latest_question_list"
+
+#     def get_queryset(self):
+#         """
+#         Return the last five published questions (not including those set to be
+#         published in the future).
+#         """
+#         return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[:5]
 
 
 class DetailView(generic.DetailView):
