@@ -61,9 +61,12 @@ class SpectralSensor():
         return min(int((val * (range[1] - range[0]) / max) + range[0]), range[1])
     
     def read(self, use_led=True):
+        if (self.sensor.temperature < 10) or (self.sensor.temperature > 40):
+            raise Exception("SpectralSensor: temperature too hot (>30°C) or cold (<18°C)'")
+        
         if use_led == True:
             GPIO.output(self.led_pin, GPIO.HIGH) # turn on LED
-            time.sleep(0.5)
+            time.sleep(0.1)
             vals = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values with LED
             GPIO.output(self.led_pin, GPIO.LOW) # turn off LED
 
