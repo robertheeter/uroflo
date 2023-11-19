@@ -8,6 +8,7 @@ Notes
 - Recommend reading max = 16000
 
 Documentation
+- Guide: https://learn.adafruit.com/adafruit-as7262-6-channel-visible-light-sensor
 - CircuitPython Documentation: https://docs.circuitpython.org/projects/as726x/en/latest/api.html#adafruit_as726x.AS726x.read_calibrated_value
 - CircuitPython GitHub: https://github.com/adafruit/Adafruit_CircuitPython_AS726x
 - Arduino GitHub: https://github.com/adafruit/Adafruit_AS726x/tree/master
@@ -22,7 +23,7 @@ from adafruit_as726x import AS726x_I2C
 
 # spectral sensor class
 class SpectralSensor():
-    def __init__(self, sensor_type='VIS', max=16000, range=[0, 100], verbose=False):
+    def __init__(self, sensor_type='VIS', range=[0, 100], max=16000, verbose=False):
         self.sensor_type = sensor_type # type of AS726x sensor ('AS7262'/'VIS' or 'AS7263'/'NIR')
         self.max = max # maximum sensor reading
         self.range = range # range of rescaled readings
@@ -45,8 +46,8 @@ class SpectralSensor():
         if (self.sensor.temperature < 18) or (self.sensor.temperature > 30):
             raise Exception("SpectralSensor: temperature too hot (>30°C) or cold (<18°C)'")
 
-    def rescale(self, val):
-        return min(int((val * (self.range[1] - self.range[0]) / self.max) + self.range[0]), self.range[1])
+    def rescale(self, val, range, max):
+        return min(int((val * (range[1] - range[0]) / max) + range[0]), range[1])
     
     def read(self):
         vals = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values
@@ -56,7 +57,7 @@ class SpectralSensor():
         
         rescaled_vals = []
         for val in vals:
-            rescaled_val = self.rescale(val, self.max, self.range) # rescale raw values
+            rescaled_val = self.rescale(val, self.range, self.max) # rescale raw values
             rescaled_vals.append(rescaled_val)
 
         if self.sensor_type in ['VIS', 'AS7262']:
@@ -70,7 +71,7 @@ class SpectralSensor():
 
 # testing
 if __name__ == '__main__':
-    ss = SpectralSensor(sensor_type='VIS', max=16000, range=[0, 100], verbose=True)
+    ss = SpectralSensor(sensor_type='VIS', range=[0, 100], max=16000, verbose=True)
 
     while True:
         readings = ss.read()
