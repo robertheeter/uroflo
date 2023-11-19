@@ -49,7 +49,7 @@ class SpectralSensor():
         if self.verbose:
             print("SpectralSensor: temperature = {0}°C".format(self.sensor.temperature))
 
-        if (self.sensor.temperature < 18) or (self.sensor.temperature > 30):
+        if (self.sensor.temperature < 10) or (self.sensor.temperature > 40):
             raise Exception("SpectralSensor: temperature too hot (>30°C) or cold (<18°C)'")
 
         if not self.sensor.data_ready:
