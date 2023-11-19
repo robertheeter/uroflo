@@ -37,7 +37,7 @@ class LinearActuator():
         GPIO.output(self.in2, GPIO.LOW)
 
         self.pwm = GPIO.PWM(self.en, self.freq)
-        self.pwm.start()
+        self.pwm.start(100)
     
     def run(self, dir='forward', speed=100, dur=-1):
         if dir not in ['forward', 'backward']:
