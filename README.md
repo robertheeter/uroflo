@@ -1,4 +1,4 @@
-# uroflo
+# UroFlo
 Design of an automated continuous bladder irrigation device at Rice University in partnership with Texas Children's Hospital.
 
 ## Setup
