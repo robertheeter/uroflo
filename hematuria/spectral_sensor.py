@@ -107,3 +107,16 @@ if __name__ == '__main__':
         readings = ss.read(use_led=True)
         print(readings)
         time.sleep(1) # wait
+
+    print('low')
+    GPIO.output(4, GPIO.LOW)
+    time.sleep(2)
+    print('high')
+    GPIO.output(4, GPIO.HIGH)
+    time.sleep(2)
+    print('low')
+    GPIO.output(4, GPIO.LOW)
+    time.sleep(2)
+    print('high')
+    GPIO.output(4, GPIO.HIGH)
+    time.sleep(2)

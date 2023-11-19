@@ -10,7 +10,7 @@ from .models import Choice, Question
 
 
 from django.http import HttpResponse
-from .spectral_sensor import SpectralSensor
+from .spectral_sensor_temp import SpectralSensor
 import time
 
 def index(request):
