@@ -14,15 +14,15 @@ Documentation
 
 '''
 
-import RPi.GPIO as GPIO
 import time
+import RPi.GPIO as GPIO
 
 # linear actuator class
 class LinearActuator():
     def __init__(self, pins=[23, 24, 25], freq=1000, verbose=False):
-        self.in1 = pins[0] # input pin 1 from GPIO
-        self.in2 = pins[1] # input pin 2 from GPIO
-        self.en = pins[2] # enable pin
+        self.in1 = pins[0] # GPIO input pin 1
+        self.in2 = pins[1] # GPIO input pin 2
+        self.en = pins[2] # GPIO enable pin
         self.freq = freq # PWM frequency
         self.verbose = verbose # toggles printing of information to terminal
         self.setup()
@@ -34,9 +34,9 @@ class LinearActuator():
             print(f"LinearActuator: pin en = {self.en}")
             print(f"LinearActuator: freq = {self.freq}")
 
-        GPIO.setmode(GPIO.BCM)
+        GPIO.setmode(GPIO.BCM) # set up GPIO pins
 
-        GPIO.setup(self.in1, GPIO.OUT) # set up pins
+        GPIO.setup(self.in1, GPIO.OUT)
         GPIO.setup(self.in2, GPIO.OUT)
         GPIO.setup(self.en, GPIO.OUT)
 

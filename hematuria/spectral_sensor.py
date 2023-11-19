@@ -19,11 +19,13 @@ Documentation
 
 import time
 import board
+import RPi.GPIO as GPIO
 from adafruit_as726x import AS726x_I2C
 
 # spectral sensor class
 class SpectralSensor():
-    def __init__(self, sensor_type='VIS', range=[0, 100], max=16000, verbose=False):
+    def __init__(self, led_pin=4, sensor_type='VIS', range=[0, 100], max=16000, verbose=False):
+        self.led_pin = led_pin # GPIO LED pin (3.3V)
         self.sensor_type = sensor_type # type of AS726x sensor ('AS7262'/'VIS' or 'AS7263'/'NIR')
         self.max = max # maximum sensor reading
         self.range = range # range of rescaled readings
@@ -40,6 +42,10 @@ class SpectralSensor():
         self.sensor = AS726x_I2C(i2c)
         self.sensor.conversion_mode = self.sensor.MODE_2 # continuously gather samples/readings
 
+        GPIO.setmode(GPIO.BCM) # set up GPIO LED pin
+        GPIO.setup(self.led_pin, GPIO.OUT)
+        GPIO.output(self.led_pin, GPIO.LOW)
+        
         if self.verbose:
             print("SpectralSensor: temperature = {0}°C".format(self.sensor.temperature))
 
@@ -54,9 +60,18 @@ class SpectralSensor():
     def rescale(self, val, range, max):
         return min(int((val * (range[1] - range[0]) / max) + range[0]), range[1])
     
-    def read(self):
-        vals = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values
+    def read(self, use_led=True):
+        if use_led == True:
+            GPIO.output(self.led_pin, GPIO.HIGH) # turn on LED
+            time.sleep(0.5)
+            vals = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values with LED
+            GPIO.output(self.led_pin, GPIO.LOW) # turn off LED
 
+        else:
+            GPIO.output(self.led_pin, GPIO.LOW) # turn off LED
+            time.sleep(0.5)
+            vals = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values without LED
+        
         if self.verbose:
             print(f"SpectralSensor: reading raw vals = {vals}")
         
@@ -79,6 +94,6 @@ if __name__ == '__main__':
     ss = SpectralSensor(sensor_type='VIS', range=[0, 100], max=16000, verbose=True)
 
     while True:
-        readings = ss.read()
+        readings = ss.read(use_led=True)
         print(readings)
         time.sleep(1) # wait
