@@ -1,28 +1,17 @@
-import RPi.GPIO as GPIO
-from RpiMotorLib import RpiMotorLib
-from pump_class import Pump, flow_to_speed
+from pump_class import Pump
 
-# setup
-step = 21
-direction = 20
-EN_pin = 16
+if __name__ == '__main__':
+    # initialize pump
+    pump = Pump(step_pin=21, dir_pin=20, en_pin=16)
 
-motor = RpiMotorLib.A4988Nema(direction, step, (-1, -1, -1), "A4988")
+    # accelerate pump to 100 mL/min and run for 15 seconds
+    pump.accelerate(100)
+    pump.run(15)
 
-GPIO.setup(EN_pin, GPIO.OUT)
-GPIO.output(EN_pin, GPIO.LOW)
+    # decelerate pump to 50 mL/min and run for 10 seconds
+    pump.accelerate(50)
+    pump.run(10)
 
-# initialize pump
-pump = Pump(motor)
-
-# accelerate pump to 100 mL/min and run for 15 seconds
-pump.accelerate(100)
-pump.run(15)
-
-# decelerate pump to 50 mL/min and run for 10 seconds
-pump.accelerate(50)
-pump.run(10)
-
-# stop motor
-pump.stop()
+    # stop motor
+    pump.stop()
 
