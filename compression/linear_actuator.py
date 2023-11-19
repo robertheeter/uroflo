@@ -9,81 +9,64 @@ https://www.electronicshub.org/raspberry-pi-l298n-interface-tutorial-control-dc-
 '''
 
 import RPi.GPIO as GPIO
-from time import sleep
+import time
 
 class LinearActuator():
-    def __init__(self, x):
-        self.x = x
+    def __init__(self, pins=[23, 24, 25], freq=1000, verbose=False):
+        self.in1 = pins[0]
+        self.in2 = pins[1]
+        self.en = pins[2]
+        self.freq = freq
+        self.verbose = verbose
+        self.setup()
 
-    def x():
+    def setup(self):
+        if self.verbose:
+            print(f"LinearActuator: pin in1 = {self.in1}")
+            print(f"LinearActuator: pin in2 = {self.in2}")
+            print(f"LinearActuator: pin en = {self.en}")
+            print(f"LinearActuator: freq = {self.freq}")
+
+        GPIO.setmode(GPIO.BCM)
+
+        GPIO.setup(self.in1, GPIO.OUT)
+        GPIO.setup(self.in2, GPIO.OUT)
+        GPIO.setup(self.en, GPIO.OUT)
+
+        GPIO.output(self.in1, GPIO.LOW)
+        GPIO.output(self.in2, GPIO.LOW)
+
+        self.pwm = GPIO.PWM(self.en, self.freq)
+
+    def set_speed(self, speed):
+        if (speed < 0) or (speed > 100):
+            raise Exception("LinearActuator: speed must be in [0, 100]")
         
+        if self.verbose:
+            print(f"LinearActuator: speed = {speed}")
 
-in1 = 23
-in2 = 24
-en = 25
-temp1 = 1
+        self.pwm.ChangeDutyCycle(speed)
+    
+    def run(self, dir='forward', dur=1):
+        if dir == 'forward':
+            GPIO.output(self.in1, GPIO.HIGH)
+            GPIO.output(self.in2, GPIO.LOW)
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(in1, GPIO.OUT)
-GPIO.setup(in2, GPIO.OUT)
-GPIO.setup(en, GPIO.OUT)
-GPIO.output(in1, GPIO.LOW)
-GPIO.output(in2, GPIO.LOW)
+        elif dir == 'backward':
+            GPIO.output(self.in1, GPIO.LOW)
+            GPIO.output(self.in2, GPIO.HIGH)
 
-p=GPIO.PWM(en,1000)
-p.start(25)
+        if self.verbose:
+            print(f"LinearActuator: dir = {dir}, dur = {dur}")
 
-print("\n")
-print("The default speed & direction of motor is LOW & Forward.....")
-print("r-run s-stop f-forward b-backward l-low m-medium h-high e-exit")
-print("\n")
+        if dur > 0:
+            time.sleep(dur)
+            self.stop()
 
-while(True):
-    x=input()
-    if x=='r':
-        print("run")
-        if(temp1==1):
-            GPIO.output(in1,GPIO.HIGH)
-            GPIO.output(in2,GPIO.LOW)
-            print("forward")
-            x='z'
-        else:
-            GPIO.output(in1,GPIO.LOW)
-            GPIO.output(in2,GPIO.HIGH)
-            print("backward")
-            x='z'
-    elif x=='s':
-        print("stop")
-        GPIO.output(in1,GPIO.LOW)
-        GPIO.output(in2,GPIO.LOW)
-        x='z'
-    elif x=='f':
-        print("forward")
-        GPIO.output(in1,GPIO.HIGH)
-        GPIO.output(in2,GPIO.LOW)
-        temp1 = 1
-        x='z'
-    elif x=='b':
-        print("backward")
-        GPIO.output(in1,GPIO.LOW)
-        GPIO.output(in2,GPIO.HIGH)
-        temp1 = 0
-        x='z'
-    elif x=='l':
-        print("low")
-        p.ChangeDutyCycle(10)
-        x='z'
-    elif x=='m':
-        print("medium")
-        p.ChangeDutyCycle(50)
-        x='z'
-    elif x=='h':
-        print("high")
-        p.ChangeDutyCycle(90)
-        x='z'
-    elif x=='e':
-        GPIO.cleanup()
-        break
-    else:
-        print("<<<  wrong data  >>>")
-        print("please enter the defined data to continue.....")
+    def stop(self):
+        print(f"LinearActuator: stop")
+        GPIO.output(self.in1, GPIO.LOW)
+        GPIO.output(self.in2, GPIO.LOW)
+
+la = LinearActuator(pins=[23, 24, 25], freq=1000, verbose=True)
+la.run(dir='forward', dur=1)
