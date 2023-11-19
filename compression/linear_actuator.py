@@ -37,17 +37,16 @@ class LinearActuator():
         GPIO.output(self.in2, GPIO.LOW)
 
         self.pwm = GPIO.PWM(self.en, self.freq)
-
-    def set_speed(self, speed):
+    
+    def run(self, dir='forward', speed=100, dur=-1):
         if (speed < 0) or (speed > 100):
             raise Exception("LinearActuator: speed must be in [0, 100]")
         
-        if self.verbose:
-            print(f"LinearActuator: speed = {speed}")
+        if dir not in ['forward', 'backward']:
+            raise Exception("LinearActuator: dir must be 'forward' or 'backward'")
 
         self.pwm.ChangeDutyCycle(speed)
-    
-    def run(self, dir='forward', dur=-1):
+
         if dir == 'forward':
             GPIO.output(self.in1, GPIO.HIGH)
             GPIO.output(self.in2, GPIO.LOW)
@@ -57,7 +56,7 @@ class LinearActuator():
             GPIO.output(self.in2, GPIO.HIGH)
 
         if self.verbose:
-            print(f"LinearActuator: dir = {dir}, dur = {dur}")
+            print(f"LinearActuator: dir = {dir}, speed = {speed}, dur = {dur}")
 
         if dur > 0:
             time.sleep(dur)
@@ -69,8 +68,8 @@ class LinearActuator():
         GPIO.output(self.in2, GPIO.LOW)
 
 la = LinearActuator(pins=[23, 24, 25], freq=1000, verbose=True)
-la.run('backward', 1)
-la.run('forward', 0.5)
-la.run('backward', 0.5)
-la.run('forward')
+la.run('backward', 100, 1)
+la.run('forward', 100, 0.5)
+la.run('backward', 60, 0.5)
+la.run('forward', 60)
 la.stop()
