@@ -1,5 +1,6 @@
-adafruit_as726x==0.1
 Adafruit_Blinka==8.25.0
+adafruit_circuitpython_as726x==2.0.17
+Django==4.2.7
 RPi.GPIO==0.7.1
 rpimotorlib==3.2
 setuptools==66.1.1
