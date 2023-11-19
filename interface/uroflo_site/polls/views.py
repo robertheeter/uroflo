@@ -23,7 +23,7 @@ def index(request):
     # readings = [1,2,3,4]
     # print(readings)
     # time.sleep(1) # wait
-    return HttpResponse(f"{str(readings)} ello, world. You're at the polls index.")
+    return HttpResponse(f"SpectralSensor: reading = {str(readings)}")
 
 
 
