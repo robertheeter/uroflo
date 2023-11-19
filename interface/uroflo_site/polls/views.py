@@ -19,6 +19,7 @@ def index(request):
     # time.sleep(1)
     # for i in range(10):
     readings = ss.read(use_led=True)
+    ss.stop()
     # readings = [1,2,3,4]
     # print(readings)
     # time.sleep(1) # wait
