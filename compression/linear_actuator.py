@@ -69,8 +69,8 @@ class LinearActuator():
         GPIO.output(self.in2, GPIO.LOW)
 
 la = LinearActuator(pins=[23, 24, 25], freq=1000, verbose=True)
-la.run('backward', 100, 4)
-la.run('forward', 100, 2)
+la.run('backward', 100, 6)
+la.run('forward', 100, 4)
 # la.run('backward', 60, 4)
 # la.run('forward', 60)
 time.sleep(2)
