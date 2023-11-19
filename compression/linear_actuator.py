@@ -47,7 +47,7 @@ class LinearActuator():
 
         self.pwm.ChangeDutyCycle(speed)
     
-    def run(self, dir='forward', dur=1):
+    def run(self, dir='forward', dur=-1):
         if dir == 'forward':
             GPIO.output(self.in1, GPIO.HIGH)
             GPIO.output(self.in2, GPIO.LOW)
@@ -69,4 +69,8 @@ class LinearActuator():
         GPIO.output(self.in2, GPIO.LOW)
 
 la = LinearActuator(pins=[23, 24, 25], freq=1000, verbose=True)
-la.run(dir='forward', dur=1)
+la.run('backward', 1)
+la.run('forward', 0.5)
+la.run('backward', 0.5)
+la.run('forward')
+la.stop()
