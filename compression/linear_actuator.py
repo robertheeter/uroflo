@@ -6,7 +6,8 @@ About
 - 12 V linear actuator (1.2 in stroke, 0.6 in/s, 60 N / 14 lb)
 
 Notes
-- The linear actuator takes dur = 4.5 s at speed = 100 to extend or retract fully.
+- The linear actuator takes dur = 4.4-4.6 s at speed = 100 to extend or retract fully
+- Recommended to use PWM freq = 1000
 
 Documentation
 - https://www.electronicshub.org/raspberry-pi-l298n-interface-tutorial-control-dc-motor-l298n-raspberry-pi/
@@ -16,13 +17,14 @@ Documentation
 import RPi.GPIO as GPIO
 import time
 
+# linear actuator class
 class LinearActuator():
     def __init__(self, pins=[23, 24, 25], freq=1000, verbose=False):
-        self.in1 = pins[0]
-        self.in2 = pins[1]
-        self.en = pins[2]
-        self.freq = freq
-        self.verbose = verbose
+        self.in1 = pins[0] # input pin 1 from GPIO
+        self.in2 = pins[1] # input pin 2 from GPIO
+        self.en = pins[2] # enable pin
+        self.freq = freq # PWM frequency
+        self.verbose = verbose # toggles printing of information to terminal
         self.setup()
 
     def setup(self):
@@ -34,14 +36,14 @@ class LinearActuator():
 
         GPIO.setmode(GPIO.BCM)
 
-        GPIO.setup(self.in1, GPIO.OUT)
+        GPIO.setup(self.in1, GPIO.OUT) # setup pins
         GPIO.setup(self.in2, GPIO.OUT)
         GPIO.setup(self.en, GPIO.OUT)
 
         GPIO.output(self.in1, GPIO.LOW)
         GPIO.output(self.in2, GPIO.LOW)
 
-        self.pwm = GPIO.PWM(self.en, self.freq)
+        self.pwm = GPIO.PWM(self.en, self.freq) # start PWM
         self.pwm.start(100)
     
     def run(self, dir='forward', speed=100, dur=-1):
@@ -51,7 +53,7 @@ class LinearActuator():
         if (speed < 0) or (speed > 100):
             raise Exception("LinearActuator: speed must be in [0, 100]")
         
-        self.pwm.ChangeDutyCycle(speed)
+        self.pwm.ChangeDutyCycle(speed) # set speed via duty cycle
 
         if dir == 'forward':
             GPIO.output(self.in1, GPIO.HIGH)
@@ -64,8 +66,8 @@ class LinearActuator():
         if self.verbose:
             print(f"LinearActuator: dir = {dir}, speed = {speed}, dur = {dur}")
 
-        if dur > 0:
-            time.sleep(dur)
+        if dur > 0: # run continously lif dur <= 0
+            time.sleep(dur) # wait for dur
             self.stop()
 
     def stop(self):
@@ -73,36 +75,22 @@ class LinearActuator():
         GPIO.output(self.in1, GPIO.LOW)
         GPIO.output(self.in2, GPIO.LOW)
 
-la = LinearActuator(pins=[23, 24, 25], freq=1000, verbose=True)
-la.run('backward', 100, 6)
-# la.run('forward', 100, 4.5)
-time.sleep(1)
-la.run('forward', 100, 0.5)
-time.sleep(1)
-la.run('forward', 100, 0.5)
-time.sleep(1)
-la.run('forward', 100, 0.5)
-time.sleep(1)
-la.run('forward', 100, 0.5)
-time.sleep(1)
-la.run('forward', 100, 0.5)
-time.sleep(1)
-la.run('forward', 100, 0.5)
-time.sleep(1)
-la.run('forward', 100, 0.5)
-time.sleep(1)
-la.run('forward', 100, 0.5)
-time.sleep(1)
-la.run('forward', 100, 0.5)
-time.sleep(1)
-la.run('forward', 100, 0.5)
-# time.sleep(1)
-# la.run('forward', 100, 0.5)
-# time.sleep(1)
-# la.run('forward', 100, 0.5)
-# time.sleep(1)
-# la.run('forward', 100, 0.5)
-# # la.run('backward', 60, 4)
-# # la.run('forward', 60)
-time.sleep(2)
-la.stop()
+    def cleanup(self):
+        print(f"LinearActuator: cleanup")
+        GPIO.cleanup() # cleans GPIO
+
+# testing
+if __name__ == '__main__':
+    la = LinearActuator(pins=[23, 24, 25], freq=1000, verbose=True)
+
+    la.run('backward', 100, 6)
+    time.sleep(1) # wait
+    la.run('forward', 100, 0.5)
+    time.sleep(1) # wait
+    la.run('forward', 60, 4)
+    time.sleep(1) # wait
+    la.run('backward', 60, 3)
+    time.sleep(1) # wait
+    la.run('forward', 60) # run continuously if dur <= 0
+    time.sleep(10) # wait
+    la.stop()
