@@ -61,6 +61,9 @@ class SpectralSensor():
         return min(int((val * (range[1] - range[0]) / max) + range[0]), range[1])
     
     def read(self, use_led=True):
+        if self.verbose:
+            print("SpectralSensor: temperature = {0}°C".format(self.sensor.temperature))
+
         if (self.sensor.temperature < 10) or (self.sensor.temperature > 40):
             raise Exception("SpectralSensor: temperature too hot (>30°C) or cold (<18°C)'")
         
@@ -72,7 +75,7 @@ class SpectralSensor():
 
         else:
             GPIO.output(self.led_pin, GPIO.LOW) # turn off LED
-            time.sleep(0.5)
+            time.sleep(0.1)
             vals = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values without LED
         
         if self.verbose:
@@ -92,11 +95,15 @@ class SpectralSensor():
 
         return readings # return readings as a dictionary, where keys are wavelengths and values are rescaled values
 
+    def stop(self):
+        print(f"SpectralSensor: stop")
+        GPIO.output(self.led_pin, GPIO.LOW)
+
 # testing
 if __name__ == '__main__':
-    ss = SpectralSensor(sensor_type='VIS', range=[0, 100], max=16000, verbose=True)
+    ss = SpectralSensor(led_pin=4, sensor_type='VIS', range=[0, 100], max=16000, verbose=True)
 
-    while True:
+    for i in range(10):
         readings = ss.read(use_led=True)
         print(readings)
         time.sleep(1) # wait
