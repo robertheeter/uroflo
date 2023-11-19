@@ -1,10 +1,15 @@
 '''
 LINEAR ACTUATOR
+
+About
 - L298N driver
 - 12 V linear actuator (1.2 in stroke, 0.6 in/s, 60 N / 14 lb)
 
+Notes
+- The linear actuator takes dur = 4.5 s at speed = 100 to extend or retract fully.
+
 Documentation
-https://www.electronicshub.org/raspberry-pi-l298n-interface-tutorial-control-dc-motor-l298n-raspberry-pi/
+- https://www.electronicshub.org/raspberry-pi-l298n-interface-tutorial-control-dc-motor-l298n-raspberry-pi/
 
 '''
 
@@ -70,11 +75,27 @@ class LinearActuator():
 
 la = LinearActuator(pins=[23, 24, 25], freq=1000, verbose=True)
 la.run('backward', 100, 6)
-la.run('forward', 100, 4.5)
+# la.run('forward', 100, 4.5)
 time.sleep(1)
-la.run('forward', 100, 2)
+la.run('forward', 100, 0.5)
 time.sleep(1)
-
+la.run('forward', 100, 0.5)
+time.sleep(1)
+la.run('forward', 100, 0.5)
+time.sleep(1)
+la.run('forward', 100, 0.5)
+time.sleep(1)
+la.run('forward', 100, 0.5)
+time.sleep(1)
+la.run('forward', 100, 0.5)
+time.sleep(1)
+la.run('forward', 100, 0.5)
+time.sleep(1)
+la.run('forward', 100, 0.5)
+time.sleep(1)
+la.run('forward', 100, 0.5)
+time.sleep(1)
+la.run('forward', 100, 0.5)
 # time.sleep(1)
 # la.run('forward', 100, 0.5)
 # time.sleep(1)
