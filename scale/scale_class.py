@@ -53,7 +53,7 @@ class Scale:
 
             if current_time - start_time >= freq:
                 end_weight = mean(weights)
-                weight_change = end_weight - start_weight
+                weight_change = start_weight - end_weight
                 flow_rate = (weight_change/(current_time - start_time))*60
                 return flow_rate
         
