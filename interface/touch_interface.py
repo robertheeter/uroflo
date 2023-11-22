@@ -23,6 +23,9 @@ development notes
     - https://channels.readthedocs.io/en/stable/
     - Django channels might be best
         - Django channels tutorial: https://www.youtube.com/watch?v=jsxFEONN_yo
+        - Example: https://github.com/testdrivenio/django-channels-example
+        - Another guide: https://testdriven.io/blog/django-channels/
+        
 
 
 
