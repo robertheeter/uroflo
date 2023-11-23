@@ -72,7 +72,7 @@ class SpectralSensor():
             time.sleep(0.1)
             vals = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values with LED
             time.sleep(0.1)
-            GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
+            
 
         else:
             GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
@@ -95,6 +95,8 @@ class SpectralSensor():
 
         readings = dict(zip(wavelengths, rescaled_vals))
 
+        GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
+        
         return readings # return readings as a dictionary, where keys are wavelengths and values are rescaled values
 
     def stop(self):
