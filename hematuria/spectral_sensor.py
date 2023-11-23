@@ -44,7 +44,7 @@ class SpectralSensor():
 
         GPIO.setmode(GPIO.BCM) # set up GPIO LED pin
         GPIO.setup(self.led_pin, GPIO.OUT)
-        GPIO.output(self.led_pin, GPIO.LOW) # turn off LED
+        GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
         
         if self.verbose:
             print("SpectralSensor: temperature = {0}°C".format(self.sensor.temperature))
@@ -68,20 +68,22 @@ class SpectralSensor():
             raise Exception("SpectralSensor: temperature too hot (>30°C) or cold (<18°C)'")
         
         if use_led == True:
-            GPIO.output(self.led_pin, GPIO.HIGH) # turn on LED
+            GPIO.output(self.led_pin, GPIO.LOW) # turn on LED
             time.sleep(0.1)
             vals = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values with LED
+            print(vals)
             time.sleep(0.1)
-            GPIO.output(self.led_pin, GPIO.LOW) # turn off LED
+            GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
 
         else:
-            GPIO.output(self.led_pin, GPIO.LOW) # turn off LED
+            GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
             time.sleep(0.1)
             vals = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values without LED
             time.sleep(0.1)
             
         if self.verbose:
-            print(f"SpectralSensor: reading raw vals = {vals}")
+            print(vals)
+            # print(f"SpectralSensor: reading raw vals = {vals}")
         
         rescaled_vals = []
         for val in vals:
@@ -99,7 +101,7 @@ class SpectralSensor():
 
     def stop(self):
         print(f"SpectralSensor: stop")
-        GPIO.output(self.led_pin, GPIO.LOW) # turn off LED
+        GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
 
 # testing
 if __name__ == '__main__':
@@ -108,4 +110,4 @@ if __name__ == '__main__':
     for i in range(10):
         readings = ss.read(use_led=True)
         print(readings)
-        time.sleep(1) # wait
+        time.sleep(5) # wait
