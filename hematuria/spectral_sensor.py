@@ -136,4 +136,4 @@ if __name__ == '__main__':
         print('810 nm / IR     : {:.1f}'.format(avg_readings[810]))
         print('860 nm / IR     : {:.1f}'.format(avg_readings[860]))
     
-    print(f"\nRAW FINAL READINGS:{readings[0]}\n")
+    print(f"\nRAW FINAL READINGS:\n{readings[0]}\n")
