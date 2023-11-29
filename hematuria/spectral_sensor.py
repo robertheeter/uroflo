@@ -21,6 +21,7 @@ import time
 import board
 import RPi.GPIO as GPIO
 from adafruit_as726x import AS726x_I2C
+import pandas as pd
 
 # spectral sensor class
 class SpectralSensor():
@@ -103,9 +104,32 @@ class SpectralSensor():
 
 # testing
 if __name__ == '__main__':
-    ss = SpectralSensor(led_pin=4, sensor_type='VIS', range=[0, 100], max=16000, verbose=True)
+    
+    sensor_type = 'NIR'
+    ss = SpectralSensor(led_pin=4, sensor_type=sensor_type, range=[0, 100], max=16000, verbose=True)
 
+    readings = []
     for i in range(10):
-        readings = ss.read(use_led=True)
-        print(readings)
-        time.sleep(4) # wait
+        readings.append(ss.read(use_led=True))
+        time.sleep(0.5)
+    
+    df = pd.DataFrame(readings)
+    avg_readings = dict(df.mean())
+
+    if sensor_type = 'VIS':
+        print('450 nm / violet : {:.1f}'.format(avg_readings[450]))
+        print('500 nm / blue   : {:.1f}'.format(avg_readings[500]))
+        print('550 nm / green  : {:.1f}'.format(avg_readings[550]))
+        print('570 nm / yellow : {:.1f}'.format(avg_readings[570]))
+        print('600 nm / orange : {:.1f}'.format(avg_readings[600]))
+        print('650 nm / red    : {:.1f}'.format(avg_readings[650]))
+
+    elif sensor_type == 'NIR':
+        print('610 nm / orange : {:.1f}'.format(avg_readings[610]))
+        print('680 nm / red    : {:.1f}'.format(avg_readings[680]))
+        print('730 nm / IR     : {:.1f}'.format(avg_readings[730]))
+        print('760 nm / IR     : {:.1f}'.format(avg_readings[760]))
+        print('810 nm / IR     : {:.1f}'.format(avg_readings[810]))
+        print('860 nm / IR     : {:.1f}'.format(avg_readings[860]))
+    
+    print(f"/nRAW FINAL READINGS:{readings})
