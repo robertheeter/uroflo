@@ -148,20 +148,20 @@ if __name__ == '__main__':
     print(f"\nCOEFFICIENT OF VARIATION READINGS (n={n}):\n")
 
     if sensor_type == 'VIS':
-        print('450 nm / violet : {:.2f}'.format(cov_trials[450]))
-        print('500 nm / blue   : {:.2f}'.format(cov_trials[500]))
-        print('550 nm / green  : {:.2f}'.format(cov_trials[550]))
-        print('570 nm / yellow : {:.2f}'.format(cov_trials[570]))
-        print('600 nm / orange : {:.2f}'.format(cov_trials[600]))
-        print('650 nm / red    : {:.2f}'.format(cov_trials[650]))
+        print('450 nm / violet : {:.2f}%'.format(cov_trials[450]*100))
+        print('500 nm / blue   : {:.2f}%'.format(cov_trials[500]*100))
+        print('550 nm / green  : {:.2f}%'.format(cov_trials[550]*100))
+        print('570 nm / yellow : {:.2f}%'.format(cov_trials[570]*100))
+        print('600 nm / orange : {:.2f}%'.format(cov_trials[600]*100))
+        print('650 nm / red    : {:.2f}%'.format(cov_trials[650]*100))
 
     elif sensor_type == 'NIR':
-        print('610 nm / orange : {:.2f}'.format(cov_trials[610]))
-        print('680 nm / red    : {:.2f}'.format(cov_trials[680]))
-        print('730 nm / IR     : {:.2f}'.format(cov_trials[730]))
-        print('760 nm / IR     : {:.2f}'.format(cov_trials[760]))
-        print('810 nm / IR     : {:.2f}'.format(cov_trials[810]))
-        print('860 nm / IR     : {:.2f}'.format(cov_trials[860]))
+        print('610 nm / orange : {:.2f}%'.format(cov_trials[610]*100))
+        print('680 nm / red    : {:.2f}%'.format(cov_trials[680]*100))
+        print('730 nm / IR     : {:.2f}%'.format(cov_trials[730]*100))
+        print('760 nm / IR     : {:.2f}%'.format(cov_trials[760]*100))
+        print('810 nm / IR     : {:.2f}%'.format(cov_trials[810]*100))
+        print('860 nm / IR     : {:.2f}%'.format(cov_trials[860]*100))
 
     print("\n####################")
     print(f"\nSTANDARD DEVIATION READINGS (n={n}):\n{df.std()}")
