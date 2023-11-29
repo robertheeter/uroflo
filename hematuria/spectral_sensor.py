@@ -104,17 +104,21 @@ class SpectralSensor():
 
 # testing
 if __name__ == '__main__':
-    
+
     sensor_type = 'NIR'
+    n = 10
+
     ss = SpectralSensor(led_pin=4, sensor_type=sensor_type, range=[0, 100], max=16000, verbose=True)
 
     readings = []
-    for i in range(10):
+    for i in range(n):
         readings.append(ss.read(use_led=True))
         time.sleep(0.5)
     
     df = pd.DataFrame(readings)
     avg_readings = dict(df.mean())
+
+    print(f"/nAVERAGE READINGS (n={n}):\n{readings}")
 
     if sensor_type = 'VIS':
         print('450 nm / violet : {:.1f}'.format(avg_readings[450]))
@@ -132,4 +136,4 @@ if __name__ == '__main__':
         print('810 nm / IR     : {:.1f}'.format(avg_readings[810]))
         print('860 nm / IR     : {:.1f}'.format(avg_readings[860]))
     
-    print(f"/nRAW FINAL READINGS:{readings})
+    print(f"/nRAW FINAL READINGS:{readings}")
