@@ -108,7 +108,12 @@ if __name__ == '__main__':
     sensor_type = 'VIS'
     n = 5
 
-    ss = SpectralSensor(led_pin=4, sensor_type=sensor_type, range=[0, 100], max=48000, verbose=False)
+    if sensor_type in ['VIS', 'AS7262']:
+        max = 48000
+    elif sensor_type in ['NIR', 'AS7263']:
+        max = 16000
+
+    ss = SpectralSensor(led_pin=4, sensor_type=sensor_type, range=[0, 100], max=max, verbose=False)
 
     trials = []
     for i in range(n):
@@ -126,7 +131,7 @@ if __name__ == '__main__':
 
     print(f"\nAVERAGE READINGS (n={n}):\n")
 
-    if sensor_type == 'VIS':
+    if sensor_type in ['VIS', 'AS7262']:
         print('450 nm / violet : {:.1f}'.format(avg_trials[450]))
         print('500 nm / blue   : {:.1f}'.format(avg_trials[500]))
         print('550 nm / green  : {:.1f}'.format(avg_trials[550]))
@@ -134,7 +139,7 @@ if __name__ == '__main__':
         print('600 nm / orange : {:.1f}'.format(avg_trials[600]))
         print('650 nm / red    : {:.1f}'.format(avg_trials[650]))
 
-    elif sensor_type == 'NIR':
+    elif sensor_type in ['NIR', 'AS7263']:
         print('610 nm / orange : {:.1f}'.format(avg_trials[610]))
         print('680 nm / red    : {:.1f}'.format(avg_trials[680]))
         print('730 nm / IR     : {:.1f}'.format(avg_trials[730]))
@@ -147,7 +152,7 @@ if __name__ == '__main__':
 
     print(f"\nCOEFFICIENT OF VARIATION READINGS (n={n}):\n")
 
-    if sensor_type == 'VIS':
+    if sensor_type in ['VIS', 'AS7262']:
         print('450 nm / violet : {:.2f}%'.format(cov_trials[450]*100))
         print('500 nm / blue   : {:.2f}%'.format(cov_trials[500]*100))
         print('550 nm / green  : {:.2f}%'.format(cov_trials[550]*100))
@@ -155,14 +160,14 @@ if __name__ == '__main__':
         print('600 nm / orange : {:.2f}%'.format(cov_trials[600]*100))
         print('650 nm / red    : {:.2f}%'.format(cov_trials[650]*100))
 
-    elif sensor_type == 'NIR':
+    elif sensor_type in ['NIR', 'AS7263']:
         print('610 nm / orange : {:.2f}%'.format(cov_trials[610]*100))
         print('680 nm / red    : {:.2f}%'.format(cov_trials[680]*100))
         print('730 nm / IR     : {:.2f}%'.format(cov_trials[730]*100))
         print('760 nm / IR     : {:.2f}%'.format(cov_trials[760]*100))
         print('810 nm / IR     : {:.2f}%'.format(cov_trials[810]*100))
         print('860 nm / IR     : {:.2f}%'.format(cov_trials[860]*100))
-
+    
     print("\n####################")
     print(f"\nSTANDARD DEVIATION READINGS (n={n}):\n{df.std()}")
     print(f"\nVARIANCE READINGS (n={n}):\n{df.var()}\n")
