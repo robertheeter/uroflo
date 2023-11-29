@@ -106,34 +106,60 @@ class SpectralSensor():
 if __name__ == '__main__':
 
     sensor_type = 'NIR'
-    n = 10
+    n = 5
 
-    ss = SpectralSensor(led_pin=4, sensor_type=sensor_type, range=[0, 100], max=16000, verbose=True)
+    ss = SpectralSensor(led_pin=4, sensor_type=sensor_type, range=[0, 100], max=16000, verbose=False)
 
-    readings = []
+    trials = []
     for i in range(n):
-        readings.append(ss.read(use_led=True))
-        time.sleep(0.5)
+        readings = []
+        for j in range(10):
+            readings.append(ss.read(use_led=True))
+            time.sleep(0.5)
+        
+        df = pd.DataFrame(readings)
+        avg_readings = dict(df.mean())
+        trials.append(avg_readings)
     
-    df = pd.DataFrame(readings)
-    avg_readings = dict(df.mean())
+    df = pd.DataFrame(trials)
+    avg_trials = dict(df.mean())
 
     print(f"\nAVERAGE READINGS (n={n}):\n")
 
     if sensor_type == 'VIS':
-        print('450 nm / violet : {:.1f}'.format(avg_readings[450]))
-        print('500 nm / blue   : {:.1f}'.format(avg_readings[500]))
-        print('550 nm / green  : {:.1f}'.format(avg_readings[550]))
-        print('570 nm / yellow : {:.1f}'.format(avg_readings[570]))
-        print('600 nm / orange : {:.1f}'.format(avg_readings[600]))
-        print('650 nm / red    : {:.1f}'.format(avg_readings[650]))
+        print('450 nm / violet : {:.1f}'.format(avg_trials[450]))
+        print('500 nm / blue   : {:.1f}'.format(avg_trials[500]))
+        print('550 nm / green  : {:.1f}'.format(avg_trials[550]))
+        print('570 nm / yellow : {:.1f}'.format(avg_trials[570]))
+        print('600 nm / orange : {:.1f}'.format(avg_trials[600]))
+        print('650 nm / red    : {:.1f}'.format(avg_trials[650]))
 
     elif sensor_type == 'NIR':
-        print('610 nm / orange : {:.1f}'.format(avg_readings[610]))
-        print('680 nm / red    : {:.1f}'.format(avg_readings[680]))
-        print('730 nm / IR     : {:.1f}'.format(avg_readings[730]))
-        print('760 nm / IR     : {:.1f}'.format(avg_readings[760]))
-        print('810 nm / IR     : {:.1f}'.format(avg_readings[810]))
-        print('860 nm / IR     : {:.1f}'.format(avg_readings[860]))
+        print('610 nm / orange : {:.1f}'.format(avg_trials[610]))
+        print('680 nm / red    : {:.1f}'.format(avg_trials[680]))
+        print('730 nm / IR     : {:.1f}'.format(avg_trials[730]))
+        print('760 nm / IR     : {:.1f}'.format(avg_trials[760]))
+        print('810 nm / IR     : {:.1f}'.format(avg_trials[810]))
+        print('860 nm / IR     : {:.1f}'.format(avg_trials[860]))
+
+    df = pd.DataFrame(trials)
+    cov_trials = dict(df.std()/df.var())
+
+    print(f"\nCOEFFICIENT OF VARIATION READINGS (n={n}):\n")
+
+    if sensor_type == 'VIS':
+        print('450 nm / violet : {:.2f}'.format(cov_trials[450]))
+        print('500 nm / blue   : {:.2f}'.format(cov_trials[500]))
+        print('550 nm / green  : {:.2f}'.format(cov_trials[550]))
+        print('570 nm / yellow : {:.2f}'.format(cov_trials[570]))
+        print('600 nm / orange : {:.2f}'.format(cov_trials[600]))
+        print('650 nm / red    : {:.2f}'.format(cov_trials[650]))
+
+    elif sensor_type == 'NIR':
+        print('610 nm / orange : {:.2f}'.format(cov_trials[610]))
+        print('680 nm / red    : {:.2f}'.format(cov_trials[680]))
+        print('730 nm / IR     : {:.2f}'.format(cov_trials[730]))
+        print('760 nm / IR     : {:.2f}'.format(cov_trials[760]))
+        print('810 nm / IR     : {:.2f}'.format(cov_trials[810]))
+        print('860 nm / IR     : {:.2f}'.format(cov_trials[860]))
     
-    print(f"\nRAW FINAL READINGS:\n{readings[0]}\n")
