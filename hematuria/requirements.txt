@@ -1,0 +1,3 @@
+Adafruit_Blinka==8.25.0
+adafruit_circuitpython_as726x==2.0.17
+RPi.GPIO==0.7.1
