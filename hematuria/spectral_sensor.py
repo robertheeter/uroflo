@@ -105,7 +105,7 @@ class SpectralSensor():
 # testing
 if __name__ == '__main__':
 
-    sensor_type = 'NIR'
+    sensor_type = 'VIS'
     n = 5
 
     ss = SpectralSensor(led_pin=4, sensor_type=sensor_type, range=[0, 100], max=16000, verbose=False)
