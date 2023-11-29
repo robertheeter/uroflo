@@ -120,7 +120,7 @@ if __name__ == '__main__':
 
     print(f"/nAVERAGE READINGS (n={n}):\n{readings}")
 
-    if sensor_type = 'VIS':
+    if sensor_type == 'VIS':
         print('450 nm / violet : {:.1f}'.format(avg_readings[450]))
         print('500 nm / blue   : {:.1f}'.format(avg_readings[500]))
         print('550 nm / green  : {:.1f}'.format(avg_readings[550]))
