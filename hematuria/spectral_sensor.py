@@ -115,7 +115,7 @@ if __name__ == '__main__':
         readings = []
         for j in range(10):
             readings.append(ss.read(use_led=True))
-            time.sleep(0.5)
+            time.sleep(0.1)
         
         df = pd.DataFrame(readings)
         avg_readings = dict(df.mean())
@@ -143,11 +143,7 @@ if __name__ == '__main__':
         print('860 nm / IR     : {:.1f}'.format(avg_trials[860]))
 
     df = pd.DataFrame(trials)
-    
-    print(f"\nSTANDARD DEVIATION READINGS (n={n}):\n{df.std()}\n")
-    print(f"\nVARIANCE READINGS (n={n}):\n{df.var()}\n")
-
-    cov_trials = dict(df.std()/df.var())
+    cov_trials = dict(df.std()/df.mean())
 
     print(f"\nCOEFFICIENT OF VARIATION READINGS (n={n}):\n")
 
@@ -166,4 +162,9 @@ if __name__ == '__main__':
         print('760 nm / IR     : {:.2f}'.format(cov_trials[760]))
         print('810 nm / IR     : {:.2f}'.format(cov_trials[810]))
         print('860 nm / IR     : {:.2f}'.format(cov_trials[860]))
+
+    print("\n####################")
+    print(f"\nSTANDARD DEVIATION READINGS (n={n}):\n{df.std()}")
+    print(f"\nVARIANCE READINGS (n={n}):\n{df.var()}\n")
+
     
