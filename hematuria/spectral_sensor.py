@@ -118,7 +118,7 @@ if __name__ == '__main__':
     df = pd.DataFrame(readings)
     avg_readings = dict(df.mean())
 
-    print(f"/nAVERAGE READINGS (n={n}):\n{readings}")
+    print(f"\nAVERAGE READINGS (n={n}):\n")
 
     if sensor_type == 'VIS':
         print('450 nm / violet : {:.1f}'.format(avg_readings[450]))
@@ -136,4 +136,4 @@ if __name__ == '__main__':
         print('810 nm / IR     : {:.1f}'.format(avg_readings[810]))
         print('860 nm / IR     : {:.1f}'.format(avg_readings[860]))
     
-    print(f"/nRAW FINAL READINGS:{readings}")
+    print(f"\nRAW FINAL READINGS:{readings[0]}\n")
