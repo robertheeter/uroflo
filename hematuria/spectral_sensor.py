@@ -143,6 +143,10 @@ if __name__ == '__main__':
         print('860 nm / IR     : {:.1f}'.format(avg_trials[860]))
 
     df = pd.DataFrame(trials)
+    
+    print(f"\nSTANDARD DEVIATION READINGS (n={n}):\n{df.std()}\n")
+    print(f"\nVARIANCE READINGS (n={n}):\n{df.var()}\n")
+
     cov_trials = dict(df.std()/df.var())
 
     print(f"\nCOEFFICIENT OF VARIATION READINGS (n={n}):\n")
