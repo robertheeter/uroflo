@@ -35,10 +35,9 @@ def SetAngle(angle):
 
 	GPIO.output(4, True)
 	pwm.ChangeDutyCycle(duty)
-	time.sleep(2)
+	time.sleep(1)
 	GPIO.output(4, False)
 	pwm.ChangeDutyCycle(0)
-	time.sleep(2)
 
 for i in range(20):
 	i = i*10
