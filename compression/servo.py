@@ -40,7 +40,7 @@ def SetAngle(angle):
 	pwm.ChangeDutyCycle(0)
 
 max_angle = 220
-max_flow = 10
+max_flow = 220
 
 while True:
 	try:
