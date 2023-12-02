@@ -27,8 +27,8 @@ def SetAngle(angle):
 	duty = angle / 18 + 2.5
 	GPIO.output(4, True)
 	pwm.ChangeDutyCycle(duty)
-	sleep(5)
-	GPIO.output(4, False)
+	# sleep(5)
+	# GPIO.output(4, False)
 	pwm.ChangeDutyCycle(0)
 	
 SetAngle(0) # 0 is completely open
