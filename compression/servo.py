@@ -5,7 +5,7 @@ About
 - 35 kg high torque servo motor (180° range)
 
 Notes
-- Recommend
+- Recommend duty = (angle/20) + 2
 
 Documentation
 - Guide: https://www.instructables.com/Servo-Motor-Control-With-Raspberry-Pi/
@@ -15,7 +15,6 @@ Documentation
 import time
 import RPi.GPIO as GPIO
 
-from time import sleep
 GPIO.setmode(GPIO.BCM) # set up GPIO PWM pin
 GPIO.setup(4, GPIO.OUT)
 
@@ -32,7 +31,7 @@ pwm.start(0)
 
 def SetAngle(angle):
 	print(f"angle: {angle}")
-	duty = (angle / (180/9)) + 2
+	duty = (angle/20) + 2
 
 	GPIO.output(4, True)
 	pwm.ChangeDutyCycle(duty)
@@ -40,18 +39,23 @@ def SetAngle(angle):
 	GPIO.output(4, False)
 	pwm.ChangeDutyCycle(0)
 	time.sleep(2)
-	
-SetAngle(0) # 0 is completely open
-time.sleep(2)
-SetAngle(180)
-time.sleep(2)
-SetAngle(90)
-time.sleep(2)
-SetAngle(180)
-time.sleep(2)
-SetAngle(0)
 
-time.sleep(2)
+for i in range(20):
+	i = i*10
+	print(i)
+	SetAngle(i)
+	time.sleep(1)
+# SetAngle(0) # 0 is completely open
+# time.sleep(2)
+# SetAngle(180)
+# time.sleep(2)
+# SetAngle(90)
+# time.sleep(2)
+# SetAngle(180)
+# time.sleep(2)
+# SetAngle(0)
+
+# time.sleep(2)
 
 pwm.stop()
 
