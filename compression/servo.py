@@ -25,6 +25,7 @@ pwm.start(0)
 
 duty = 2
 while duty <= 17:
+	print(duty)
 	pwm.ChangeDutyCycle(duty)
 	time.sleep(1)
 	duty += 1	
