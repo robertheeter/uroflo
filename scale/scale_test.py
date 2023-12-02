@@ -7,10 +7,11 @@ if __name__ == '__main__':
     
     while True:
         try:
+            time.sleep(5)
             weight = scale.read_weight()
             volume = weight / (1009/1000)
             print(f'Volume: {volume} mL')
 
-            time.sleep(1)
+            
         except (KeyboardInterrupt, SystemExit):
             scale.stop()
