@@ -39,7 +39,7 @@ def SetAngle(angle):
 	GPIO.output(4, False)
 	pwm.ChangeDutyCycle(0)
 
-max_angle = 150
+max_angle = 180
 max_flow = 10
 
 while True:
