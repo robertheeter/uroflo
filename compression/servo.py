@@ -19,12 +19,12 @@ from time import sleep
 GPIO.setmode(GPIO.BCM) # set up GPIO PWM pin
 GPIO.setup(4, GPIO.OUT)
 
-pwm = GPIO.PWM(4, 40)
+pwm = GPIO.PWM(4, 50)
 pwm.start(0)
 
 def SetAngle(angle):
 	print(f"angle: {angle}")
-	duty = angle / 18 + 2.1
+	duty = angle / 18 + 2
 	GPIO.output(4, True)
 	pwm.ChangeDutyCycle(duty)
 	sleep(1)
@@ -32,17 +32,17 @@ def SetAngle(angle):
 	pwm.ChangeDutyCycle(0)
 	
 SetAngle(0) # 0 is completely open
-time.sleep(4)
+time.sleep(2)
 SetAngle(180)
-time.sleep(4)
+time.sleep(2)
 SetAngle(90)
-time.sleep(4)
-SetAngle(200)
+time.sleep(2)
+SetAngle(180)
+time.sleep(2)
+SetAngle(0)
 
-# SetAngle(0)
-# SetAngle(150)
+time.sleep(2)
 
-time.sleep(4)
 pwm.stop()
 
 GPIO.cleanup()
