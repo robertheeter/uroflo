@@ -41,7 +41,6 @@ def SetAngle(angle):
 
 for i in range(20):
 	i = i*10
-	print(i)
 	SetAngle(i)
 	time.sleep(1)
 # SetAngle(0) # 0 is completely open
