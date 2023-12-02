@@ -39,6 +39,22 @@ def SetAngle(angle):
 	GPIO.output(4, False)
 	pwm.ChangeDutyCycle(0)
 
+max_angle = 150
+max_flow = 10
+
+while True:
+	try:
+		flow = float(input())
+		if flow < 0 or flow > max_flow:
+			raise Exception
+	except:
+		print("ERROR: Must be a number between 0 and 10.")
+		continue
+	
+	angle = max_angle*flow/max_flow
+	SetAngle(angle)
+
+	
 for i in range(20):
 	i = i*10
 	SetAngle(i)
