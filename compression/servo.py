@@ -36,6 +36,7 @@ SetAngle(180)
 # SetAngle(0)
 # SetAngle(150)
 
+time.sleep(4)
 pwm.stop()
 
 GPIO.cleanup()
