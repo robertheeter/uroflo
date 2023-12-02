@@ -31,7 +31,7 @@ while duty <= 17:
 
 # def SetAngle(angle):
 # 	print(f"angle: {angle}")
-# 	duty = angle / 18 + 2.5
+# 	duty = angle / 18 + 2
 # 	GPIO.output(4, True)
 # 	pwm.ChangeDutyCycle(duty)
 # 	sleep(1)
