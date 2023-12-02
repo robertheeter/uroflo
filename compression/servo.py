@@ -31,7 +31,7 @@ def SetAngle(angle):
 	pwm.ChangeDutyCycle(0)
 	
 SetAngle(0) # 0 is completely open
-time.sleep(4)
+time.sleep(1000)
 SetAngle(180)
 # SetAngle(0)
 # SetAngle(150)
