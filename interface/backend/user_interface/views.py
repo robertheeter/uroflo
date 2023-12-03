@@ -6,7 +6,8 @@ from .device.weight_sensor import WeightSensor
 
 # spectral_sensor = SpectralSensor()
 weight_sensor = WeightSensor(pd_sck_pin=14, dout_pin=15, verbose=True)
-
+weight_sensor.stop()
+weight_sensor.setup()
 def get_hematuria(request):
     level = random.randint(0, 100)
     color = [1,2,3]
@@ -14,7 +15,6 @@ def get_hematuria(request):
     return JsonResponse({'level': level, 'color': color})
 
 def get_supply(request):
-    weight_sensor.stop()
     volume = weight_sensor.mass() / 1009 # convert mg to L with density
     percent = int(min((volume/3)*100, 100)) # using 3 L bag
     volume = int(round(volume, 1))

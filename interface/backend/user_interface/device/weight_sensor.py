@@ -22,7 +22,7 @@ class WeightSensor():
         self.pd_sck_pin = pd_sck_pin # GPIO SKC pin
         self.dout_pin = dout_pin # GPIO DOUT pin
         self.verbose = verbose # toggles printing of information to terminal
-        self.setup()
+        # self.setup()
 
     def setup(self):
         print("WeightSensor: setup")
