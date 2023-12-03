@@ -4,11 +4,11 @@ import random
 from .device.spectral_sensor import SpectralSensor
 from .device.weight_sensor import WeightSensor
 
-spectral_sensor = SpectralSensor(led_pin=4, sensor_type='VIS', range=[0, 100], max=48000, verbose=False)
+spectral_sensor = SpectralSensor(led_pin=4, sensor_type='VIS', max=48000, verbose=False)
 weight_sensor = WeightSensor(pd_sck_pin=14, dout_pin=15, verbose=True)
 
 def get_hematuria(request):
-    sensor_type = 'VIS'
+    # sensor_type = 'VIS'
 
     level = random.randint(0, 100)
     color = [1,2,3]
