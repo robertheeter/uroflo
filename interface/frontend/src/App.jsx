@@ -16,12 +16,12 @@ function App() {
   const [hematuria_level, setHematuriaLevel] = useState(0); // integer; outflow hematuria level/severity
   // const [hematuria_color, setHematuriaColor] = useState([]); // outflow 0-255 [R, G, B] color
 
-  const [supply_volume, setSupplyVolume] = useState(0); // float (mL); supply bag volume
+  const [supply_volume, setSupplyVolume] = useState(0); // float (L); supply bag volume
   const [supply_rate, setSupplyRate] = useState(0); // float (mL/min); supply bag flow rate
   const [supply_percent, setSupplyPercent] = useState(0); // float (%); percent supply bag full
   const [supply_time, setSupplyTime] = useState(0); // integer (s); time to supply bag empty
 
-  // const [waste_volume, setWasteVolume] = useState(0); // float (mL); waste bag volume
+  // const [waste_volume, setWasteVolume] = useState(0); // float (L); waste bag volume
   // const [waste_rate, setWasteRate] = useState(0); // float (mL/min); waste bag flow rate
   // const [waste_percent, setWastePercent] = useState(0); // float (%); percent waste bag full
   // const [waste_time, setWasteTime] = useState(0);  // integer (s); time to waste bag full
