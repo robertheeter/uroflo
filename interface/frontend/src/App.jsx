@@ -179,19 +179,19 @@ function App() {
                 </Text>
 
                 <Box marginBottom="4">
-                  <Text fontSize="2xl">{hematuria}%</Text>
+                  <Text fontSize="2xl">{hematuria_level}%</Text>
                 </Box>
 
                 <Spacer />
 
                 <Progress
-                  value={hematuria}
+                  value={hematuria_level}
                   width="80%"
                   borderRadius="full"
                   bgColor="white"
                   sx={{
                     div: {
-                      backgroundColor: getColor(hematuria),
+                      backgroundColor: getColor(hematuria_level),
                     },
                     "& > div:first-child": {
                       transitionProperty: "width",
@@ -214,18 +214,18 @@ function App() {
                 background="#e1effa"
               >
                 <Text fontSize="3xl" fontWeight="bold" marginBottom="1">
-                  Saline Weight
+                  Supply Bag
                 </Text>
 
                 <Box marginBottom="4">
-                  <Text fontSize="2xl">{saline} L</Text>
-                  <Text fontSize="2xl">{salinepercent}% Left</Text>
+                  <Text fontSize="2xl">{supply_volume} L</Text>
+                  <Text fontSize="2xl">{supply_percent}% Left</Text>
                 </Box>
 
                 <Spacer />
 
                 <Progress
-                  value={saline}
+                  value={supply_volume}
                   width="80%"
                   borderRadius="full"
                   bgColor="white"
