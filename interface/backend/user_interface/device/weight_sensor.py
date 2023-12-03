@@ -26,7 +26,7 @@ class WeightSensor():
 
     def setup(self):
         print("WeightSensor: setup")
-        GPIO.setwarnings(False)
+        # GPIO.setwarnings(False)
         self.hx = HX711(self.pd_sck_pin, self.dout_pin)
         self.hx.set_reading_format("MSB", "MSB")
         self.hx.set_reference_unit(-242.22)
