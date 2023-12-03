@@ -14,9 +14,8 @@ def get_hematuria(request):
     return JsonResponse({'level': level, 'color': color})
 
 def get_supply(request):
-    volume = weight_sensor.volume()
-    volume = volume / (1009)
-    int(min((volume/3)*100, 100)) # using 3 L bag
+    volume = weight_sensor.mass() / 1009 # convert mg to L with density
+    percent = int(min((volume/3)*100, 100)) # using 3 L bag
     volume = int(round(volume, 1))
 
     # volume = random.randint(0, 100) # re

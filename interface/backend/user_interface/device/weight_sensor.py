@@ -33,42 +33,42 @@ class WeightSensor():
         self.hx.reset()
         self.hx.tare()
 
-    def volume(self):
-        weight = max(0, int(self.hx.get_weight(5)))
+    def mass(self):
+        mass = max(0, int(self.hx.get_weight(5)))
         self.hx.power_down()
         self.hx.power_up()
         time.sleep(0.1)
-        print(f"WeightSensor: volume = {weight} mL")
-        return weight
+        print(f"WeightSensor: mass = {mass} mg")
+        return mass
     
     def rate(self, interval=60):
         start_time = time.time()
         duration = 0
 
-        start_weight = 0
-        end_weight = 0
-        weights = []
-        calculate_start_weight = True
+        start_mass = 0
+        end_mass = 0
+        masses = []
+        calculate_start_mass = True
 
         while duration <= interval:
             duration = time.time() - start_time
-            weight = self.read_weight()
+            mass = self.mass()
 
             if duration <= 1:
-                weights.append(weight)
+                masses.append(mass)
                 
-            elif duration > 1 and calculate_start_weight:
-                start_weight = np.mean(weights)
-                weights = []
-                calculate_start_weight = False
+            elif duration > 1 and calculate_start_mass:
+                start_mass = np.mean(masses)
+                masses = []
+                calculate_start_mass = False
 
             elif duration >= interval - 1:
-                weights.append(weight)
+                masses.append(mass)
 
             elif duration >= interval:
-                end_weight = np.mean(weights)
-                rate = ((start_weight - end_weight)/duration)*60
-                print(f"WeightSensor: rate = {rate} mL/min")
+                end_mass = np.mean(masses)
+                rate = ((start_mass - end_mass)/duration)*60
+                print(f"WeightSensor: rate = {rate} mg/min")
                 return rate
         
     def stop(self):
