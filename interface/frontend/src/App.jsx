@@ -45,8 +45,8 @@ function App() {
       axios
         .get("http://localhost:8000/user_interface/get_saline_weight/")
         .then((response) => {
-          setSaline([response.data.volume]);
-          setSalinePercent([response.data.percentage]);
+          setSaline([...response.data.volume]);
+          setSalinePercent([...response.data.percentage]);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
