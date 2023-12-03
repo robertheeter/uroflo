@@ -6,8 +6,7 @@ from .device.weight_sensor import WeightSensor
 
 # spectral_sensor = SpectralSensor()
 weight_sensor = WeightSensor(pd_sck_pin=14, dout_pin=15, verbose=True)
-weight_sensor.stop()
-weight_sensor.setup()
+
 def get_hematuria(request):
     level = random.randint(0, 100)
     color = [1,2,3]
