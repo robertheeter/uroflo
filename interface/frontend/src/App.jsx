@@ -27,13 +27,13 @@ function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setHematuria(2)
+      // setHematuria(2);
       axios
-        setHematuria(124214)
-        .get("localhost:8000/user_interface/get_hematuria/")
+        // setHematuria(124214);
+        .get("http://localhost:8000/user_interface/get_hematuria/")
         .then((response) => {
-          setHematuria(44444)
-          // setHematuria([response.data.value]);
+          // setHematuria(44444);
+          setHematuria([response.data.value]);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -46,10 +46,10 @@ function App() {
   useEffect(() => {
     const interval = setInterval(() => {
       axios
-        .get("localhost:8000/user_interface/get_saline_weight/")
+        .get("http://localhost:8000/user_interface/get_saline_weight/")
         .then((response) => {
-          setSaline(103432124)
-          setSalinePercent(999999)
+          setSaline(103432124);
+          setSalinePercent(999999);
           // setSaline([...response.data.volume]);
           // setSalinePercent([...response.data.percentage]);
         })
