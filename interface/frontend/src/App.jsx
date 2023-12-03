@@ -21,20 +21,19 @@ function App() {
   // const [hematuria_color, setHematuriaColor] = useState([]); // outflow 0-255 [R, G, B] color
 
   const [supply_volume, setSupplyVolume] = useState(0); // float (mL); supply bag volume
+  const [supply_rate, setSupplyRate] = useState(0); // float (mL/min); supply bag flow rate
   const [supply_percent, setSupplyPercent] = useState(0); // float (%); percent supply bag full
   const [supply_time, setSupplyTime] = useState(0); // integer (s); time to supply bag empty
 
   // const [waste_volume, setWasteVolume] = useState(0); // float (mL); waste bag volume
+  // const [waste_rate, setWasteRate] = useState(0); // float (mL/min); waste bag flow rate
   // const [waste_percent, setWastePercent] = useState(0); // float (%); percent waste bag full
   // const [waste_time, setWasteTime] = useState(0);  // integer (s); time to waste bag full
 
   // const [occlusion_level, setOcclusionLevel] = useState(0); // integer; peristaltic pump or tube compression occlusion level
   
-  // const [status, setStatus] = useState(0); // integer; CBI status for notification system
-
-  // const [duration, setDuration] = useState(0); // integer (min); duration on CBI
-
-  // const [control_mode, setControlMode] = useState(0); // boolean; automatic or manual device control
+  // const [device_status, setDeviceStatus] = useState(0); // integer; CBI notification status
+  // const [device_mode, setDeviceMode] = useState(0); // boolean; automatic or manual device control mode
 
   // const [patient_first_name, setPatientFirstName] = useState(0); // string; patient first name
   // const [patient_middle_name, setPatientMiddleName] = useState(0); // string; patient middle name
@@ -46,6 +45,8 @@ function App() {
   // const [doctor_middle_name, setDoctorMiddleName] = useState(0); // string; doctor middle name
   // const [doctor_last_name, setDoctorLastName] = useState(0); // string; doctor last name
   // const [doctor_id, setDoctorId] = useState(0); // string; doctor ID
+
+  // const [duration_time, setDurationTime] = useState(0); // integer (min); duration on CBI
  
 
   const [time, setTime] = useState(
@@ -65,6 +66,7 @@ function App() {
         .get("http://localhost:8000/user_interface/get_hematuria")
         .then((response) => {
           setHematuriaLevel(response.data.level);
+          // setHematuriaColor(response.data.color);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -77,10 +79,12 @@ function App() {
   useEffect(() => {
     const interval = setInterval(() => {
       axios
-        .get("http://localhost:8000/user_interface/get_supplybag")
+        .get("http://localhost:8000/user_interface/get_supply")
         .then((response) => {
-          set(response.data.raw);
-          setSalinePercent(response.data.percent);
+          setSupplyVolume(response.data.volume);
+          setSupplyRate(response.data.rate);
+          setSupplyPercent(response.data.percent);
+          setSupplyTime(response.data.time);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -89,10 +93,6 @@ function App() {
 
     return () => clearInterval(interval);
   }, []);
-
-
-  // http://localhost:8000/user_interface/get_flow (response.data.raw)
-
 
   useEffect(() => {
     const timer = setInterval(() => {

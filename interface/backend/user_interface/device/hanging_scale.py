@@ -1,10 +1,9 @@
 import time
-# import sys
 import RPi.GPIO as GPIO
-from statistics import mean
+import numpy as np
 from .hx711 import HX711
 
-class Scale:
+class HangingScale:
     def __init__(self, pd_sck_pin=2, dout_pin=3):
         self.pd_sck_pin = pd_sck_pin
         self.dout_pin = dout_pin
@@ -44,7 +43,7 @@ class Scale:
 #                weights.append(reading)
                 
 #            if current_time - start_time > 1 and not calculate_start_weight:
-#                start_weight = mean(weights)
+#                start_weight = np.mean(weights)
 #                weights = []
 #                calculate_start_weight = True
 
@@ -52,7 +51,7 @@ class Scale:
 #                weights.append(reading)
 
 #            if current_time - start_time >= freq:
-#                end_weight = mean(weights)
+#                end_weight = np.mean(weights)
 #                weight_change = start_weight - end_weight
 #                flow_rate = (weight_change/(current_time - start_time))*60
 #                return flow_rate
