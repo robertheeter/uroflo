@@ -35,14 +35,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'user_interface.apps.UserInterfaceConfig' # add user_interface app
+    'user_interface.apps.UserInterfaceConfig', # add user_interface app
     'corsheaders', # add CORS
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware', # add CORS
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware', # add CORS
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
