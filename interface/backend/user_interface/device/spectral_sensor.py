@@ -32,6 +32,7 @@ class SpectralSensor():
         self.setup()
 
     def setup(self):
+        print("SpectralSensor: setup")
         if self.verbose:
             print(f"SpectralSensor: sensor_type = {self.sensor_type}")
             print(f"SpectralSensor: reading max = {self.max}")
@@ -99,6 +100,7 @@ class SpectralSensor():
     def stop(self):
         print(f"SpectralSensor: stop")
         GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
+        GPIO.cleanup()
 
 
 

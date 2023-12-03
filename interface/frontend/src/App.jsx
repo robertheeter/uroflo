@@ -71,7 +71,7 @@ function App() {
         .catch((error) => {
           console.error("Error fetching data:", error);
         });
-    }, 5000);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);
@@ -89,7 +89,7 @@ function App() {
         .catch((error) => {
           console.error("Error fetching data:", error);
         });
-    }, 5000);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);
@@ -225,12 +225,14 @@ function App() {
                 <Spacer />
 
                 <Progress
-                  value={supply_percent}
+                  value={hematuria_level}
                   width="80%"
                   borderRadius="full"
                   bgColor="white"
-                  colorScheme="blue"
                   sx={{
+                    div: {
+                      backgroundColor: getColor(hematuria_level),
+                    },
                     "& > div:first-child": {
                       transitionProperty: "width",
                     },

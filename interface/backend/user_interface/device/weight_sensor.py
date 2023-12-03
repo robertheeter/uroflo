@@ -18,19 +18,20 @@ import numpy as np
 from .hx711 import HX711
 
 class WeightSensor():
-    def __init__(self, pd_sck_pin=2, dout_pin=3):
-        self.pd_sck_pin = pd_sck_pin
-        self.dout_pin = dout_pin
+    def __init__(self, pd_sck_pin=2, dout_pin=3, verbose=False):
+        self.pd_sck_pin = pd_sck_pin # GPIO SKC pin
+        self.dout_pin = dout_pin # GPIO DOUT pin
+        self.verbose = verbose # toggles printing of information to terminal
         self.setup()
 
     def setup(self):
+        print("WeightSensor: setup")
         GPIO.setwarnings(False)
         self.hx = HX711(self.pd_sck_pin, self.dout_pin)
         self.hx.set_reading_format("MSB", "MSB")
         self.hx.set_reference_unit(-242.22)
         self.hx.reset()
         self.hx.tare()
-        print("WeightSensor: setup")
 
     def volume(self):
         weight = max(0, int(self.hx.get_weight(5)))
@@ -71,5 +72,5 @@ class WeightSensor():
                 return rate
         
     def stop(self):
-        GPIO.cleanup()
         print("WeightSensor: stop")
+        GPIO.cleanup()
