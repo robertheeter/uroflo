@@ -12,7 +12,6 @@ import {
 
 function App() {
   const [hematuria, setHematuria] = useState(0);
-  setHematuria(420)
   const [saline, setSaline] = useState(0);
   const [salinepercent, setSalinePercent] = useState(0);
   const [time, setTime] = useState(
@@ -31,7 +30,6 @@ function App() {
       // setHematuria(2);
       axios.get("http://localhost:8000/user_interface/get_hematuria")
         .then(response => {
-          console.log(response.data.value)
           // setHematuria(44444);
           setHematuria(response.data.value);
         })
@@ -47,8 +45,6 @@ function App() {
     const interval = setInterval(() => {
       axios.get("http://localhost:8000/user_interface/get_saline_weight")
         .then(response => {
-          console.log(response.data.volume)
-          console.log(response.data.percentage)
           setSaline(3);
           setSalinePercent(9);
           // setSaline([...response.data.volume]);
