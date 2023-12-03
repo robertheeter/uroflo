@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 import random
-from .scale_class import Scale
+from device.scale import Scale
 
 # define scale
 scale = Scale(pd_sck_pin=2, dout_pin=3)
