@@ -13,7 +13,8 @@ def get_hematuria(request):
     level = random.randint(0, 100)
     color = [1,2,3]
 
-    return JsonResponse({'level': int(level), 'color': color})
+    return JsonResponse({'level': int(level),
+                         'color': color})
 
 def get_supply(request):
     volume = weight_sensor.mass() / 1009 # convert mg to L with density
@@ -22,4 +23,7 @@ def get_supply(request):
     rate = random.randint(0, 100) # random integer for noww
     time = random.randint(0, 100) # random integer for now
 
-    return JsonResponse({'volume': format(volume, '.1f'), 'rate': format(rate, '.1f'), 'percent': int(percent), 'time': int(time)})
+    return JsonResponse({'volume': format(volume, '1.1f'),
+                         'rate': format(rate, '.1f'),
+                         'percent': int(percent),
+                         'time': int(time)})
