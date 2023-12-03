@@ -175,7 +175,7 @@ function App() {
                 background="#fceded"
               >
                 <Text fontSize="3xl" fontWeight="bold" marginBottom="1">
-                  Hematuria Degree
+                  Hematuria
                 </Text>
 
                 <Box marginBottom="4">
