@@ -225,14 +225,12 @@ function App() {
                 <Spacer />
 
                 <Progress
-                  value={hematuria_level}
+                  value={supply_percent}
                   width="80%"
                   borderRadius="full"
                   bgColor="white"
+                  colorScheme="blue"
                   sx={{
-                    div: {
-                      backgroundColor: getColor(hematuria_level),
-                    },
                     "& > div:first-child": {
                       transitionProperty: "width",
                     },
