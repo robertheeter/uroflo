@@ -28,6 +28,7 @@ function App() {
   useEffect(() => {
     const interval = setInterval(() => {
       // setHematuria(2);
+      console.log('basdfnasnl;dfkasdl;fk')
       axios.get("http://localhost:8000/user_interface/get_hematuria/")
         .then(response => {
           console.log(response.data.value)
