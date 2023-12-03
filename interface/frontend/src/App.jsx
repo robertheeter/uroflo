@@ -12,6 +12,7 @@ import {
 
 function App() {
   const [hematuria, setHematuria] = useState(0);
+  setHematuria(420)
   const [saline, setSaline] = useState(0);
   const [salinepercent, setSalinePercent] = useState(0);
   const [time, setTime] = useState(
