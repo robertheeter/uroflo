@@ -1,8 +1,5 @@
 import axios from "axios";
-import {
-  useState,
-  useEffect
-} from "react";
+import { useState, useEffect } from "react";
 import {
   ChakraProvider,
   Progress,
@@ -12,7 +9,6 @@ import {
   Spacer,
   Image,
 } from "@chakra-ui/react";
-
 
 function App() {
   axios.defaults.baseURL = "http://localhost:8000"; // proxy
@@ -31,7 +27,7 @@ function App() {
   // const [waste_time, setWasteTime] = useState(0);  // integer (s); time to waste bag full
 
   // const [occlusion_level, setOcclusionLevel] = useState(0); // integer; peristaltic pump or tube compression occlusion level
-  
+
   // const [device_status, setDeviceStatus] = useState(0); // integer; CBI notification status
   // const [device_mode, setDeviceMode] = useState(0); // boolean; automatic or manual device control mode
 
@@ -47,7 +43,6 @@ function App() {
   // const [doctor_id, setDoctorId] = useState(0); // string; doctor ID
 
   // const [duration_time, setDurationTime] = useState(0); // integer (min); duration on CBI
- 
 
   const [time, setTime] = useState(
     new Date().toLocaleString("en-US", {
