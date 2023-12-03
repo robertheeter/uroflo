@@ -28,9 +28,9 @@ function App() {
   useEffect(() => {
     const interval = setInterval(() => {
       // setHematuria(2);
-      axios.get("http://localhost:8000/user_interface/get_hematuria")
-        .then(response => {
-          // setHematuria(44444);
+      axios
+        .get("http://localhost:8000/user_interface/get_hematuria")
+        .then((response) => {
           setHematuria(response.data.value);
         })
         .catch((error) => {
@@ -43,12 +43,11 @@ function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      axios.get("http://localhost:8000/user_interface/get_saline_weight")
-        .then(response => {
-          setSaline(3);
-          setSalinePercent(9);
-          // setSaline([...response.data.volume]);
-          // setSalinePercent([...response.data.percentage]);
+      axios
+        .get("http://localhost:8000/user_interface/get_saline_weight")
+        .then((response) => {
+          setSaline(response.data.volume);
+          setSalinePercent(response.data.percentage);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
