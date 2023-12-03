@@ -2,10 +2,10 @@ from django.http import JsonResponse
 import random
 
 # from .device.spectral_sensor import SpectralSensor
-# from .device.weight_sensor import WeightSensor
+from .device.weight_sensor import WeightSensor
 
 # spectral_sensor = SpectralSensor()
-# weight_sensor = WeightSensor()
+weight_sensor = WeightSensor()
 
 def get_hematuria(request):
     level = random.randint(0, 100) # re
@@ -14,14 +14,14 @@ def get_hematuria(request):
     return JsonResponse({'level': level, 'color': color})
 
 def get_supply(request):
-    # weight = scale.read_weight()
-    # volume = weight / (1009)
-    # volume = round(volume, 1)
-    # percentage = int((volume/3)*100) # assuming 3 L bag
+    volume = weight_sensor.volume()
+    volume = volume / (1009)
+    volume = round(volume, 1)
+    percent = int((volume/3)*100) # assuming 3 L bag
 
-    volume = random.randint(0, 100) # re
+    # volume = random.randint(0, 100) # re
     rate = random.randint(0, 100) # re
-    percentage = random.randint(0, 100) # re
+    # percent = random.randint(0, 100) # re
     time = random.randint(0, 100) # re
 
-    return JsonResponse({'volume': volume, 'rate': rate, 'percent': percentage, 'time': time})
+    return JsonResponse({'volume': volume, 'rate': rate, 'percent': percent, 'time': time})
