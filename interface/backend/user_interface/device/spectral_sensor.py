@@ -41,7 +41,8 @@ class SpectralSensor():
         i2c = board.I2C() # set up I2C; uses board.SCL and board.SDA
         self.sensor = AS726x_I2C(i2c)
         self.sensor.conversion_mode = self.sensor.MODE_2 # continuously gather samples/readings
-
+        
+        GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM) # set up GPIO LED pin
         GPIO.setup(self.led_pin, GPIO.OUT)
         GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED

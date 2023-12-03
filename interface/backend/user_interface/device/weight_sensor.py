@@ -38,7 +38,8 @@ class WeightSensor():
         self.hx.power_down()
         self.hx.power_up()
         time.sleep(0.1)
-        print(f"WeightSensor: mass = {mass} mg")
+        if self.verbose:
+            print(f"WeightSensor: mass = {mass} mg")
         return mass
     
     def rate(self, interval=60):
@@ -68,7 +69,8 @@ class WeightSensor():
             elif duration >= interval:
                 end_mass = np.mean(masses)
                 rate = ((start_mass - end_mass)/duration)*60
-                print(f"WeightSensor: rate = {rate} mg/min")
+                if self.verbose:
+                    print(f"WeightSensor: rate = {rate} mg/min")
                 return rate
         
     def stop(self):
