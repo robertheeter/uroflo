@@ -4,8 +4,8 @@ import random
 # from .device.spectral_sensor import SpectralSensor
 from .device.weight_sensor import WeightSensor
 
-# spectral_sensor = SpectralSensor()
-weight_sensor = WeightSensor(pd_sck_pin=19, dout_pin=26)
+spectral_sensor = SpectralSensor()
+weight_sensor = WeightSensor(pd_sck_pin=14, dout_pin=15)
 
 def get_hematuria(request):
     level = random.randint(0, 100)
@@ -18,9 +18,7 @@ def get_supply(request):
     percent = int(min((volume/3)*100, 100)) # using 3 L bag
     volume = int(round(volume, 1))
 
-    # volume = random.randint(0, 100) # re
-    rate = random.randint(0, 100) # re
-    # percent = random.randint(0, 100) # re
-    time = random.randint(0, 100) # re
+    rate = random.randint(0, 100) # random integer for now
+    time = random.randint(0, 100) # random integer for now
 
     return JsonResponse({'volume': volume, 'rate': rate, 'percent': percent, 'time': time})
