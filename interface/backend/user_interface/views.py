@@ -18,9 +18,10 @@ def get_hematuria(request):
 
 def get_saline_weight(request):
 
-    weight = scale.read_weight()
-    volume = weight / (1009)
-    volume = round(volume, 1)
-    percentage = int((volume/3)*100) # assuming 3 L bag
-
+    # weight = scale.read_weight()
+    # volume = weight / (1009)
+    # volume = round(volume, 1)
+    # percentage = int((volume/3)*100) # assuming 3 L bag
+    volume = random.randint(0, 100) # re
+    percentage = random.randint(0, 100) # re
     return JsonResponse({'volume': volume, 'percentage': percentage})
