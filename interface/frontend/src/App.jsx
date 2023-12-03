@@ -30,7 +30,8 @@ function App() {
       axios
         .get("http://localhost:8000/user_interface/get_hematuria/")
         .then((response) => {
-          setHematuria([response.data.value]);
+          setHematuria(44444)
+          // setHematuria([response.data.value]);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -45,8 +46,10 @@ function App() {
       axios
         .get("http://localhost:8000/user_interface/get_saline_weight/")
         .then((response) => {
-          setSaline([...response.data.volume]);
-          setSalinePercent([...response.data.percentage]);
+          setSaline(103432124)
+          setSalinePercent(999999)
+          // setSaline([...response.data.volume]);
+          // setSalinePercent([...response.data.percentage]);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
