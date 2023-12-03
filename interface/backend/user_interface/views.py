@@ -1,10 +1,10 @@
 from django.http import JsonResponse
-import random
-# from .device.scale import Scale
 
-# define scale
-# scale = Scale(pd_sck_pin=2, dout_pin=3)
+from .device.spectral_sensor import SpectralSensor
+from .device.hanging_scale import HangingScale
 
+spectral_sensor = SpectralSensor()
+hanging_scale = HangingScale()
 
 def get_hematuria(request):
 
@@ -13,10 +13,11 @@ def get_hematuria(request):
 
     value = random.randint(0, 100) # re
     # value = 1242
-    return JsonResponse({'value': value})
+
+    return JsonResponse({'raw': value})
 
 
-def get_saline_weight(request):
+def get_bag(request):
 
     # weight = scale.read_weight()
     # volume = weight / (1009)
@@ -24,4 +25,5 @@ def get_saline_weight(request):
     # percentage = int((volume/3)*100) # assuming 3 L bag
     volume = random.randint(0, 100) # re
     percentage = random.randint(0, 100) # re
-    return JsonResponse({'volume': volume, 'percentage': percentage})
+    flow = 0
+    return JsonResponse({'volume': volume, 'percent_volume': percentage, 'flow': flow})

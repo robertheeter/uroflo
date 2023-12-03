@@ -1,5 +1,8 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import {
+  useState,
+  useEffect
+} from "react";
 import {
   ChakraProvider,
   Progress,
@@ -10,11 +13,41 @@ import {
   Image,
 } from "@chakra-ui/react";
 
+
 function App() {
-  axios.defaults.baseURL = "http://localhost:8000";
-  const [hematuria, setHematuria] = useState(0);
-  const [saline, setSaline] = useState(0);
-  const [salinepercent, setSalinePercent] = useState(0);
+  axios.defaults.baseURL = "http://localhost:8000"; // proxy
+
+  const [hematuria_level, setHematuriaLevel] = useState(0); // integer; outflow hematuria level/severity
+  // const [hematuria_color, setHematuriaColor] = useState([]); // outflow 0-255 [R, G, B] color
+
+  const [supply_volume, setSupplyVolume] = useState(0); // float (mL); supply bag volume
+  const [supply_percent, setSupplyPercent] = useState(0); // float (%); percent supply bag full
+  const [supply_time, setSupplyTime] = useState(0); // integer (s); time to supply bag empty
+
+  // const [waste_volume, setWasteVolume] = useState(0); // float (mL); waste bag volume
+  // const [waste_percent, setWastePercent] = useState(0); // float (%); percent waste bag full
+  // const [waste_time, setWasteTime] = useState(0);  // integer (s); time to waste bag full
+
+  // const [occlusion_level, setOcclusionLevel] = useState(0); // integer; peristaltic pump or tube compression occlusion level
+  
+  // const [status, setStatus] = useState(0); // integer; CBI status for notification system
+
+  // const [duration, setDuration] = useState(0); // integer (min); duration on CBI
+
+  // const [control_mode, setControlMode] = useState(0); // boolean; automatic or manual device control
+
+  // const [patient_first_name, setPatientFirstName] = useState(0); // string; patient first name
+  // const [patient_middle_name, setPatientMiddleName] = useState(0); // string; patient middle name
+  // const [patient_last_name, setPatientLastName] = useState(0); // string; patient last name
+  // const [patient_id, setPatientId] = useState(0); // string; patient ID
+  // const [patient_birth_date, setPatientBirthDate] = useState(0); // date; patient date of birth
+
+  // const [doctor_first_name, setDoctorFirstName] = useState(0); // string; doctor first name
+  // const [doctor_middle_name, setDoctorMiddleName] = useState(0); // string; doctor middle name
+  // const [doctor_last_name, setDoctorLastName] = useState(0); // string; doctor last name
+  // const [doctor_id, setDoctorId] = useState(0); // string; doctor ID
+ 
+
   const [time, setTime] = useState(
     new Date().toLocaleString("en-US", {
       hour: "2-digit",
@@ -31,12 +64,12 @@ function App() {
       axios
         .get("http://localhost:8000/user_interface/get_hematuria")
         .then((response) => {
-          setHematuria(response.data.value);
+          setHematuriaLevel(response.data.level);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
         });
-    }, 1000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -44,18 +77,22 @@ function App() {
   useEffect(() => {
     const interval = setInterval(() => {
       axios
-        .get("http://localhost:8000/user_interface/get_saline_weight")
+        .get("http://localhost:8000/user_interface/get_supplybag")
         .then((response) => {
-          setSaline(response.data.volume);
-          setSalinePercent(response.data.percentage);
+          set(response.data.raw);
+          setSalinePercent(response.data.percent);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
         });
-    }, 1000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
+
+
+  // http://localhost:8000/user_interface/get_flow (response.data.raw)
+
 
   useEffect(() => {
     const timer = setInterval(() => {
