@@ -1,8 +1,8 @@
 import time
 import sys
 import RPi.GPIO as GPIO
-from hx711 import HX711
 from statistics import mean
+from .hx711 import HX711
 
 class Scale:
     def __init__(self, pd_sck_pin=2, dout_pin=3):
