@@ -7,25 +7,25 @@ if __name__ == '__main__':
     scale = Scale(pd_sck_pin=2, dout_pin=3)
 
     # window size for moving average (number of data points)
-    window = 10
+    window = 15
 
     # frequency of flow rate measurement (seconds)
-    freq = 1
+    freq = 5
 
     start_time = time.time()
     data = [scale.read_weight() for _ in range(window)]
     start_weight = mean(data)
-
+    time.sleep(5)
     while True:
         try:
             reading = scale.read_weight()
             data.append(reading)
             avg_weight = mean(data)
             data.pop(0)
-            print(f"Reading: {reading}")
             if time.time() - start_time >= freq:
                 flow_rate = ((start_weight - avg_weight)/freq)*60
-                print(f'Flow rate: {flow_rate} mL/min')
+                print(f'Flow rate: {flow_rate} mL/min, Volume: {reading} mL')
+                #print(flow_rate)
 
                 start_time = time.time()
                 start_weight = avg_weight
