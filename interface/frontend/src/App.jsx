@@ -27,7 +27,6 @@ function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      // setHematuria(2);
       axios
         .get("http://localhost:8000/user_interface/get_hematuria")
         .then((response) => {
