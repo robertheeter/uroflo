@@ -30,7 +30,7 @@ function App() {
       // setHematuria(2);
       axios
         // setHematuria(124214);
-        .get("http://localhost:8000/user_interface/get_hematuria/")
+        .fetch("http://localhost:8000/user_interface/get_hematuria/")
         .then((response) => {
           // setHematuria(44444);
           setHematuria([response.data.value]);
@@ -46,7 +46,7 @@ function App() {
   useEffect(() => {
     const interval = setInterval(() => {
       axios
-        .get("http://localhost:8000/user_interface/get_saline_weight/")
+        .fetch("http://localhost:8000/user_interface/get_saline_weight/")
         .then((response) => {
           setSaline(103432124);
           setSalinePercent(999999);
