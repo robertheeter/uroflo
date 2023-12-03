@@ -12,6 +12,7 @@ def get_hematuria(request):
     # and get the percentage
 
     value = random.randint(0, 100) # re
+    value = 1242
     return JsonResponse({'value': value})
 
 
