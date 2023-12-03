@@ -1,5 +1,5 @@
 import time
-import sys
+# import sys
 import RPi.GPIO as GPIO
 from statistics import mean
 from .hx711 import HX711
@@ -60,4 +60,4 @@ class Scale:
     def stop(self):
         print('Stopped')
         GPIO.cleanup()
-        sys.exit()
+        # sys.exit()

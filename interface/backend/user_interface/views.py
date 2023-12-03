@@ -24,7 +24,3 @@ def get_saline_weight(request):
     percentage = int((volume/3)*100) # assuming 3 L bag
 
     return JsonResponse({'volume': volume, 'percentage': percentage})
-
-
-
-
