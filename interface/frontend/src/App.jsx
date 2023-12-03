@@ -225,7 +225,7 @@ function App() {
                 <Spacer />
 
                 <Progress
-                  value={supply_volume}
+                  value={supply_percent}
                   width="80%"
                   borderRadius="full"
                   bgColor="white"
