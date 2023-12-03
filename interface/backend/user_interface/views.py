@@ -1,11 +1,11 @@
 from django.http import JsonResponse
 import random
 
-from .device.spectral_sensor import SpectralSensor
-from .device.weight_sensor import WeightSensor
+# from .device.spectral_sensor import SpectralSensor
+# from .device.weight_sensor import WeightSensor
 
-spectral_sensor = SpectralSensor()
-weight_sensor = WeightSensor()
+# spectral_sensor = SpectralSensor()
+# weight_sensor = WeightSensor()
 
 def get_hematuria(request):
     level = random.randint(0, 100) # re
