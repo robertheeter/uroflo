@@ -1,18 +1,17 @@
 from django.http import JsonResponse
 import random
 
-# from .device.spectral_sensor import SpectralSensor
-# from .device.hanging_scale import HangingScale
+from .device.spectral_sensor import SpectralSensor
+from .device.weight_sensor import WeightSensor
 
-# spectral_sensor = SpectralSensor()
-# hanging_scale = HangingScale()
+spectral_sensor = SpectralSensor()
+weight_sensor = WeightSensor()
 
 def get_hematuria(request):
     level = random.randint(0, 100) # re
     color = [1,2,3]
 
     return JsonResponse({'level': level, 'color': color})
-
 
 def get_supply(request):
     # weight = scale.read_weight()
