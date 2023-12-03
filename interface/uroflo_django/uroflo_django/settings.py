@@ -51,11 +51,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_ALL_ORIGINS = True
 # CORS_ALLOWED_ORIGINS = [
 #     'http://localhost:8000',
 #     'http://localhost:5173', # Replace with your React frontend URL
 # ]
+
+ALLOWED_HOSTS=['*']
 
 ROOT_URLCONF = 'uroflo_django.urls'
 
