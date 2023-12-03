@@ -18,10 +18,14 @@ def get_supply(request):
     volume = volume / (1009)
     volume = round(volume, 1)
     percent = int((volume/3)*100) # assuming 3 L bag
+    print(volume)
+    print(percent)
 
     # volume = random.randint(0, 100) # re
     rate = random.randint(0, 100) # re
     percent = random.randint(0, 100) # re
     time = random.randint(0, 100) # re
 
+    print(percent)
+    
     return JsonResponse({'volume': volume, 'rate': rate, 'percent': percent, 'time': time})
