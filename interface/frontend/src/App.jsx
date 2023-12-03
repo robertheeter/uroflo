@@ -11,6 +11,8 @@ import {
 } from "@chakra-ui/react";
 
 function App() {
+  axios.defaults.baseURL = "http://127.0.0.1:8000";
+  
   const [hematuria, setHematuria] = useState(0);
   const [saline, setSaline] = useState(0);
   const [salinepercent, setSalinePercent] = useState(0);
