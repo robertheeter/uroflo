@@ -77,7 +77,7 @@ class SpectralSensor():
 
         return scan # return scanned intensities
 
-    def read(self, n=10):
+    def read(self, n=5):
         if self.verbose:
             print("SpectralSensor: temperature = {0}°C".format(self.sensor.temperature))
 
@@ -104,7 +104,7 @@ class SpectralSensor():
         
         return reading # return reading as a dictionary, where keys are wavelengths and values are intensities averaged from n scans
 
-    def level(self, weights, bias, max, n=10, range=[0, 100]):
+    def level(self, weights, bias, max, n=5, range=[0, 100]):
         reading = self.read(n)
         intensities = reading.values()
 
