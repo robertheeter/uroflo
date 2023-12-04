@@ -15,7 +15,7 @@ def get_hematuria(request):
 
     level = spectral_sensor.level(weights, bias, max_level, n=6, range=[0, 100])
 
-    # level = random.randint(0, 100)
+    level = random.randint(0, 100)
     color = [1,2,3]
 
     return JsonResponse({'level': int(level),
@@ -25,6 +25,9 @@ def get_supply(request):
     volume = weight_sensor.mass() / 1009 # convert mg to L with density
     percent = int(min((volume/3)*100, 100)) # using 3 L bag
 
+    volume = random.randint(0, 100) # random integer for now
+    volume = random.randint(0, 100) # random integer for now
+    
     rate = random.randint(0, 100) # random integer for now
     time = random.randint(0, 100) # random integer for now
 

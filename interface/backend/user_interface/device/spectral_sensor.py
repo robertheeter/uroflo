@@ -97,7 +97,7 @@ class SpectralSensor():
             wavelengths = [610, 680, 730, 760, 810, 860] # near-infrared channel wavelengths (AS7263)
 
         reading = dict(zip(wavelengths, intensities))
-
+        
         if self.verbose:
             print(f"SpectralSensor: reading = {reading}")
         
