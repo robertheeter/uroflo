@@ -21,13 +21,13 @@ import time
 import board
 import RPi.GPIO as GPIO
 from adafruit_as726x import AS726x_I2C
-import pandas as pd
+import numpy as np
 
 class SpectralSensor():
-    def __init__(self, led_pin=4, sensor_type='VIS', max=16000, verbose=False):
+    def __init__(self, led_pin=4, sensor_type='VIS', max_scan=16000, verbose=False):
         self.led_pin = led_pin # GPIO LED pin (3.3V)
         self.sensor_type = sensor_type # type of AS726x sensor ('AS7262'/'VIS' or 'AS7263'/'NIR')
-        self.max = max # maximum sensor reading
+        self.max_scan = max_scan # maximum sensor scan intensity
         self.verbose = verbose # toggles printing of information to terminal
         self.setup()
 
@@ -35,8 +35,7 @@ class SpectralSensor():
         print("SpectralSensor: setup")
         if self.verbose:
             print(f"SpectralSensor: sensor_type = {self.sensor_type}")
-            print(f"SpectralSensor: reading max = {self.max}")
-            print(f"SpectralSensor: reading range = {self.range}")
+            print(f"SpectralSensor: max_scan = {self.max_scan}")
 
         i2c = board.I2C() # set up I2C; uses board.SCL and board.SDA
         self.sensor = AS726x_I2C(i2c)
@@ -57,17 +56,8 @@ class SpectralSensor():
             if self.verbose:
                 print("SpectralSensor: data not ready; waiting...")
             time.sleep(1)
-
-    # def rescale(self, val, range, max):
-    #     return min(int((val * (range[1] - range[0]) / max) + range[0]), range[1])
     
-    def read(self, use_led=True):
-        if self.verbose:
-            print("SpectralSensor: temperature = {0}°C".format(self.sensor.temperature))
-
-        if (self.sensor.temperature < 10) or (self.sensor.temperature > 40):
-            raise Exception("SpectralSensor: temperature too hot (>30°C) or cold (<18°C)'")
-        
+    def scan(self, use_led=True):
         if use_led == True:
             GPIO.output(self.led_pin, GPIO.LOW) # turn on LED
             time.sleep(0.3)
@@ -80,124 +70,54 @@ class SpectralSensor():
             time.sleep(0.3)
             vals = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values without LED
             time.sleep(0.3)
-            
-        if self.verbose:
-            print(f"SpectralSensor: reading raw vals = {vals}")
         
-        trimmed_vals = []
+        scan = []
         for val in vals:
             trimmed_val = min(self.max, val) # cap maximum sensor value
-            trimmed_vals.append(trimmed_val)
+            scan.append(trimmed_val)
 
-        # rescaled_vals = []
-        # for val in vals:
-        #     rescaled_val = self.rescale(val, self.range, self.max) # rescale raw values
-        #     rescaled_vals.append(rescaled_val)
+        return scan # return scanned intensities
+
+    def read(self, n=10):
+        if self.verbose:
+            print("SpectralSensor: temperature = {0}°C".format(self.sensor.temperature))
+
+        if (self.sensor.temperature < 10) or (self.sensor.temperature > 40):
+            raise Exception("SpectralSensor: temperature too hot (>30°C) or cold (<18°C)'")
+        
+        intensities = []
+        for i in range(n):
+            intensities.append(self.scan(use_led=True))
+            time.sleep(0.1)
+        
+        intensities = np.mean(np.array(intensities), axis=0) # average n scans to get intensity
 
         if self.sensor_type in ['VIS', 'AS7262']:
             wavelengths = [450, 500, 550, 570, 600, 650] # visible channel wavelengths (AS7262)
         elif self.sensor_type in ['NIR', 'AS7263']:
             wavelengths = [610, 680, 730, 760, 810, 860] # near-infrared channel wavelengths (AS7263)
 
-        readings = dict(zip(wavelengths, rescaled_vals))
+        reading = dict(zip(wavelengths, intensities))
 
-        return readings # return readings as a dictionary, where keys are wavelengths and values are rescaled values
-
-    def intensities(self, n=10):
-        readings = []
-        for i in range(n):
-            readings.append(self.read(use_led=True))
-            time.sleep(0.1)
-
-        df = pd.DataFrame(readings)
-        intensities = dict(df.mean()) # intensities are average of n readings
-
-        return intensities # return intensities
-
-    def aggregate(self, range=[0, 100]):
-        weights = []
+        if self.verbose:
+            print(f"SpectralSensor: reading = {reading}")
         
-        level = 0
-        rescaled_level = int((level * (range[1] - range[0]) / self.max) + range[0])
+        return reading # return reading as a dictionary, where keys are wavelengths and values are intensities averaged from n scans
 
-        return rescaled_level
+    def level(self, weights, bias, max, n=10, range=[0, 100]):
+        reading = self.read(n)
+        intensities = reading.values()
+
+        level = sum([w*i for w, i in zip(weights, intensities)]) + bias # apply least squares regression weights and bias to predict level
+
+        rescaled_level = int((level/max * (range[1]-range[0])) + range[0])
+        
+        if self.verbose:
+            print(f"SpectralSensor: level = {rescaled_level} in range [{range[0]}-{range[1]}]")
+
+        return rescaled_level # return rescaled level
     
     def stop(self):
         print(f"SpectralSensor: stop")
         GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
         GPIO.cleanup()
-
-
-# import pandas as pd
-
-# # testing
-# if __name__ == '__main__':
-
-#     sensor_type = 'VIS'
-#     n = 5
-
-#     if sensor_type in ['VIS', 'AS7262']:
-#         max = 48000
-#     elif sensor_type in ['NIR', 'AS7263']:
-#         max = 16000
-
-#     ss = SpectralSensor(led_pin=4, sensor_type=sensor_type, range=[0, 100], max=max, verbose=False)
-
-#     trials = []
-#     for i in range(n):
-#         readings = []
-#         for j in range(10):
-#             readings.append(ss.intensities(use_led=True))
-#             time.sleep(0.1)
-        
-#         df = pd.DataFrame(readings)
-#         avg_readings = dict(df.mean())
-#         trials.append(avg_readings)
-    
-#     df = pd.DataFrame(trials)
-#     avg_trials = dict(df.mean())
-
-#     print(f"\nAVERAGE READINGS (n={n}):\n")
-
-#     if sensor_type in ['VIS', 'AS7262']:
-#         print('450 nm / violet : {:.2f}'.format(avg_trials[450]))
-#         print('500 nm / blue   : {:.2f}'.format(avg_trials[500]))
-#         print('550 nm / green  : {:.2f}'.format(avg_trials[550]))
-#         print('570 nm / yellow : {:.2f}'.format(avg_trials[570]))
-#         print('600 nm / orange : {:.2f}'.format(avg_trials[600]))
-#         print('650 nm / red    : {:.2f}'.format(avg_trials[650]))
-
-#     elif sensor_type in ['NIR', 'AS7263']:
-#         print('610 nm / orange : {:.2f}'.format(avg_trials[610]))
-#         print('680 nm / red    : {:.2f}'.format(avg_trials[680]))
-#         print('730 nm / IR     : {:.2f}'.format(avg_trials[730]))
-#         print('760 nm / IR     : {:.2f}'.format(avg_trials[760]))
-#         print('810 nm / IR     : {:.2f}'.format(avg_trials[810]))
-#         print('860 nm / IR     : {:.2f}'.format(avg_trials[860]))
-
-#     df = pd.DataFrame(trials)
-#     cov_trials = dict(df.std()/df.mean())
-
-#     print(f"\nCOEFFICIENT OF VARIATION READINGS (n={n}):\n")
-
-#     if sensor_type in ['VIS', 'AS7262']:
-#         print('450 nm / violet : {:.4f}%'.format(cov_trials[450]*100))
-#         print('500 nm / blue   : {:.4f}%'.format(cov_trials[500]*100))
-#         print('550 nm / green  : {:.4f}%'.format(cov_trials[550]*100))
-#         print('570 nm / yellow : {:.4f}%'.format(cov_trials[570]*100))
-#         print('600 nm / orange : {:.4f}%'.format(cov_trials[600]*100))
-#         print('650 nm / red    : {:.4f}%'.format(cov_trials[650]*100))
-
-#     elif sensor_type in ['NIR', 'AS7263']:
-#         print('610 nm / orange : {:.4f}%'.format(cov_trials[610]*100))
-#         print('680 nm / red    : {:.4f}%'.format(cov_trials[680]*100))
-#         print('730 nm / IR     : {:.4f}%'.format(cov_trials[730]*100))
-#         print('760 nm / IR     : {:.4f}%'.format(cov_trials[760]*100))
-#         print('810 nm / IR     : {:.4f}%'.format(cov_trials[810]*100))
-#         print('860 nm / IR     : {:.4f}%'.format(cov_trials[860]*100))
-    
-#     print("\n####################")
-#     print(f"\nSTANDARD DEVIATION READINGS (n={n}):\n{df.std()}")
-#     print(f"\nVARIANCE READINGS (n={n}):\n{df.var()}\n")
-
-    

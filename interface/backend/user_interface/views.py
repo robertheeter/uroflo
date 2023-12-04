@@ -4,13 +4,18 @@ import random
 from .device.spectral_sensor import SpectralSensor
 from .device.weight_sensor import WeightSensor
 
-spectral_sensor = SpectralSensor(led_pin=4, sensor_type='VIS', max=48000, verbose=False)
+spectral_sensor = SpectralSensor(led_pin=4, sensor_type='VIS', max_scan=48000, verbose=True)
 weight_sensor = WeightSensor(pd_sck_pin=14, dout_pin=15, verbose=True)
 
 def get_hematuria(request):
-    # sensor_type = 'VIS'
+    
+    max = 12 # 100% hematuria
+    weights = [-0.4198196025, 0.2050549854, -0.2104491625, 0.05050789723] # weights for visible spectrum in wavelength order of [450, 500, 550, 570]
+    bias = 28.34907833 # offset
 
-    level = random.randint(0, 100)
+    level = spectral_sensor.level(weights, bias, max, n=10, range=[0, 100])
+
+    # level = random.randint(0, 100)
     color = [1,2,3]
 
     return JsonResponse({'level': int(level),
