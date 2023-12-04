@@ -89,6 +89,7 @@ class SpectralSensor():
             intensities.append(self.scan(use_led=True))
             time.sleep(0.1)
         
+        print(np.array(intensities))
         intensities = np.mean(np.array(intensities), axis=0) # average n scans to get intensity
 
         if self.sensor_type in ['VIS', 'AS7262']:
