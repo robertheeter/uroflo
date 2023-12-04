@@ -61,21 +61,20 @@ class SpectralSensor():
         if use_led == True:
             GPIO.output(self.led_pin, GPIO.LOW) # turn on LED
             time.sleep(0.3)
-            vals = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values with LED
+            intensities = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values with LED
             time.sleep(0.3)
             GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
 
         else:
             GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
             time.sleep(0.3)
-            vals = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values without LED
+            intensities = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values without LED
             time.sleep(0.3)
         
         scan = []
-        for val in vals:
-            trimmed_val = min(self.max, val) # cap maximum sensor value
-            scan.append(trimmed_val)
-
+        for intensity in intensities:
+            scan.append(min(self.max_scan, intensity)) # cap maximum sensor scan intensity
+        
         return scan # return scanned intensities
 
     def read(self, n=10):
