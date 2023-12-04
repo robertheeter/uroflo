@@ -25,7 +25,7 @@ def get_supply(request):
     volume = weight_sensor.mass() / 1009 # convert mg to L with density
     percent = int(min((volume/3)*100, 100)) # using 3 L bag
 
-    rate = random.randint(0, 100) # random integer for noww
+    rate = random.randint(0, 100) # random integer for now
     time = random.randint(0, 100) # random integer for now
 
     return JsonResponse({'volume': format(volume, '1.1f'),
