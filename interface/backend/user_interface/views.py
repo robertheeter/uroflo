@@ -13,7 +13,7 @@ def get_hematuria(request):
     bias = 28.34907833 # offset
     max_level = 12 # 100% hematuria level
 
-    level = spectral_sensor.level(weights, bias, max_level, n=10, range=[0, 100])
+    level = spectral_sensor.level(weights, bias, max_level, n=6, range=[0, 100])
 
     # level = random.randint(0, 100)
     color = [1,2,3]

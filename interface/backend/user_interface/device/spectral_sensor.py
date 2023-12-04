@@ -105,9 +105,9 @@ class SpectralSensor():
 
     def level(self, weights, bias, max_level, n=10, range=[0, 100]):
         reading = self.read(n)
-        intensities = reading.values()
+        intensities = list(reading.values())
 
-        level = sum([w*i for w, i in zip(weights, intensities)]) + bias # apply least squares regression weights and bias to predict level
+        level = sum([w*i for w, i in zip(weights, intensities[0:4])]) + bias # apply least squares regression weights and bias to predict level
         level = max(level, range[0])
         level = min(level, range[1])
 
