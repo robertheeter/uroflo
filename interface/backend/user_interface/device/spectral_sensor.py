@@ -77,7 +77,7 @@ class SpectralSensor():
 
         return scan # return scanned intensities
 
-    def read(self, n=5):
+    def read(self, n=10):
         if self.verbose:
             print("SpectralSensor: temperature = {0}°C".format(self.sensor.temperature))
 
@@ -104,13 +104,15 @@ class SpectralSensor():
         
         return reading # return reading as a dictionary, where keys are wavelengths and values are intensities averaged from n scans
 
-    def level(self, weights, bias, max, n=5, range=[0, 100]):
+    def level(self, weights, bias, max_level, n=10, range=[0, 100]):
         reading = self.read(n)
         intensities = reading.values()
 
         level = sum([w*i for w, i in zip(weights, intensities)]) + bias # apply least squares regression weights and bias to predict level
+        level = max(level, range[0])
+        level = min(level, range[1])
 
-        rescaled_level = int((level/max * (range[1]-range[0])) + range[0])
+        rescaled_level = int((level/max_level * (range[1]-range[0])) + range[0])
         
         if self.verbose:
             print(f"SpectralSensor: level = {rescaled_level} in range [{range[0]}-{range[1]}]")

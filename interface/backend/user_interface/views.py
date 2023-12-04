@@ -11,10 +11,10 @@ def get_hematuria(request):
     
     weights = [0.0001052247859, -0.0004384357553, 0.0004271978863, -0.0008746241718] # weights for visible spectrum in wavelength order of [450, 500, 550, 570]
     bias = 28.34907833 # offset
-    max = 12 # 100% hematuria
+    max_level = 12 # 100% hematuria level
 
-    level = spectral_sensor.level(weights, bias, max, n=5, range=[0, 100])
-    
+    level = spectral_sensor.level(weights, bias, max_level, n=10, range=[0, 100])
+
     # level = random.randint(0, 100)
     color = [1,2,3]
 
