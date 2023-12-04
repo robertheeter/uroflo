@@ -74,7 +74,7 @@ class SpectralSensor():
         scan = []
         for intensity in intensities:
             scan.append(min(self.max_scan, intensity)) # cap maximum sensor scan intensity
-        
+
         return scan # return scanned intensities
 
     def read(self, n=10):
@@ -107,8 +107,8 @@ class SpectralSensor():
         reading = self.read(n)
         intensities = reading.values()
 
-        level = sum([w*i for w, i in zip(weights, intensities)]) + bias # apply least squares regression weights and bias to predict level
-
+        level = sum([w*i for w, i in zip(weights, intensities[0:4])]) + bias # apply least squares regression weights and bias to predict level
+        
         rescaled_level = int((level/max * (range[1]-range[0])) + range[0])
         
         if self.verbose:
