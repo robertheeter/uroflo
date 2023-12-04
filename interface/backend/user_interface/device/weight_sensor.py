@@ -19,6 +19,7 @@ from .hx711 import HX711
 
 class WeightSensor():
     def __init__(self, pd_sck_pin=2, dout_pin=3, verbose=False):
+        GPIO.cleanup()
         self.pd_sck_pin = pd_sck_pin # GPIO SKC pin
         self.dout_pin = dout_pin # GPIO DOUT pin
         self.verbose = verbose # toggles printing of information to terminal

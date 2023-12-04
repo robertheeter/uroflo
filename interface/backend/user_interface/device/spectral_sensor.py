@@ -25,6 +25,7 @@ import numpy as np
 
 class SpectralSensor():
     def __init__(self, led_pin=4, sensor_type='VIS', max_scan=16000, verbose=False):
+        GPIO.cleanup()
         self.led_pin = led_pin # GPIO LED pin (3.3V)
         self.sensor_type = sensor_type # type of AS726x sensor ('AS7262'/'VIS' or 'AS7263'/'NIR')
         self.max_scan = max_scan # maximum sensor scan intensity
