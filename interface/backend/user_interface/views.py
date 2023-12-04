@@ -9,10 +9,10 @@ weight_sensor = WeightSensor(pd_sck_pin=14, dout_pin=15, verbose=True)
 
 def get_hematuria(request):
     
-    max = 12 # 100% hematuria
     weights = [0.0001052247859, -0.0004384357553, 0.0004271978863, -0.0008746241718] # weights for visible spectrum in wavelength order of [450, 500, 550, 570]
     bias = 28.34907833 # offset
-
+    max = 12 # 100% hematuria
+    
     level = spectral_sensor.level(weights, bias, max, n=10, range=[0, 100])
 
     # level = random.randint(0, 100)
@@ -25,10 +25,10 @@ def get_supply(request):
     volume = weight_sensor.mass() / 1009 # convert mg to L with density
     percent = int(min((volume/3)*100, 100)) # using 3 L bag
 
-    rate = random.randint(0, 100) # random integer for noww
+    rate = random.randint(0, 100) # random integer for now
     time = random.randint(0, 100) # random integer for now
 
-    return JsonResponse({'volume': format(volume, '1.1f'),
+    return JsonResponse({'volume': format(volume, '.1f'),
                          'rate': format(rate, '.1f'),
                          'percent': int(percent),
                          'time': int(time)})

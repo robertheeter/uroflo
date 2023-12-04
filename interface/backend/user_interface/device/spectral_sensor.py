@@ -105,9 +105,9 @@ class SpectralSensor():
 
     def level(self, weights, bias, max, n=10, range=[0, 100]):
         reading = self.read(n)
-        intensities = list(reading.values())
+        intensities = reading.values()
 
-        level = sum([w*i for w, i in zip(weights, intensities[0:4])]) + bias # apply least squares regression weights and bias to predict level
+        level = sum([w*i for w, i in zip(weights, intensities)]) + bias # apply least squares regression weights and bias to predict level
 
         rescaled_level = int((level/max * (range[1]-range[0])) + range[0])
         
