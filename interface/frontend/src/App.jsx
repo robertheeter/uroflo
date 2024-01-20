@@ -104,7 +104,7 @@ function App() {
           .catch((error) => {
             console.error("Error fetching data:", error);
           });
-      }, 1000);
+      }, 10000);
     }
 
     return () => clearInterval(interval);
@@ -125,7 +125,7 @@ function App() {
           .catch((error) => {
             console.error("Error fetching data:", error);
           });
-      }, 1000);
+      }, 10000);
     }
 
     return () => clearInterval(interval);
