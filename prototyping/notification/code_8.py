@@ -22,7 +22,6 @@ blue = pwmio.PWMOut(BLUE_PIN)
 
 # Function to simplify setting duty cycle to percent value.
 
-
 def duty_cycle(percent):
     return int(percent / 100.0 * 65535.0)
 
@@ -57,6 +56,7 @@ while True:
         green.duty_cycle = duty_cycle(i)
         time.sleep(FADE_SLEEP / 1000)
 
+# make functions for setting to particular color or RGB value?
 
 # for i in [0, 2, 4, 6, 8, 10]:
 #     blue.duty_cycle = duty_cycle(100)
