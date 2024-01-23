@@ -7,9 +7,9 @@ import time
 import board
 import pwmio
 
-RED_PIN = board.D5  # Red LED pin
-GREEN_PIN = board.D6  # Green LED pin
-BLUE_PIN = board.D3  # Blue LED pin
+RED_PIN = board.D15  # Red LED pin
+GREEN_PIN = board.D18  # Green LED pin
+BLUE_PIN = board.D14  # Blue LED pin
 
 FADE_SLEEP = 10  # Number of milliseconds to delay between changes.
 # Increase to slow down, decrease to speed up.
