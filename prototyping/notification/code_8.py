@@ -57,9 +57,9 @@ def duty_cycle(percent):
 #     green.duty_cycle = duty_cycle(i)
 #     time.sleep(FADE_SLEEP / 1000)
 
-for i in [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0]:
+for i in [0, 2, 4, 6, 8, 10]:
     blue.duty_cycle = duty_cycle(i)
     green.duty_cycle = 0
     red.duty_cycle = 0
     print(i)
-    time.sleep(5)
+    time.sleep(2)
