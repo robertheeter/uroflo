@@ -6,5 +6,5 @@ See [this Google Document](https://docs.google.com/document/d/1xNtN-FHFRW5H-90g1
 
 ## Folders/Files
 - [`prototyping/`](prototyping/): scripts for each device component
-- [`app`](app/): scripts for user interface web application
-- [`docs`](docs/): project related documents
+- [`app/`](app/): scripts for user interface web application
+- [`docs/`](docs/): project related documents
