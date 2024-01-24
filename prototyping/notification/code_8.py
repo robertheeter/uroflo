@@ -11,20 +11,21 @@ import pygame
 # Mellow sound for bag changes 
 # playing sonar sound
 pygame.init()
-my_sound = pygame.mixer.Sound('sonar.mp3')
+my_sound = pygame.mixer.Sound('sonar.mp3') # only plays once
 my_sound.play()
 my_sound.set_volume(0.5) # can set sound volume from 0-1 
 print('playing sonar sound')
 
-my_sound = pygame.mixer.Sound('harsh.mp3')
+# Harsh sound for emergencies 
+my_sound = pygame.mixer.Sound('harsh.mp3') # repeats 4 times 
 my_sound.play()
 my_sound.set_volume(0.5) # can set sound volume from 0-1 
 print('playing harsh sound')
 
 # Defining pins on board GPIOs 
-RED_PIN = board.D15  # Red LED pin
-GREEN_PIN = board.D18  # Green LED pin
-BLUE_PIN = board.D14  # Blue LED pin
+RED_PIN = board.D8  # Red LED pin
+GREEN_PIN = board.D7  # Green LED pin
+BLUE_PIN = board.D1  # Blue LED pin
 
 FADE_SLEEP = 100  # Number of milliseconds to delay between changes.
 # Increase to slow down, decrease to speed up.
@@ -75,8 +76,8 @@ def duty_cycle(percent):
 
 # Default color - uroflo blue
 # while True: 
-#     blue.duty_cycle = duty_cycle(4)
 #     red.duty_cycle = duty_cycle(1)
+#     blue.duty_cycle = duty_cycle(4)
 #     green.duty_cycle = duty_cycle(2.74)
 #     time.sleep(2)
 
@@ -88,15 +89,15 @@ def duty_cycle(percent):
 
 # # # Medium emergency alert color: orange 
 # while True: 
-#     blue.duty_cycle = duty_cycle(1)
 #     red.duty_cycle = duty_cycle(30)
+#     blue.duty_cycle = duty_cycle(1)
 #     green.duty_cycle = duty_cycle(7)
 #     time.sleep(2)
 
 # # Low emergency alert color: yellow 
 while True: 
-    blue.duty_cycle = duty_cycle(0)
     red.duty_cycle = duty_cycle(20)
+    blue.duty_cycle = duty_cycle(0)
     green.duty_cycle = duty_cycle(10)
     time.sleep(2)
 
