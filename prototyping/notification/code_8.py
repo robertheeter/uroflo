@@ -12,7 +12,7 @@ RED_PIN = board.D15  # Red LED pin
 GREEN_PIN = board.D18  # Green LED pin
 BLUE_PIN = board.D14  # Blue LED pin
 
-FADE_SLEEP = 1000  # Number of milliseconds to delay between changes.
+FADE_SLEEP = 100  # Number of milliseconds to delay between changes.
 # Increase to slow down, decrease to speed up.
 
 # Define PWM outputs:
