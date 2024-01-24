@@ -10,7 +10,7 @@ import pygame
 
 # playing sonar sound
 pygame.init()
-my_sound = pygame.mizer.Sound('sonar.mp3')
+my_sound = pygame.mixer.Sound('sonar.mp3')
 my_sound.play()
 print('playing sonar sound')
 RED_PIN = board.D15  # Red LED pin
