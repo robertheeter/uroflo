@@ -8,11 +8,12 @@ import board
 import pwmio
 import pygame
 
+# Mellow sound for bag changes 
 # playing sonar sound
 pygame.init()
 my_sound = pygame.mixer.Sound('sonar.mp3')
 my_sound.play()
-my_sound.set_volume(0.5)
+my_sound.set_volume(0.5) # can set sound volume from 0-1 
 print('playing sonar sound')
 
 # Defining pins on board GPIOs 
@@ -81,18 +82,18 @@ def duty_cycle(percent):
 #     time.sleep(2)
 
 # # Medium emergency alert color: orange 
-# while True: 
-#     blue.duty_cycle = duty_cycle(1.2)
-#     red.duty_cycle = duty_cycle(10)
-#     green.duty_cycle = duty_cycle(3.7)
-#     time.sleep(2)
-
-# Low emergency alert color: yellow 
 while True: 
-    blue.duty_cycle = duty_cycle(0)
+    blue.duty_cycle = duty_cycle(1.2)
     red.duty_cycle = duty_cycle(10)
-    green.duty_cycle = duty_cycle(5)
+    green.duty_cycle = duty_cycle(3.7)
     time.sleep(2)
+
+# # Low emergency alert color: yellow 
+# while True: 
+#     blue.duty_cycle = duty_cycle(0)
+#     red.duty_cycle = duty_cycle(10)
+#     green.duty_cycle = duty_cycle(5)
+#     time.sleep(2)
 
 
 
