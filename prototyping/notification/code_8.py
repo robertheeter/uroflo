@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2017 Tony DiCola for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
-
+pip install playsound
 # Importing libraries 
 import time
 from playsound import playsound 
