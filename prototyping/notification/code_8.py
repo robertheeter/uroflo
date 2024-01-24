@@ -59,9 +59,16 @@ def duty_cycle(percent):
 
 # make functions for setting to particular color or RGB value?
 
+# while True: 
+#     # Default color - uroflo blue
+#     blue.duty_cycle = duty_cycle(4)
+#     red.duty_cycle = duty_cycle(1)
+#     green.duty_cycle = duty_cycle(2.74)
+#     time.sleep(2)
+
+
+# Emergency alert color: red 
 while True: 
-    blue.duty_cycle = duty_cycle(4)
-    red.duty_cycle = duty_cycle(1)
-    green.duty_cycle = duty_cycle(2.74)
+    red.duty_cycle = duty_cycle(5)
     time.sleep(2)
 
