@@ -1,17 +1,18 @@
 # SPDX-FileCopyrightText: 2017 Tony DiCola for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
-pip install playsound
+
 # Importing libraries 
 import time
-from playsound import playsound 
 import board
 import pwmio
+import pygame
 
 # playing sonar sound
-playsound('sonar.mp3')
+pygame.init()
+my_sound = pygame.mizer.Sound('sonar.mp3')
+my_sound.play()
 print('playing sonar sound')
-
 RED_PIN = board.D15  # Red LED pin
 GREEN_PIN = board.D18  # Green LED pin
 BLUE_PIN = board.D14  # Blue LED pin
