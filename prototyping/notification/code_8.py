@@ -16,6 +16,11 @@ my_sound.play()
 my_sound.set_volume(0.5) # can set sound volume from 0-1 
 print('playing sonar sound')
 
+my_sound = pygame.mixer.Sound('harsh.mp3')
+my_sound.play()
+my_sound.set_volume(0.5) # can set sound volume from 0-1 
+print('playing harsh sound')
+
 # Defining pins on board GPIOs 
 RED_PIN = board.D15  # Red LED pin
 GREEN_PIN = board.D18  # Green LED pin
