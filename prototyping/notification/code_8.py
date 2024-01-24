@@ -61,7 +61,7 @@ def duty_cycle(percent):
 
 while True: 
     blue.duty_cycle = duty_cycle(4)
-    red.duty_cycle = duty_cycle(0.5)
-    green.duty_cycle = duty_cycle(2.44)
+    red.duty_cycle = duty_cycle(2)
+    green.duty_cycle = duty_cycle(2.74)
     time.sleep(2)
 
