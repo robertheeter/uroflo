@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
+# Importing libraries 
 import time
 
 import board
@@ -11,7 +12,7 @@ RED_PIN = board.D15  # Red LED pin
 GREEN_PIN = board.D18  # Green LED pin
 BLUE_PIN = board.D14  # Blue LED pin
 
-FADE_SLEEP = 1  # Number of milliseconds to delay between changes.
+FADE_SLEEP = 5  # Number of milliseconds to delay between changes.
 # Increase to slow down, decrease to speed up.
 
 # Define PWM outputs:
@@ -65,3 +66,4 @@ while True:
 #     red.duty_cycle = 0
 #     print(i)
 #     time.sleep(2)
+
