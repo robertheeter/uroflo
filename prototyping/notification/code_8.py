@@ -85,7 +85,7 @@ def duty_cycle(percent):
 while True: 
     blue.duty_cycle = duty_cycle(0.5)
     red.duty_cycle = duty_cycle(10)
-    green.duty_cycle = duty_cycle(2.5)
+    green.duty_cycle = duty_cycle(2.2)
     time.sleep(2)
 
 # # Low emergency alert color: yellow 
