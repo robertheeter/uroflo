@@ -60,8 +60,8 @@ def duty_cycle(percent):
 # make functions for setting to particular color or RGB value?
 
 while True: 
-    blue.duty_cycle = duty_cycle(10)
-    red.duty_cycle = duty_cycle(0)
-    green.duty_cycle = duty_cycle(5.88)
+    blue.duty_cycle = duty_cycle(8)
+    red.duty_cycle = duty_cycle(0.5)
+    green.duty_cycle = duty_cycle(4.88)
     time.sleep(2)
 
