@@ -72,12 +72,20 @@ def duty_cycle(percent):
 #     red.duty_cycle = duty_cycle(5)
 #     time.sleep(2)
 
-# Medium emergency alert color: orange 
+# # Medium emergency alert color: orange 
+# while True: 
+#     blue.duty_cycle = duty_cycle(1.2)
+#     red.duty_cycle = duty_cycle(10)
+#     green.duty_cycle = duty_cycle(3.7)
+#     time.sleep(2)
+
+# Low emergency alert color: yellow 
 while True: 
-    blue.duty_cycle = duty_cycle(1.2)
+    blue.duty_cycle = duty_cycle(0)
     red.duty_cycle = duty_cycle(10)
-    green.duty_cycle = duty_cycle(3.7)
+    green.duty_cycle = duty_cycle(8)
     time.sleep(2)
+
 
 
 
