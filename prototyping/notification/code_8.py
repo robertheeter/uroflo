@@ -4,9 +4,13 @@
 
 # Importing libraries 
 import time
-
+from playsound import playsound 
 import board
 import pwmio
+
+# playing sonar sound
+playsound('sonar.mp3')
+print('playing sonar sound')
 
 RED_PIN = board.D15  # Red LED pin
 GREEN_PIN = board.D18  # Green LED pin
@@ -83,7 +87,7 @@ def duty_cycle(percent):
 while True: 
     blue.duty_cycle = duty_cycle(0)
     red.duty_cycle = duty_cycle(10)
-    green.duty_cycle = duty_cycle(8)
+    green.duty_cycle = duty_cycle(5)
     time.sleep(2)
 
 
