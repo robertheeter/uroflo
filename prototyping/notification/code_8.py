@@ -23,28 +23,28 @@ def duty_cycle(percent):
     return int(percent / 100.0 * 65535.0)
     
 # default standard blue color
-def default():
+def default_LED():
     red.duty_cycle = duty_cycle(1)
     green.duty_cycle = duty_cycle(2.74)
     blue.duty_cycle = duty_cycle(4)
 
-# red - bad 
-def red():
+# red - high emergency
+def red_LED():
     red.duty_cycle = duty_cycle(50)
 
-# orange - medium 
-def orange():
+# orange - medium emergency
+def orange_LED():
     red.duty_cycle = duty_cycle(30)
     blue.duty_cycle = duty_cycle(1)
     green.duty_cycle = duty_cycle(7)
     
-# yellow - low
-def yellow():
+# yellow - low emergency 
+def yellow_LED():
     red.duty_cycle = duty_cycle(20)
     blue.duty_cycle = duty_cycle(0)
     green.duty_cycle = duty_cycle(10)
 
-def mellow_alarn():
+def mellow_alarm():
     pygame.init()
     my_sound = pygame.mixer.Sound('sonar.mp3') # only plays once
     my_sound.play()
@@ -54,6 +54,30 @@ def harsh_alarm():
     my_sound = pygame.mixer.Sound('harsh.mp3') # repeats 4 times 
     my_sound.play()
     my_sound.set_volume(0.5) # can set sound volume from 0-1 
+
+
+while True: 
+
+    default_LED()
+
+    # Condition A: saline bag volume
+    # assuming we will have inputted saline bag volume and current volume 
+
+    # calculate percentage saline volume remaining 
+    saline_percent = saline_current_volume / saline_bag_volume
+
+    if saline_percent <10: 
+        red_LED()
+        mellow_alarm()
+        # check if "Replace Saline Bag" button is pressed 
+            if replace_saline_bag_button is pressed: 
+                default_LED()
+                
+        
+    if saline_percent >10 && <15: 
+        orange_LED()
+    if saline_percent >15 && <20 
+        yellow_LED()
     
 
 # FADE_SLEEP = 100  # Number of milliseconds to delay between changes.
