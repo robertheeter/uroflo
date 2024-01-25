@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'interface.apps.InterfaceConfig', # add interface app
+    'user_interface.apps.UserInterfaceConfig', # add user_interface app
     'corsheaders', # add CORS
 ]
 
