@@ -83,8 +83,10 @@ class LinearActuator():
 if __name__ == '__main__':
     # la = LinearActuator(pins=[10, 9, 11], freq=1000, verbose=True)
 
-    GPIO.setmode(GPIO.BCM)
+    GPIO.cleanup()
     
+    GPIO.setmode(GPIO.BCM)
+
     GPIO.setup(9, GPIO.OUT)
     GPIO.setup(11, GPIO.OUT)
     GPIO.setup(10, GPIO.OUT)
