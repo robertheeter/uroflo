@@ -19,7 +19,7 @@ import RPi.GPIO as GPIO
 
 # linear actuator class
 class LinearActuator():
-    def __init__(self, pins=[19, 21, 23], freq=1000, verbose=False):
+    def __init__(self, pins=[10, 9, 11], freq=1000, verbose=False):
         self.en = pins[0] # GPIO enable pin
         self.in1 = pins[1] # GPIO input pin 1
         self.in2 = pins[2] # GPIO input pin 2
@@ -34,7 +34,7 @@ class LinearActuator():
             print(f"LinearActuator: pin en = {self.en}")
             print(f"LinearActuator: freq = {self.freq}")
 
-        GPIO.setmode(GPIO.BOARD) # set up GPIO pins
+        GPIO.setmode(GPIO.BCM) # set up GPIO pins
 
         GPIO.setup(self.in1, GPIO.OUT)
         GPIO.setup(self.in2, GPIO.OUT)
