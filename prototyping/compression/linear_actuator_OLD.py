@@ -81,7 +81,7 @@ class LinearActuator():
 
 # testing
 if __name__ == '__main__':
-    la = LinearActuator(pins=[19, 21, 23], freq=1000, verbose=True)
+    la = LinearActuator(pins=[10, 9, 11], freq=1000, verbose=True)
 
     # la.run('backward', 1000, 10)
     time.sleep(2) # wait
