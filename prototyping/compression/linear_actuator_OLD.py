@@ -98,7 +98,7 @@ if __name__ == '__main__':
     # time.sleep(20)
     la.run('backward', 100, 10)
 
-    la.run('forward', 100, 4)
+    la.run('forward', 100, 2)
     time.sleep(1)
     la.run('forward', 50, 4)
     time.sleep(1)
