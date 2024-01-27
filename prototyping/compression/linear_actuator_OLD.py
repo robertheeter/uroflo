@@ -100,9 +100,15 @@ if __name__ == '__main__':
 
     la.run('forward', 50, 2)
     time.sleep(1)
-    la.run('forward', 20, 4)
+    la.run('forward', 20, 0.5)
     time.sleep(1)
-    la.run('forward', 10, 4)
+    la.run('forward', 20, 0.5)
+    time.sleep(1)
+    la.run('forward', 20, 0.5)
+    time.sleep(1)
+    la.run('forward', 20, 0.5)
+    time.sleep(1)
+    la.run('forward', 20, 0.5)
     time.sleep(1)
 
     # time.sleep(1) # wait
