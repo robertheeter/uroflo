@@ -96,6 +96,8 @@ if __name__ == '__main__':
     # GPIO.output(10, GPIO.LOW)
 
     # time.sleep(20)
+    la.run('backward', 100, 10)
+    
     la.run('forward', 100, 4)
     time.sleep(1)
     la.run('forward', 50, 4)
