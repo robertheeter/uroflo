@@ -85,11 +85,11 @@ if __name__ == '__main__':
 
     # la.run('backward', 1000, 10)
     time.sleep(2) # wait
-    la.run('forward', 1000, 10)
+    la.run('forward', 100, 10)
     time.sleep(2)
-    la.run('backward', 250, 10)
+    la.run('backward', 25, 10)
     time.sleep(2)
-    la.run('forward', 250, 10)
+    la.run('forward', 25, 10)
 
     time.sleep(1) # wait
     # la.run('backward', 60, 4)
