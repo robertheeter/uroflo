@@ -84,7 +84,7 @@ if __name__ == '__main__':
     # la = LinearActuator(pins=[10, 9, 11], freq=1000, verbose=True)
 
     GPIO.cleanup()
-    
+
     GPIO.setmode(GPIO.BCM)
 
     GPIO.setup(9, GPIO.OUT)
@@ -95,6 +95,7 @@ if __name__ == '__main__':
     GPIO.output(11, GPIO.HIGH)
     GPIO.output(10, GPIO.LOW)
 
+    time.sleep(20)
     # la.run('forward', 100, 4)
     # time.sleep(1)
     # la.run('forward', 50, 4)
