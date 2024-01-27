@@ -19,10 +19,10 @@ import RPi.GPIO as GPIO
 
 # linear actuator class
 class LinearActuator():
-    def __init__(self, pins=[23, 24, 25], freq=1000, verbose=False):
-        self.in1 = pins[0] # GPIO input pin 1
-        self.in2 = pins[1] # GPIO input pin 2
-        self.en = pins[2] # GPIO enable pin
+    def __init__(self, pins=[19, 21, 23], freq=1000, verbose=False):
+        self.en = pins[0] # GPIO enable pin
+        self.in1 = pins[1] # GPIO input pin 1
+        self.in2 = pins[2] # GPIO input pin 2
         self.freq = freq # PWM frequency
         self.verbose = verbose # toggles printing of information to terminal
         self.setup()
@@ -34,7 +34,7 @@ class LinearActuator():
             print(f"LinearActuator: pin en = {self.en}")
             print(f"LinearActuator: freq = {self.freq}")
 
-        GPIO.setmode(GPIO.BCM) # set up GPIO pins
+        GPIO.setmode(GPIO.BOARD) # set up GPIO pins
 
         GPIO.setup(self.in1, GPIO.OUT)
         GPIO.setup(self.in2, GPIO.OUT)
@@ -50,8 +50,8 @@ class LinearActuator():
         if dir not in ['forward', 'backward']:
             raise Exception("LinearActuator: dir must be 'forward' or 'backward'")
 
-        if (speed < 0) or (speed > 100):
-            raise Exception("LinearActuator: speed must be in [0, 100]")
+        if (speed < 25) or (speed > 100):
+            raise Exception("LinearActuator: speed must be in [25, 100]")
         
         self.pwm.ChangeDutyCycle(speed) # set speed via duty cycle
 
@@ -81,11 +81,16 @@ class LinearActuator():
 
 # testing
 if __name__ == '__main__':
-    la = LinearActuator(pins=[23, 24, 25], freq=1000, verbose=True)
+    la = LinearActuator(pins=[19, 21, 23], freq=1000, verbose=True)
 
     la.run('backward', 100, 10)
-    time.sleep(3) # wait
+    time.sleep(2) # wait
     la.run('forward', 100, 10)
+    time.sleep(2)
+    la.run('backward', 25, 10)
+    time.sleep(2)
+    la.run('forward', 25, 10)
+
     time.sleep(1) # wait
     # la.run('backward', 60, 4)
     # time.sleep(1) # wait
