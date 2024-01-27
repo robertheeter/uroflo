@@ -12,7 +12,7 @@ if __name__ == '__main__':
     # pump.accelerate(50)
     # pump.run(10)
     if (KeyboardInterrupt, SystemExit):
-        scale.stop()
+        pump.stop()
     # stop motor
     pump.stop()
 
