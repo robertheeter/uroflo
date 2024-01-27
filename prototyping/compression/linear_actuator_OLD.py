@@ -81,27 +81,33 @@ class LinearActuator():
 
 # testing
 if __name__ == '__main__':
-    la = LinearActuator(pins=[10, 9, 11], freq=1000, verbose=True)
+    # la = LinearActuator(pins=[10, 9, 11], freq=1000, verbose=True)
 
-    # la.run('backward', 1000, 10)
-    time.sleep(2) # wait
-    la.run('forward', 100, 4)
-    time.sleep(1)
-    la.run('forward', 50, 4)
-    time.sleep(1)
-    la.run('forward', 25, 4)
-    time.sleep(1)
-    la.run('forward', 15, 4)
-    time.sleep(1)
-    la.run('forward', 5, 4)
-    time.sleep(1)
+    GPIO.setup(9, GPIO.OUT)
+    GPIO.setup(11, GPIO.OUT)
+    GPIO.setup(10, GPIO.OUT)
+    
+    GPIO.output(9, GPIO.HIGH)
+    GPIO.output(11, GPIO.HIGH)
+    GPIO.output(10, GPIO.LOW)
 
-    time.sleep(1) # wait
+    # la.run('forward', 100, 4)
+    # time.sleep(1)
+    # la.run('forward', 50, 4)
+    # time.sleep(1)
+    # la.run('forward', 25, 4)
+    # time.sleep(1)
+    # la.run('forward', 15, 4)
+    # time.sleep(1)
+    # la.run('forward', 5, 4)
+    # time.sleep(1)
+
+    # time.sleep(1) # wait
     # la.run('backward', 60, 4)
     # time.sleep(1) # wait
     # la.run('forward', 60, 3)
     # time.sleep(1) # wait
     # la.run('forward', 60) # run continuously if dur <= 0
     # time.sleep(10) # wait
-    la.stop()
-    la.off()
+    # la.stop()
+    # la.off()
