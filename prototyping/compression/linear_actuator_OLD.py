@@ -81,7 +81,7 @@ class LinearActuator():
 
 # testing
 if __name__ == '__main__':
-    la = LinearActuator(pins=[10, 9, 11], freq=10000, verbose=True)
+    la = LinearActuator(pins=[10, 9, 11], freq=200, verbose=True)
 
     # GPIO.cleanup()
 
