@@ -4,7 +4,9 @@ import Hematuria from "./components/Hematuria";
 function App() {
   return (
     <div>
-      <div className="fixed text-white text-4xl w-3/4 h-4/5">
+      <div className="flex flex-col justify-center items-center gap-y-5 fixed text-4xl w-3/4 h-4/5">
+        <Hematuria />
+        <Hematuria />
         <Hematuria />
       </div>
       <div className="fixed bg-blue-500 text-white text-4xl w-1/4 h-4/5 right-0">
