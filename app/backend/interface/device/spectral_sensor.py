@@ -4,6 +4,9 @@ SPECTRAL SENSOR
 About
 - AS7262 (visible) or AS7263 (near-infrared) spectral sensor using I2C
 
+For
+- Hematuria severity measurement
+
 Notes
 - Recommend reading max = 48000 (VIS) or 16000 (NIR)
 
@@ -22,6 +25,7 @@ import board
 import RPi.GPIO as GPIO
 from adafruit_as726x import AS726x_I2C
 import numpy as np
+
 
 class SpectralSensor():
     def __init__(self, led_pin=4, sensor_type='VIS', max_scan=16000, verbose=False):
