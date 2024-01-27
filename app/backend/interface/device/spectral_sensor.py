@@ -8,7 +8,10 @@ For
 - Hematuria severity measurement
 
 Notes
-- Recommend reading max = 48000 (VIS) or 16000 (NIR)
+- Recommend max_scan = 48000 (VIS) or 16000 (NIR)
+- Pin allocation (use 'GPIO.setmode(GPIO.BOARD)'):
+  PIN 1 (3.3 V), PIN 3 (I2C SDA), PIN 5 (I2C SCL), PIN 7 (GPIO),
+  PIN 9 (Ground)
 
 Documentation
 - Guide: https://learn.adafruit.com/adafruit-as7262-6-channel-visible-light-sensor
@@ -46,7 +49,7 @@ class SpectralSensor():
         self.sensor.conversion_mode = self.sensor.MODE_2 # continuously gather samples/readings
 
         GPIO.setwarnings(False)
-        GPIO.setmode(GPIO.BCM) # set up GPIO LED pin
+        GPIO.setmode(GPIO.BOARD) # BOARD mode
         GPIO.setup(self.led_pin, GPIO.OUT)
         GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
         

@@ -9,10 +9,15 @@ For
 - Inflow/outflow rate measurement
 
 Notes
-- 
+- Recommend initial offset = 1
+- Recommend initial scale = -242.22
+- Recommend replicates = 5
+- Pin allocation (use 'GPIO.setmode(GPIO.BOARD)'):
+  PIN 2 (5 V), PIN 4 (5 V), PIN 6 (Ground), PIN 8 (GPIO),
+  PIN 10 (GPIO), PIN 12 (GPIO), PIN 14 (Ground), PIN 16 (GPIO)
 
 Documentation
-- 
+- See HX711 class below
 
 '''
 
@@ -23,97 +28,78 @@ import numpy as np
 
 
 class WeightSensor():
-    def __init__(self, pdsck_pin, dout_pin, verbose=False):
-        self.pdsck_pin = pdsck_pin # GPIO SKC pin
+    def __init__(self, pdsck_pin, dout_pin, offset=1, scale=-242.22, replicates=5, verbose=False):
+        self.pdsck_pin = pdsck_pin # GPIO SCK pin
         self.dout_pin = dout_pin # GPIO DOUT pin
-        self.OFFSET = 1 # offset amount
-        self.SCALE = -242.22 # scaling factor
-        self.REPLICATES = 5 # number of replicates per reading
+
+        self.OFFSET = offset # offset amount
+        self.SCALE = scale # scaling factor
+        self.REPLICATES = replicates # number of replicates per reading
+
         self.verbose = verbose # toggles printing of information to terminal
+
         self.setup()
 
     def setup(self):
         print("WeightSensor: setup")
         GPIO.setwarnings(False)
+        GPIO.setmode(GPIO.BOARD) # BOARD mode
 
         self.hx = HX711(self.pdsck_pin, self.dout_pin)
-
         self.hx.set_reading_format("MSB", "MSB")
-
+        
         self.set_offset(self.OFFSET)
         self.set_scale(self.SCALE)
-
-        self.hx.reset()
-        
+    
+    # set parameters
     def set_offset(self, new_offset):
         self.OFFSET = new_offset
         self.hx.set_offset(self.OFFSET)
+        self.hx.reset()
     
     def set_scale(self, new_scale):
         self.SCALE = new_scale
         self.hx.set_reference_unit(self.SCALE)
+        self.hx.reset()
     
     def set_replicates(self, new_replicates):
         self.REPLICATES = new_replicates
-        
+
+    # zero sensor reading
     def zero(self):
-        self.hx.tare()
-        new_offset = self.hx.get_offset()
-
-        self.set_offset(new_offset)
-
-    def calibrate(self, new_mass):
-        mass = self.hx.get_weight(self.REPLICATES)
-        raw = mass * self.SCALE
-        new_scale = raw/new_mass
-
-        self.set_scale(new_scale)
-
-
-    def read(self):
+        scale = self.hx.get_reference_unit()
+        self.hx.set_reference_unit(reference_unit=1)
+        offset = self.hx.read_average(self.REPLICATES)
         
-    def mass(self):
-        mass = max(0, int(self.hx.get_weight(5)))
-        self.hx.power_down()
-        self.hx.power_up()
-        time.sleep(0.1)
+        if self.verbose:
+            print(f"WeightSensor: zero offset = {offset}")
+        
+        self.hx.set_reference_unit(reference_unit=scale)
+        self.set_offset(offset)
+    
+    # calibrate sensor reading to match known_mass
+    def calibrate(self, known_mass):
+        mass = self.read()
+        raw = mass * self.SCALE
+        scale = raw/known_mass
+
+        if self.verbose:
+            print(f"WeightSensor: calibrate scale = {scale}")
+
+        self.set_scale(scale)
+
+    # read mass
+    def read(self):
+        mass = max(0, int(self.hx.get_weight(self.REPLICATES)))
+        self.hx.reset()
+
         if self.verbose:
             print(f"WeightSensor: mass = {mass} mg")
+        
         return mass
     
-    def rate(self, interval=60):
-        start_time = time.time()
-        duration = 0
-
-        start_mass = 0
-        end_mass = 0
-        masses = []
-        calculate_start_mass = True
-
-        while duration <= interval:
-            duration = time.time() - start_time
-            mass = self.mass()
-
-            if duration <= 1:
-                masses.append(mass)
-                
-            elif duration > 1 and calculate_start_mass:
-                start_mass = np.mean(masses)
-                masses = []
-                calculate_start_mass = False
-
-            elif duration >= interval - 1:
-                masses.append(mass)
-
-            elif duration >= interval:
-                end_mass = np.mean(masses)
-                rate = ((start_mass - end_mass)/duration)*60
-                if self.verbose:
-                    print(f"WeightSensor: rate = {rate} mg/min")
-                return rate
-        
-    def stop(self):
-        print("WeightSensor: stop")
+    def shutdown(self):
+        print("WeightSensor: shutdown")
         GPIO.cleanup()
 
 
@@ -125,7 +111,8 @@ class HX711():
         # Mutex for reading from the HX711, in case multiple threads in client software try to access at the same time
         self.readLock = threading.Lock()
         
-        GPIO.setmode(GPIO.BCM)
+        GPIO.setmode(GPIO.BOARD) # BOARD mode
+        # GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.PD_SCK, GPIO.OUT)
         GPIO.setup(self.DOUT, GPIO.IN)
 
