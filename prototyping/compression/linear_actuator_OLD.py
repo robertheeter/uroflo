@@ -50,8 +50,8 @@ class LinearActuator():
         if dir not in ['forward', 'backward']:
             raise Exception("LinearActuator: dir must be 'forward' or 'backward'")
 
-        if (speed < 25) or (speed > 100):
-            raise Exception("LinearActuator: speed must be in [25, 100]")
+        # if (speed < 25) or (speed > 100):
+            # raise Exception("LinearActuator: speed must be in [25, 100]")
         
         self.pwm.ChangeDutyCycle(speed) # set speed via duty cycle
 
