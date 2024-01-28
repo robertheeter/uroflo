@@ -56,7 +56,15 @@ def harsh_alarm():
     my_sound.set_volume(0.5) # can set sound volume from 0-1 
 
 while True:
+    FADE_SLEEP = 10
+    default_LED()
+    time.sleep(FADE_SLEEP / 1000)
+    yellow_LED()
+    time.sleep(FADE_SLEEP / 1000)
     orange_LED()
+    time.sleep(FADE_SLEEP / 1000)
+    red_LED()
+    time.sleep(FADE_SLEEP / 1000)
 
 
 # while True: 
