@@ -64,6 +64,8 @@ while True:
     orange_LED()
     time.sleep(FADE_SLEEP / 10)
     red_LED()
+    time.sleep(FADE_SLEEP / 10)
+    red_LED()
 
 
 # while True: 
