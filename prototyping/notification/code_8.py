@@ -28,32 +28,35 @@ def default_LED():
     green.duty_cycle = duty_cycle(2.74)
     blue.duty_cycle = duty_cycle(4)
 
-# # red - high emergency
-# def red_LED():
-#     red.duty_cycle = duty_cycle(50)
+# red - high emergency
+def red_LED():
+    red.duty_cycle = duty_cycle(50)
 
-# # orange - medium emergency
-# def orange_LED():
-#     red.duty_cycle = duty_cycle(30)
-#     blue.duty_cycle = duty_cycle(1)
-#     green.duty_cycle = duty_cycle(7)
+# orange - medium emergency
+def orange_LED():
+    red.duty_cycle = duty_cycle(30)
+    blue.duty_cycle = duty_cycle(1)
+    green.duty_cycle = duty_cycle(7)
     
-# # yellow - low emergency 
-# def yellow_LED():
-#     red.duty_cycle = duty_cycle(20)
-#     blue.duty_cycle = duty_cycle(0)
-#     green.duty_cycle = duty_cycle(10)
+# yellow - low emergency 
+def yellow_LED():
+    red.duty_cycle = duty_cycle(20)
+    blue.duty_cycle = duty_cycle(0)
+    green.duty_cycle = duty_cycle(10)
 
-# def mellow_alarm():
-#     pygame.init()
-#     my_sound = pygame.mixer.Sound('sonar.mp3') # only plays once
-#     my_sound.play()
-#     my_sound.set_volume(0.5) # can set sound volume from 0-1 
+def mellow_alarm():
+    pygame.init()
+    my_sound = pygame.mixer.Sound('sonar.mp3') # only plays once
+    my_sound.play()
+    my_sound.set_volume(0.5) # can set sound volume from 0-1 
 
-# def harsh_alarm():
-#     my_sound = pygame.mixer.Sound('harsh.mp3') # repeats 4 times 
-#     my_sound.play()
-#     my_sound.set_volume(0.5) # can set sound volume from 0-1 
+def harsh_alarm():
+    my_sound = pygame.mixer.Sound('harsh.mp3') # repeats 4 times 
+    my_sound.play()
+    my_sound.set_volume(0.5) # can set sound volume from 0-1 
+
+while True: 
+    default_LED()
 
 
 # while True: 
