@@ -23,10 +23,10 @@ def duty_cycle(percent):
     return int(percent / 100.0 * 65535.0)
     
 # # default standard blue color
-# def default_LED():
-#     red.duty_cycle = duty_cycle(1)
-#     green.duty_cycle = duty_cycle(2.74)
-#     blue.duty_cycle = duty_cycle(4)
+def default_LED():
+    red.duty_cycle = duty_cycle(1)
+    green.duty_cycle = duty_cycle(2.74)
+    blue.duty_cycle = duty_cycle(4)
 
 # # red - high emergency
 # def red_LED():
