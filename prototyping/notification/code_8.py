@@ -34,9 +34,9 @@ def red_LED():
 
 # orange - medium emergency
 def orange_LED():
-    red.duty_cycle = duty_cycle(30)
-    blue.duty_cycle = duty_cycle(1)
-    green.duty_cycle = duty_cycle(7)
+    red.duty_cycle = duty_cycle(50)
+    blue.duty_cycle = duty_cycle(0)
+    green.duty_cycle = duty_cycle(32)
     
 # yellow - low emergency 
 def yellow_LED():
