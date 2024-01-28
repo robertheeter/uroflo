@@ -34,7 +34,7 @@ def red_LED():
 
 # orange - medium emergency
 def orange_LED():
-    red.duty_cycle = duty_cycle(45)
+    red.duty_cycle = duty_cycle(50)
     blue.duty_cycle = duty_cycle(0)
     green.duty_cycle = duty_cycle(10)
     
@@ -64,7 +64,6 @@ while True:
     orange_LED()
     time.sleep(FADE_SLEEP / 10)
     red_LED()
-    time.sleep(FADE_SLEEP / 10)
 
 
 # while True: 
