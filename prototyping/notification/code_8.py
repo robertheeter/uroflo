@@ -88,7 +88,7 @@ def duty_cycle(percent):
 
 
 
-FADE_SLEEP = 100  # Number of milliseconds to delay between changes.
+FADE_SLEEP = 10  # Number of milliseconds to delay between changes.
 # Increase to slow down, decrease to speed up.
 
 while True:
