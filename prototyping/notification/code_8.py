@@ -31,6 +31,8 @@ def default_LED():
 # red - high emergency
 def red_LED():
     red.duty_cycle = duty_cycle(50)
+    blue.duty_cycle = duty_cycle(0)
+    green.duty_cycle = duty_cycle(0)
 
 # orange - medium emergency
 def orange_LED():
@@ -59,11 +61,11 @@ while True:
     FADE_SLEEP = 10
     default_LED()
     time.sleep(FADE_SLEEP / 10)
-    red_LED()
-    time.sleep(FADE_SLEEP / 10)
     yellow_LED()
     time.sleep(FADE_SLEEP / 10)
     orange_LED()
+    time.sleep(FADE_SLEEP / 10)
+    red_LED()
     time.sleep(FADE_SLEEP / 10)
 
     
