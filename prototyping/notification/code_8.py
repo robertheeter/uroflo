@@ -55,8 +55,7 @@ def harsh_alarm():
     my_sound.play()
     my_sound.set_volume(0.5) # can set sound volume from 0-1 
 
-while True: 
-    mellow_alarm()
+while True:
     red_LED()
 
 
