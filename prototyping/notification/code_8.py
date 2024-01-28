@@ -57,6 +57,8 @@ def harsh_alarm():
 
 while True:
     FADE_SLEEP = 10
+    red_LED()
+    time.sleep(FADE_SLEEP / 10)
     default_LED()
     time.sleep(FADE_SLEEP / 10)
     yellow_LED()
@@ -64,8 +66,7 @@ while True:
     orange_LED()
     time.sleep(FADE_SLEEP / 10)
     red_LED()
-    time.sleep(FADE_SLEEP / 10)
-    red_LED()
+    
 
 
 # while True: 
