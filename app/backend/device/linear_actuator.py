@@ -10,6 +10,8 @@ For
 
 Notes
 - Recommend PWM freq = 1000
+- Pin allocation:
+  PIN 19 (GPIO), PIN 21 (GPIO), PIN 23 (GPIO), PIN 25 (Ground)
 
 Documentation
 - Guide: https://www.electronicshub.org/raspberry-pi-l298n-interface-tutorial-control-dc-motor-l298n-raspberry-pi/
@@ -18,6 +20,7 @@ Documentation
 
 import time
 import RPi.GPIO as GPIO
+
 
 class LinearActuator():
     def __init__(self, en_pin, in1_pin, in2_pin, freq=1000, verbose=False):
@@ -91,7 +94,7 @@ class LinearActuator():
 
 # example implementation
 if __name__ == '__main__':
-    linear_actuator = LinearActuator(en_pin=10, in1_pin=9, in2_pin=11, freq=1000, verbose=True)
+    linear_actuator = LinearActuator(en_pin=10, in1_pin=9, in2_pin=11, freq=1000, verbose=True) # use pin numbering (NOT GPIO numbering)
     time.sleep(2) # wait for setup
 
     for i in range(4):

@@ -10,7 +10,7 @@ For
 Notes
 - Recommend max = 48000 (VIS) or 16000 (NIR)
 - Recommend replicates = 10
-- Pin allocation (use 'GPIO.setmode(GPIO.BOARD)'):
+- Pin allocation:
   PIN 1 (3.3 V), PIN 3 (I2C SDA), PIN 5 (I2C SCL), PIN 7 (GPIO),
   PIN 9 (Ground)
 
@@ -125,7 +125,7 @@ class SpectralSensor():
 
 # example implementation
 if __name__ == '__main__':
-    spectral_sensor = SpectralSensor(led_pin=7, use_led=True, sensor_type='VIS', max=48000, verbose=True)
+    spectral_sensor = SpectralSensor(led_pin=7, use_led=True, sensor_type='VIS', max=48000, verbose=True) # use pin numbering (NOT GPIO numbering)
     time.sleep(2) # wait for setup
 
     spectral_sensor.read(replicates=10)

@@ -12,7 +12,7 @@ Notes
 - Recommend initial offset = 1
 - Recommend initial scale = -242.22
 - Recommend replicates = 15
-- Pin allocation (use 'GPIO.setmode(GPIO.BOARD)'):
+- Pin allocation:
   PIN 2 (5 V), PIN 4 (5 V), PIN 6 (Ground), PIN 8 (GPIO),
   PIN 10 (GPIO), PIN 12 (GPIO), PIN 14 (Ground), PIN 16 (GPIO)
 
@@ -449,7 +449,7 @@ class HX711():
 
 # example implementation
 if __name__ == '__main__':
-    weight_sensor = WeightSensor(pdsck_pin=8, dout_pin=10, offset=1, scale=-242.22, verbose=True)
+    weight_sensor = WeightSensor(pdsck_pin=8, dout_pin=10, offset=1, scale=-242.22, verbose=True) # use pin numbering (NOT GPIO numbering)
     time.sleep(2) # wait for setup
 
     time.sleep(10) # remove all weight from sensor

@@ -1,0 +1,109 @@
+'''
+LIGHT & SOUND
+
+About
+- LED strip light using 3 R, G, and B N-channel MOSFETs
+- Speaker with sound alerts
+
+For
+- Notification system
+
+Notes
+- Pin allocation:
+  PIN 24 (GPIO), PIN 26 (GPIO), PIN 28 (GPIO), PIN 30 (Ground)
+
+Documentation
+- Guide: https://learn.adafruit.com/rgb-led-strips
+
+'''
+
+import time
+import board
+import pwmio
+import pygame
+
+
+class LightSound():
+    def __init__(self, red_pin, green_pin, blue_pin, verbose=False):
+        self.red_pin = red_pin
+        self.green_pin = green_pin
+        self.blue_pin = blue_pin
+
+        self.verbose = verbose
+
+        self.setup()
+
+    def setup(self):
+        print("LightSound: setup")
+        self.red = pwmio.PWMOut(self.red_pin)
+        self.green = pwmio.PWMOut(self.green_pin)
+        self.blue = pwmio.PWMOut(self.blue_pin)
+
+    # convert between percent and duty_cycle
+    def duty_cycle(self, percent):
+        return int(percent / 100.0 * 65535.0)
+
+    # turn on LED to color
+    def light(self, color):
+        if color == 'off':
+            self.red.duty_cycle = self.duty_cycle(0)
+            self.green.duty_cycle = self.duty_cycle(0)
+            self.blue.duty_cycle = self.duty_cycle(0)
+        
+        elif color == 'defult':
+            self.red.duty_cycle = self.duty_cycle(1)
+            self.green.duty_cycle = self.duty_cycle(2.74)
+            self.blue.duty_cycle = self.duty_cycle(4)
+            
+        elif color == 'yellow':
+            self.red.duty_cycle = self.duty_cycle(20)
+            self.blue.duty_cycle = self.duty_cycle(0)
+            self.green.duty_cycle = self.duty_cycle(10)
+
+        elif color == 'orange':
+            self.red.duty_cycle = self.duty_cycle(50)
+            self.blue.duty_cycle = self.duty_cycle(0)
+            self.green.duty_cycle = self.duty_cycle(10)
+
+        elif color == 'red':
+            self.red.duty_cycle = self.duty_cycle(50)
+            self.blue.duty_cycle = self.duty_cycle(0)
+            self.green.duty_cycle = self.duty_cycle(0)
+
+    # play audio from speaker
+    def sound(self, tone):
+        if tone == 'chime':
+            pygame.init()
+            audio = pygame.mixer.Sound('chime.mp3') # play 1 time
+            audio.set_volume(0.5)
+            audio.play()
+
+        elif tone == 'alarm':
+            pygame.init()
+            audio = pygame.mixer.Sound('alarm.mp3') # play 4 times
+            audio.set_volume(0.5)
+            audio.play()
+
+    def shutdown(self):
+        print("LightSound: shutdown")
+        self.light('off')
+        self.red.deinit()
+        self.green.deinit()
+        self.blue.deinit()
+        pygame.quit()
+
+
+# example implementation
+if __name__ == '__main__':
+    light_sound = LightSound(red_pin=board.D8, green_pin=board.D7, blue_pin=board.D1, verbose=True) # use BOARD.D[GPIO] numbering (NOT pin numbering)
+    time.sleep(2) # wait for setup
+
+    for color in ['default', 'off', 'yellow', 'orange', 'red']:
+        light_sound.light(color=color)
+        time.sleep(4)
+    
+    for tone in ['chime', 'alarm']:
+        light_sound.sound(tone=tone)
+        time.sleep(1)
+
+    light_sound.shutdown()
