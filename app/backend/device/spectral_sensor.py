@@ -8,7 +8,8 @@ For
 - Hematuria severity measurement
 
 Notes
-- Recommend max_scan = 48000 (VIS) or 16000 (NIR)
+- Recommend max = 48000 (VIS) or 16000 (NIR)
+- Recommend replicates = 10
 - Pin allocation (use 'GPIO.setmode(GPIO.BOARD)'):
   PIN 1 (3.3 V), PIN 3 (I2C SDA), PIN 5 (I2C SCL), PIN 7 (GPIO),
   PIN 9 (Ground)
@@ -31,72 +32,78 @@ import numpy as np
 
 
 class SpectralSensor():
-    def __init__(self, led_pin=4, sensor_type='VIS', max_scan=16000, verbose=False):
-        self.led_pin = led_pin # GPIO LED pin (3.3V)
+    def __init__(self, led_pin, use_led=True, sensor_type='VIS', max=48000, verbose=False):
+        self.led_pin = led_pin # GPIO LED pin
+        self.use_led = use_led # toggles whether to use LED when scanning
         self.sensor_type = sensor_type # type of AS726x sensor ('AS7262'/'VIS' or 'AS7263'/'NIR')
-        self.max_scan = max_scan # maximum sensor scan intensity
+        
+        self.MAX = max # maximum sensor scan intensity
+
         self.verbose = verbose # toggles printing of information to terminal
+
         self.setup()
 
     def setup(self):
         print("SpectralSensor: setup")
-        if self.verbose:
-            print(f"SpectralSensor: sensor_type = {self.sensor_type}")
-            print(f"SpectralSensor: max_scan = {self.max_scan}")
+        GPIO.setwarnings(False)
+        GPIO.setmode(GPIO.BOARD) # BOARD mode
 
         i2c = board.I2C() # set up I2C; uses board.SCL and board.SDA
         self.sensor = AS726x_I2C(i2c)
         self.sensor.conversion_mode = self.sensor.MODE_2 # continuously gather samples/readings
 
-        GPIO.setwarnings(False)
-        GPIO.setmode(GPIO.BOARD) # BOARD mode
         GPIO.setup(self.led_pin, GPIO.OUT)
         GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
         
-        if self.verbose:
-            print("SpectralSensor: temperature = {0}°C".format(self.sensor.temperature))
-
-        if (self.sensor.temperature < 10) or (self.sensor.temperature > 40):
-            raise Exception("SpectralSensor: temperature too hot (>30°C) or cold (<18°C)'")
+        self.check_temperature()
 
         if not self.sensor.data_ready:
             if self.verbose:
                 print("SpectralSensor: data not ready; waiting...")
-            time.sleep(1)
+            time.sleep(0.5)
     
-    def scan(self, use_led=True):
-        if use_led == True:
-            GPIO.output(self.led_pin, GPIO.LOW) # turn on LED
-            time.sleep(0.3)
-            intensities = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values with LED
-            time.sleep(0.3)
-            GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
-
-        else:
-            GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
-            time.sleep(0.3)
-            intensities = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values without LED
-            time.sleep(0.3)
-        
-        scan = []
-        for intensity in intensities:
-            scan.append(min(self.max_scan, intensity)) # cap maximum sensor scan intensity
-
-        return scan # return scanned intensities
-
-    def read(self, n=10):
+    def check_temperature(self):
         if self.verbose:
             print("SpectralSensor: temperature = {0}°C".format(self.sensor.temperature))
 
         if (self.sensor.temperature < 10) or (self.sensor.temperature > 40):
-            raise Exception("SpectralSensor: temperature too hot (>30°C) or cold (<18°C)'")
+            raise Exception("SpectralSensor: temperature too hot (>40°C) or cold (<10°C)'")
+        
+    # set parameters
+    def set_max(self, new_max):
+        if self.verbose:
+            print(f"SpectralSensor: set_max (new_max = {new_max})")
+        self.MAX = new_max
+
+    # scan raw intensities
+    def scan(self):
+        if self.use_led == True:
+            GPIO.output(self.led_pin, GPIO.LOW) # turn on LED
+        
+        else:
+            GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
+        
+        time.sleep(0.3)
+        intensities = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values with LED
+        time.sleep(0.3)
+        GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
+
+        scan = []
+        for intensity in intensities:
+            scan.append(min(self.MAX, intensity)) # cap maximum sensor scan intensity
+
+        return scan # return scanned intensities
+
+    # read wavelength intensities
+    def read(self, replicates=10):
+        self.check_temperature()
         
         intensities = []
-        for i in range(n):
-            intensities.append(self.scan(use_led=True))
+        for _ in range(replicates):
+            intensities.append(self.scan())
             time.sleep(0.1)
         
-        intensities = np.mean(np.array(intensities), axis=0) # average n scans to get intensity
+        intensities = np.median(np.array(intensities), axis=0) # get median intensities across replicates
 
         if self.sensor_type in ['VIS', 'AS7262']:
             wavelengths = [450, 500, 550, 570, 600, 650] # visible channel wavelengths (AS7262)
@@ -106,26 +113,22 @@ class SpectralSensor():
         reading = dict(zip(wavelengths, intensities))
         
         if self.verbose:
-            print(f"SpectralSensor: reading = {reading}")
+            print(f"SpectralSensor: reading = {reading} (replicates = {replicates})")
         
-        return reading # return reading as a dictionary, where keys are wavelengths and values are intensities averaged from n scans
-
-    def level(self, weights, bias, max_level, n=10, range=[0, 100]):
-        reading = self.read(n)
-        intensities = list(reading.values())
-
-        level = sum([w*i for w, i in zip(weights, intensities[0:4])]) + bias # apply least squares regression weights and bias to predict level
-        level = max(level, range[0])
-        level = min(level, range[1])
-
-        rescaled_level = int((level/max_level * (range[1]-range[0])) + range[0])
-        
-        if self.verbose:
-            print(f"SpectralSensor: level = {rescaled_level} in range [{range[0]}-{range[1]}]")
-
-        return rescaled_level # return rescaled level
+        return reading # return reading as a dictionary, where keys are wavelengths and values are median intensities
     
-    def stop(self):
-        print(f"SpectralSensor: stop")
+    def shutdown(self):
+        print(f"SpectralSensor: shutdown")
         GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
         GPIO.cleanup()
+
+
+# example implementation
+if __name__ == '__main__':
+    spectral_sensor = SpectralSensor(led_pin=7, use_led=True, sensor_type='VIS', max=48000, verbose=True)
+    time.sleep(2) # wait for setup
+
+    spectral_sensor.read(replicates=10)
+
+    spectral_sensor.shutdown()
+    

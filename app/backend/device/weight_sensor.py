@@ -11,7 +11,7 @@ For
 Notes
 - Recommend initial offset = 1
 - Recommend initial scale = -242.22
-- Recommend replicates = 5
+- Recommend replicates = 15
 - Pin allocation (use 'GPIO.setmode(GPIO.BOARD)'):
   PIN 2 (5 V), PIN 4 (5 V), PIN 6 (Ground), PIN 8 (GPIO),
   PIN 10 (GPIO), PIN 12 (GPIO), PIN 14 (Ground), PIN 16 (GPIO)
@@ -28,13 +28,12 @@ import numpy as np
 
 
 class WeightSensor():
-    def __init__(self, pdsck_pin, dout_pin, offset=1, scale=-242.22, replicates=5, verbose=False):
+    def __init__(self, pdsck_pin, dout_pin, offset=1, scale=-242.22, verbose=False):
         self.pdsck_pin = pdsck_pin # GPIO SCK pin
         self.dout_pin = dout_pin # GPIO DOUT pin
 
         self.OFFSET = offset # offset amount
         self.SCALE = scale # scaling factor
-        self.REPLICATES = replicates # number of replicates per reading
 
         self.verbose = verbose # toggles printing of information to terminal
 
@@ -53,53 +52,50 @@ class WeightSensor():
     
     # set parameters
     def set_offset(self, new_offset):
+        if self.verbose:
+            print(f"WeightSensor: set_offset (new_offset = {new_offset})")
         self.OFFSET = new_offset
         self.hx.set_offset(self.OFFSET)
         self.hx.reset()
     
     def set_scale(self, new_scale):
+        if self.verbose:
+            print(f"WeightSensor: set_scale (new_scale = {new_scale})")
         self.SCALE = new_scale
         self.hx.set_reference_unit(self.SCALE)
         self.hx.reset()
-    
-    def set_replicates(self, new_replicates):
-        self.REPLICATES = new_replicates
 
     # zero sensor reading
-    def zero(self):
+    def zero(self, replicates=15):
+        if self.verbose:
+            print(f"WeightSensor: zero (replicates = {replicates})")
         scale = self.hx.get_reference_unit()
         self.hx.set_reference_unit(reference_unit=1)
-        offset = self.hx.read_average(self.REPLICATES)
-        
-        if self.verbose:
-            print(f"WeightSensor: zero offset = {offset}")
-        
+        offset = self.hx.read_average(replicates)
         self.hx.set_reference_unit(reference_unit=scale)
         self.set_offset(offset)
     
     # calibrate sensor reading to match known_mass
-    def calibrate(self, known_mass):
-        mass = self.read()
+    def calibrate(self, known_mass, replicates=15):
+        if self.verbose:
+            print(f"WeightSensor: calibrate (known_mass = {known_mass}, replicates = {replicates})")
+        mass = self.read(replicates)
         raw = mass * self.SCALE
         scale = raw/known_mass
-
-        if self.verbose:
-            print(f"WeightSensor: calibrate scale = {scale}")
-
         self.set_scale(scale)
 
     # read mass
-    def read(self):
-        mass = max(0, int(self.hx.get_weight(self.REPLICATES)))
+    def read(self, replicates=15):
+        mass = max(0, int(self.hx.get_weight(replicates)))
         self.hx.reset()
 
         if self.verbose:
-            print(f"WeightSensor: mass = {mass} mg")
+            print(f"WeightSensor: mass = {mass} (replicates = {replicates})")
         
         return mass
     
     def shutdown(self):
-        print("WeightSensor: shutdown")
+        print(f"WeightSensor: shutdown")
         GPIO.cleanup()
 
 
@@ -449,3 +445,19 @@ class HX711():
     def reset(self):
         self.power_down()
         self.power_up()
+
+
+# example implementation
+if __name__ == '__main__':
+    weight_sensor = WeightSensor(pdsck_pin=8, dout_pin=10, offset=1, scale=-242.22, verbose=True)
+    time.sleep(2) # wait for setup
+
+    time.sleep(10) # remove all weight from sensor
+    weight_sensor.zero(replicates=15)
+    time.sleep(10) # add 6000 g weight
+    weight_sensor.calibrate(known_mass=6000, replicates=15)
+    time.sleep(10) # add unknown weight
+    weight_sensor.read(replicates=15)
+
+    weight_sensor.shutdown()
+    
