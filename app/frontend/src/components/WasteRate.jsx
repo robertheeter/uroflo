@@ -1,13 +1,13 @@
 const WasteRate = () => {
-  let rate = 24; // Change this value to a number between 0 and 100
+  let rate = 30; // Change this value to a number between 0 and 100
 
   return (
     <div
-      className="w-[49%] h-full bg-amber-200 rounded-xl 
+      className="w-[48.5%] h-full bg-amber-200 rounded-xl 
                        flex flex-row "
     >
       <div className="w-full h-full flex flex-col justify-between items-start px-6 py-1">
-        <div className="text-3xl font-bold">WASTE INFLOW</div>
+        <div className="text-2xl font-bold">WASTE INFLOW</div>
         <div className="w-full flex flex-col justify-center items-center pb-8">
           <div className="font-bold text-2xl pb-1">{rate} mL/min</div>
           <div className="w-full h-5 rounded-3xl bg-yellow-50">
