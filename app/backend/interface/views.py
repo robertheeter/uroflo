@@ -1,37 +1,52 @@
 from django.http import JsonResponse
+import json
+
+# for testing
 import random
 
-from .device.spectral_sensor import SpectralSensor
-from .device.weight_sensor import WeightSensor
+TESTING = True
 
-spectral_sensor = SpectralSensor(led_pin=4, sensor_type='VIS', max_scan=48000, verbose=True)
-weight_sensor = WeightSensor(pd_sck_pin=14, dout_pin=15, verbose=True)
+def get_update(request):
 
-def get_hematuria(request):
-    
-    # weights = [0.0001052247859, -0.0004384357553, 0.0004271978863, -0.0008746241718] # weights for visible spectrum in wavelength order of [450, 500, 550, 570]
-    # bias = 28.34907833 # offset
-    # max_level = 12 # 100% hematuria level
+    if TESTING == True:
+        response = JsonResponse({'hematuria_level': random.randint(0, 99),
+                                 'hematuria_percent': random.uniform(0, 10),
 
-    # level = spectral_sensor.level(weights, bias, max_level, n=6, range=[0, 100])
+                                 'supply_percent': random.randint(0, 100),
+                                 'supply_time': random.randint(0, 1000),
+                                 'supply_volume': random.randint(0, 6000),
+                                 'supply_rate': random.randint(0, 100),
 
-    level = random.randint(0, 100)
-    color = [1,2,3]
+                                 'waste_percent': random.randint(0, 100),
+                                 'waste_time': random.randint(0, 1000),
+                                 'waste_volume': random.randint(0, 5000),
+                                 'waste_rate': random.randint(0, 100),
 
-    return JsonResponse({'level': int(level),
-                         'color': color})
+                                 'status_message': 'Normal. This is a test message.',
+                                 'status_color': 'yellow',
 
-def get_supply(request):
-    # volume = weight_sensor.mass() / 1009 # convert mg to L with density
-    # percent = int(min((volume/3)*100, 100)) # using 3 L bag
+                                 'active_time': random.randint(0, 1000),
+                                 'date': '2014-07-05',
+                                 'time': '14:34:14'
+                                 })
+        return response
 
-    volume = random.randint(0, 100) # random integer for now
-    percent = random.randint(0, 100) # random integer for now
+    # ADD HERE
 
-    rate = random.randint(0, 100) # random integer for now
-    time = random.randint(0, 100) # random integer for now
+    response = JsonResponse({'level': random.randint(0,100)})
+    return response
 
-    return JsonResponse({'volume': format(volume, '.1f'),
-                         'rate': format(rate, '.1f'),
-                         'percent': int(percent),
-                         'time': int(time)})
+# def post_update(request):
+#     if request.method == 'POST':
+#         try:
+#             data = json.loads(request.body.decode('utf-8'))
+            
+#             key1_value = data.get('key1', None)
+#             key2_value = data.get('key2', None)
+
+#             return JsonResponse({'status': 'success', 'message': 'Request processed.'})
+        
+#         except json.JSONDecodeError:
+#             return JsonResponse({'status': 'error', 'message': 'Invalid JSON data.'})
+#     else:
+#         return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
