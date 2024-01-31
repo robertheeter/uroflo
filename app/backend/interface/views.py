@@ -6,7 +6,8 @@ import random
 
 TESTING = True
 
-def get_update(request):
+# DEVICE DATA
+def send_device(request):
 
     if TESTING == True:
         response = JsonResponse({'hematuria_level': random.randint(0, 99),
@@ -36,7 +37,98 @@ def get_update(request):
     response = JsonResponse({'level': random.randint(0,100)})
     return response
 
-# def post_update(request):
+# INTERFACE DATA
+# SUPPLY
+def handle_supply_replace_volume(request):
+    response = None
+    return response
+
+def handle_supply_replace_removed(request):
+    response = None
+    return response
+
+def handle_supply_replace_added(request):
+    response = None
+    return response
+
+# WASTE
+def handle_waste_replace_volume(request):
+    response = None
+    return response
+
+def handle_waste_replace_removed(request):
+    response = None
+    return response
+
+def handle_waste_replace_added(request):
+    response = None
+    return response
+
+# CONTROL
+def handle_automatic(request):
+    response = None
+    return response
+
+def handle_inflow_level_increase(request):
+    response = None
+    return response
+
+def handle_inflow_level_decrease(request):
+    response = None
+    return response
+
+def handle_clear(request):
+    response = None
+    return response
+
+def handle_mute(request):
+    response = None
+    return response
+
+def handle_reset(request):
+    response = None
+    return response
+
+# PATIENT
+def handle_patient_firstname(request):
+    response = None
+    return response
+
+def handle_patient_lastname(request):
+    response = None
+    return response
+
+def handle_patient_middleinitial(request):
+    response = None
+    return response
+
+def handle_patient_ID(request):
+    response = None
+    return response
+
+def handle_patient_birthdate(request):
+    response = None
+    return response
+
+def handle_patient_sex(request):
+    response = None
+    return response
+
+# CONTACT
+def handle_contact_A(request):
+    response = None
+    return response
+
+def handle_contact_B(request):
+    response = None
+    return response
+
+
+
+
+# EXAMPLE FROM CHATGPT
+
+# def update_interface_data(request):
 #     if request.method == 'POST':
 #         try:
 #             data = json.loads(request.body.decode('utf-8'))
