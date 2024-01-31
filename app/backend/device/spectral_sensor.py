@@ -103,7 +103,7 @@ class SpectralSensor():
             intensities.append(self.scan())
             time.sleep(0.1)
         
-        intensities = np.median(np.array(intensities), axis=0) # get median intensities across replicates
+        intensities = np.average(np.array(intensities), axis=0) # get median intensities across replicates
 
         if self.sensor_type in ['VIS', 'AS7262']:
             wavelengths = [450, 500, 550, 570, 600, 650] # visible channel wavelengths (AS7262)
@@ -130,7 +130,7 @@ def calibrate():
     n = 20
     reading = spectral_sensor.read(replicates=n)
 
-    print(reading)
+    # print(reading)
 
     # trials = []
     # for i in range(n):
