@@ -83,9 +83,9 @@ class SpectralSensor():
         else:
             GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
         
-        time.sleep(0.3)
+        time.sleep(0.2)
         intensities = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values with LED
-        time.sleep(0.3)
+        time.sleep(0.2)
         GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
 
         scan = []
