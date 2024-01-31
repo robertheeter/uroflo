@@ -11,7 +11,7 @@ Notes
 - Recommend max = 48000 (VIS) or 16000 (NIR)
 - Recommend replicates = 10
 - Pin allocation:
-  PIN 1 (3.3 V), PIN 3 (I2C SDA), PIN 5 (I2C SCL), PIN 7 (GPIO),
+  PIN 1 (3.3 V), PIN 3 (I2C SDA), PIN 5 (I2C SCL), PIN 7 (GPIO 4),
   PIN 9 (Ground)
 
 Documentation
@@ -46,7 +46,7 @@ class SpectralSensor():
     def setup(self):
         print("SpectralSensor: setup")
         GPIO.setwarnings(False)
-        GPIO.setmode(GPIO.BOARD) # BOARD mode
+        GPIO.setmode(GPIO.BCM) # BCM mode
 
         i2c = board.I2C() # set up I2C; uses board.SCL and board.SDA
         self.sensor = AS726x_I2C(i2c)
@@ -177,7 +177,7 @@ def calibrate():
 
 # example implementation
 if __name__ == '__main__':
-    # spectral_sensor = SpectralSensor(led_pin=7, use_led=True, sensor_type='VIS', max=48000, verbose=True) # use pin numbering (NOT GPIO numbering)
+    # spectral_sensor = SpectralSensor(led_pin=7, use_led=True, sensor_type='VIS', max=48000, verbose=True) # use GPIO numbering (NOT pin numbering)
     # time.sleep(2) # wait for setup
 
     # spectral_sensor.read(replicates=10)

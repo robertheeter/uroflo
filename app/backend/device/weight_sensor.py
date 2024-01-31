@@ -13,8 +13,8 @@ Notes
 - Recommend initial scale = -242.22
 - Recommend replicates = 15
 - Pin allocation:
-  PIN 2 (5 V), PIN 4 (5 V), PIN 6 (Ground), PIN 8 (GPIO),
-  PIN 10 (GPIO), PIN 12 (GPIO), PIN 14 (Ground), PIN 16 (GPIO)
+  PIN 2 (5 V), PIN 4 (5 V), PIN 6 (Ground), PIN 8 (GPIO 14),
+  PIN 10 (GPIO 15), PIN 12 (GPIO 18), PIN 14 (Ground), PIN 16 (GPIO 23)
 
 Documentation
 - See HX711 class below
@@ -107,8 +107,7 @@ class HX711():
         # Mutex for reading from the HX711, in case multiple threads in client software try to access at the same time
         self.readLock = threading.Lock()
         
-        GPIO.setmode(GPIO.BOARD) # BOARD mode
-        # GPIO.setmode(GPIO.BCM)
+        GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.PD_SCK, GPIO.OUT)
         GPIO.setup(self.DOUT, GPIO.IN)
 
@@ -449,7 +448,7 @@ class HX711():
 
 # example implementation
 if __name__ == '__main__':
-    weight_sensor = WeightSensor(pdsck_pin=8, dout_pin=10, offset=1, scale=-242.22, verbose=True) # use pin numbering (NOT GPIO numbering)
+    weight_sensor = WeightSensor(pdsck_pin=8, dout_pin=10, offset=1, scale=-242.22, verbose=True) # use GPIO numbering (NOT pin numbering)
     time.sleep(2) # wait for setup
 
     time.sleep(10) # remove all weight from sensor

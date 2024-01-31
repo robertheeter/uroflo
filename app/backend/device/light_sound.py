@@ -10,7 +10,7 @@ For
 
 Notes
 - Pin allocation:
-  PIN 24 (GPIO), PIN 26 (GPIO), PIN 28 (GPIO), PIN 30 (Ground)
+  PIN 24 (GPIO 8), PIN 26 (GPIO 7), PIN 28 (GPIO 1), PIN 30 (Ground)
 
 Documentation
 - Guide: https://learn.adafruit.com/rgb-led-strips

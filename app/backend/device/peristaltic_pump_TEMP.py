@@ -8,8 +8,8 @@ For
 - Inflow rate control
 
 Notes
-- Pin allocation (use 'GPIO.setmode(GPIO.BOARD)'):
-  PIN 33 (GPIO), PIN 35 (GPIO), PIN 37 (GPIO), PIN 39 (Ground)
+- Pin allocation:
+  PIN 33 (GPIO 13), PIN 35 (GPIO 19), PIN 37 (GPIO 26), PIN 39 (Ground)
 
 Documentation
 - 
