@@ -123,12 +123,65 @@ class SpectralSensor():
         GPIO.cleanup()
 
 
+# calibration testing
+def calibrate():
+    spectral_sensor = SpectralSensor(led_pin=7, use_led=True, sensor_type='VIS', max=48000, verbose=False)
+    
+    n = 20
+    reading = spectral_sensor.read(replicates=n)
+
+    print(reading)
+
+    # trials = []
+    # for i in range(n):
+    #     readings = []
+    #     for j in range(10):
+    #         readings.append(ss.read(use_led=True))
+    #         time.sleep(0.1)
+        
+    #     df = pd.DataFrame(readings)
+    #     avg_readings = dict(df.mean())
+    #     trials.append(avg_readings)
+    
+    # df = pd.DataFrame(trials)
+    # avg_trials = dict(df.mean())
+
+    print(f"\nAVERAGE READINGS (n={n}):\n")
+
+    print('450 nm / violet : {:.2f}'.format(reading[450]))
+    print('500 nm / blue   : {:.2f}'.format(reading[500]))
+    print('550 nm / green  : {:.2f}'.format(reading[550]))
+    print('570 nm / yellow : {:.2f}'.format(reading[570]))
+    print('600 nm / orange : {:.2f}'.format(reading[600]))
+    print('650 nm / red    : {:.2f}'.format(reading[650]))
+
+
+    # df = pd.DataFrame(trials)
+    # cov_trials = dict(df.std()/df.mean())
+
+    # print(f"\nCOEFFICIENT OF VARIATION READINGS (n={n}):\n")
+
+    # print('450 nm / violet : {:.4f}%'.format(cov_trials[450]*100))
+    # print('500 nm / blue   : {:.4f}%'.format(cov_trials[500]*100))
+    # print('550 nm / green  : {:.4f}%'.format(cov_trials[550]*100))
+    # print('570 nm / yellow : {:.4f}%'.format(cov_trials[570]*100))
+    # print('600 nm / orange : {:.4f}%'.format(cov_trials[600]*100))
+    # print('650 nm / red    : {:.4f}%'.format(cov_trials[650]*100))
+    
+    # print("\n####################")
+    # print(f"\nSTANDARD DEVIATION READINGS (n={n}):\n{df.std()}")
+    # print(f"\nVARIANCE READINGS (n={n}):\n{df.var()}\n")
+
+
+
+
 # example implementation
 if __name__ == '__main__':
-    spectral_sensor = SpectralSensor(led_pin=7, use_led=True, sensor_type='VIS', max=48000, verbose=True) # use pin numbering (NOT GPIO numbering)
-    time.sleep(2) # wait for setup
+    # spectral_sensor = SpectralSensor(led_pin=7, use_led=True, sensor_type='VIS', max=48000, verbose=True) # use pin numbering (NOT GPIO numbering)
+    # time.sleep(2) # wait for setup
 
-    spectral_sensor.read(replicates=10)
+    # spectral_sensor.read(replicates=10)
 
-    spectral_sensor.shutdown()
+    # spectral_sensor.shutdown()
     
+    calibrate()
