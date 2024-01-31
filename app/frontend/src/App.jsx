@@ -2,6 +2,7 @@
 import Hematuria from "./components/Hematuria";
 import Supply from "./components/Supply";
 import Waste from "./components/Waste";
+import ControlPanel from "./components/ControlPanel";
 
 function App() {
   return (
@@ -14,8 +15,8 @@ function App() {
         <Supply />
         <Waste />
       </div>
-      <div className="fixed bg-slate-900 text-white text-4xl w-1/4 h-4/5 right-0">
-        UROFLO + CONTROLS
+      <div className="fixed bg-slate-900 w-1/4 h-4/5 right-0">
+        <ControlPanel />
       </div>
       <div className="fixed bg-slate-900 text-white text-4xl right-0 bottom-0 w-1/4 h-1/5">
         CONTACT
