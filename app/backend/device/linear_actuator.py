@@ -24,9 +24,9 @@ import RPi.GPIO as GPIO
 
 class LinearActuator():
     def __init__(self, en_pin, in1_pin, in2_pin, freq=1000, verbose=False):
-        self.en_pin = en_pin # GPIO enable pin
-        self.in1_pin = in1_pin # GPIO input pin 1
-        self.in2_pin = in2_pin # GPIO input pin 2
+        self.en_pin = en_pin # GPIO enable pin (BCM)
+        self.in1_pin = in1_pin # GPIO input pin 1 (BCM)
+        self.in2_pin = in2_pin # GPIO input pin 2 (BCM)
 
         self.FREQ = freq # PWM frequency
 

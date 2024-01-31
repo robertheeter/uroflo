@@ -33,7 +33,7 @@ import numpy as np
 
 class SpectralSensor():
     def __init__(self, led_pin, use_led=True, sensor_type='VIS', max=48000, verbose=False):
-        self.led_pin = led_pin # GPIO LED pin
+        self.led_pin = led_pin # GPIO LED pin (BCM)
         self.use_led = use_led # toggles whether to use LED when scanning
         self.sensor_type = sensor_type # type of AS726x sensor ('AS7262'/'VIS' or 'AS7263'/'NIR')
         
@@ -125,7 +125,7 @@ class SpectralSensor():
 
 # calibration testing
 def calibrate():
-    spectral_sensor = SpectralSensor(led_pin=7, use_led=True, sensor_type='VIS', max=48000, verbose=False)
+    spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000, verbose=False)
     
     n = 20
     reading = spectral_sensor.read(replicates=n)
@@ -177,7 +177,7 @@ def calibrate():
 
 # example implementation
 if __name__ == '__main__':
-    # spectral_sensor = SpectralSensor(led_pin=7, use_led=True, sensor_type='VIS', max=48000, verbose=True) # use GPIO numbering (NOT pin numbering)
+    # spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000, verbose=True) # use GPIO numbering (NOT pin numbering)
     # time.sleep(2) # wait for setup
 
     # spectral_sensor.read(replicates=10)

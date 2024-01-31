@@ -29,8 +29,8 @@ import numpy as np
 
 class WeightSensor():
     def __init__(self, pdsck_pin, dout_pin, offset=1, scale=-242.22, verbose=False):
-        self.pdsck_pin = pdsck_pin # GPIO SCK pin
-        self.dout_pin = dout_pin # GPIO DOUT pin
+        self.pdsck_pin = pdsck_pin # GPIO SCK pin (BCM)
+        self.dout_pin = dout_pin # GPIO DOUT pin (BCM)
 
         self.OFFSET = offset # offset amount
         self.SCALE = scale # scaling factor

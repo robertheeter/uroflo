@@ -25,9 +25,9 @@ import pygame
 
 class LightSound():
     def __init__(self, red_pin, green_pin, blue_pin, verbose=False):
-        self.red_pin = red_pin
-        self.green_pin = green_pin
-        self.blue_pin = blue_pin
+        self.red_pin = red_pin # GPIO red pin (BCM)
+        self.green_pin = green_pin # GPIO green pin (BCM)
+        self.blue_pin = blue_pin # GPIO blue pin (BCM)
 
         self.verbose = verbose
 
