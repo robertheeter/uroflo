@@ -115,11 +115,6 @@ if __name__ == '__main__':
     
     for tone in ['chime', 'alarm']:
         light_sound.sound(tone=tone)
-        # for i in range(2000):
-        #     print(i)
-        # time.sleep(16)
+        time.sleep(10)
 
-    while(True):
-        print(1)
-        time.sleep(0.5)
-    # light_sound.shutdown()
+    light_sound.shutdown()
