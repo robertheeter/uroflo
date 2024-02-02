@@ -45,12 +45,18 @@ class LightSound():
 
     # turn on LED to color
     def light(self, color):
+        if color not in ['off', 'default', 'yellow', 'orange', 'red']:
+            raise Exception(f"LightSound: color = {color} not available")
+        
+        if self.verbose:
+            print(f"LightSound: light (color = {color})")
+        
         if color == 'off':
             self.red.duty_cycle = self.duty_cycle(0)
             self.green.duty_cycle = self.duty_cycle(0)
             self.blue.duty_cycle = self.duty_cycle(0)
         
-        elif color == 'defult':
+        elif color == 'default':
             self.red.duty_cycle = self.duty_cycle(1)
             self.green.duty_cycle = self.duty_cycle(2.74)
             self.blue.duty_cycle = self.duty_cycle(4)
@@ -72,17 +78,22 @@ class LightSound():
 
     # play audio from speaker
     def sound(self, tone):
+        if tone not in ['chime', 'alarm']:
+            raise Exception(f"LightSound: tone = {tone} not available")
+        
+        if self.verbose:
+            print(f"LightSound: sound (tone = {tone})")
+
+        pygame.init()
+
         if tone == 'chime':
-            pygame.init()
-            audio = pygame.mixer.Sound('chime.mp3') # play 1 time
-            audio.set_volume(0.5)
-            audio.play()
+            audio = pygame.mixer.Sound('/sound/chime.mp3') # play 1 time
 
         elif tone == 'alarm':
-            pygame.init()
-            audio = pygame.mixer.Sound('alarm.mp3') # play 4 times
-            audio.set_volume(0.5)
-            audio.play()
+            audio = pygame.mixer.Sound('/sound/alarm.mp3') # play 4 times
+        
+        audio.set_volume(0.5)
+        audio.play()
 
     def shutdown(self):
         print("LightSound: shutdown")
