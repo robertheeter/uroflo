@@ -92,7 +92,7 @@ class LightSound():
         elif tone == 'alarm':
             audio = pygame.mixer.Sound('sound/alarm.mp3') # play 4 times
         
-        audio.set_volume(0.5)
+        audio.set_volume(0.8)
         audio.play()
 
     def shutdown(self):
@@ -115,6 +115,6 @@ if __name__ == '__main__':
     
     for tone in ['chime', 'alarm']:
         light_sound.sound(tone=tone)
-        time.sleep(1)
+        time.sleep(5)
 
     light_sound.shutdown()
