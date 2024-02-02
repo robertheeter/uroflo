@@ -1,4 +1,3 @@
-// import "./App.css";
 import Hematuria from "./components/Hematuria";
 import Supply from "./components/Supply";
 import Waste from "./components/Waste";
