@@ -87,10 +87,10 @@ class LightSound():
         pygame.init()
 
         if tone == 'chime':
-            audio = pygame.mixer.Sound('/sound/chime.mp3') # play 1 time
+            audio = pygame.mixer.Sound('sound/chime.mp3') # play 1 time
 
         elif tone == 'alarm':
-            audio = pygame.mixer.Sound('/sound/alarm.mp3') # play 4 times
+            audio = pygame.mixer.Sound('sound/alarm.mp3') # play 4 times
         
         audio.set_volume(0.5)
         audio.play()
