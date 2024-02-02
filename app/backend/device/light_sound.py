@@ -119,4 +119,7 @@ if __name__ == '__main__':
         #     print(i)
         # time.sleep(16)
 
+    while(True):
+        print(1)
+        time.sleep(0.5)
     # light_sound.shutdown()
