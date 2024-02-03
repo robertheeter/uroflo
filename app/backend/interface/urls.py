@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     # DEVICE DATA
-    path('api/device/', views.send_device),
+    path('api/device', views.send_device),
 
     # INTERFACE DATA
     # SUPPLY
