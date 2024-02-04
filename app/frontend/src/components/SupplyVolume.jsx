@@ -1,32 +1,66 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+
 const SupplyVolume = () => {
-  let currentVolume = 2.8;
-  let totalVolume = 3.0;
-  let percent = Math.round((currentVolume / totalVolume) * 100);
+  let [volume, setVolume] = useState(0);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      axios
+        .get("http://localhost:8000/interface/api/device") // replace with your API endpoint
+        .then((response) => setVolume(response.data.supply_volume)) // replace 'rate' with the actual key in the response
+        .catch((error) => console.error(error));
+    }, 1000); // fetch every 1 second
+
+    return () => clearInterval(intervalId); // clean up on component unmount
+  }, []);
+
+  volume = volume / 1000;
+  let totalVolume = 6.0;
+  let percent = Math.round((volume / totalVolume) * 100);
+
+  const [time, setTime] = useState(0);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      axios
+        .get("http://localhost:8000/interface/api/device") // replace with your API endpoint
+        .then((response) => setTime(response.data.supply_time)) // replace 'rate' with the actual key in the response
+        .catch((error) => console.error(error));
+    }, 1000); // fetch every 1 second
+
+    return () => clearInterval(intervalId); // clean up on component unmount
+  }, []);
+
+  let hours = Math.floor(time / 60);
+  let minutes = time % 60;
 
   return (
     <div
-      className="w-[48.5%] h-full bg-blue-300 rounded-xl 
+      className="w-[48.5%] h-full bg-slate-800 rounded-xl
                        flex flex-row "
     >
-      <div className="w-[80%] flex flex-col justify-between items-start px-6 py-1">
-        <div className="text-2xl font-bold">SUPPLY VOLUME</div>
+      <div className="w-[95%] flex flex-col justify-between items-start px-4 py-3">
+        <div className="text-2xl text-slate-200">SUPPLY VOLUME</div>
         <div className="w-full flex justify-between items-center">
           <div
-            className={`w-[125px] h-[48px] font-bold bg-blue-50 flex flex-row justify-center 
-        items-center rounded-lg border-black border-4 text-xl`}
+            className={`h-[40px] font-bold bg-slate-200 flex flex-row justify-left 
+        items-center rounded-lg text-2xl text-slate-950 px-3`}
           >
             {percent}% FULL
           </div>
-          <div className="text-2xl relative -right-5">
-            {currentVolume.toFixed(1)}/{totalVolume.toFixed(1)} L
+          <div className="text-2xl text-slate-200 relative -right-3">
+            {volume.toFixed(1)}/{totalVolume.toFixed(1)} L
           </div>
         </div>
-        <div className="text-xl">01 HR 32 MIN TO EMPTY</div>
+        <div className="text-lg text-slate-200">
+          {hours} HR {minutes} MIN TO EMPTY
+        </div>
       </div>
       <div className="w-16 flex justify-center items-center">
-        <div className="relative w-10 h-24 bg-blue-50 border-black border-2 rounded-sm">
+        <div className="relative w-5 h-24 bg-slate-200 rounded-2xl">
           <div
-            className="absolute w-full bottom-0 bg-blue-600 transition-all duration-500"
+            className="absolute w-full bottom-0 bg-blue-400 transition-all duration-500 rounded-2xl"
             style={{ height: `${percent}%` }}
           ></div>
         </div>
