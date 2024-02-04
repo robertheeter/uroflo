@@ -13,14 +13,14 @@ def send_device(request):
         response = JsonResponse({'hematuria_level': random.randint(0, 99),
                                  'hematuria_percent': random.uniform(0, 10),
 
-                                 'supply_percent': random.randint(0, 100),
                                  'supply_time': random.randint(0, 1000),
                                  'supply_volume': random.randint(0, 6000),
+                                 'supply_volume_total': 6000,
                                  'supply_rate': random.randint(0, 100),
 
-                                 'waste_percent': random.randint(0, 100),
                                  'waste_time': random.randint(0, 1000),
                                  'waste_volume': random.randint(0, 5000),
+                                 'waste_volume_total': 5000,
                                  'waste_rate': random.randint(0, 100),
 
                                  'status_message': 'Normal. This is a test message.',

@@ -1,0 +1,12 @@
+{
+    "patient_firstname": "",
+    "patient_lastname": "",
+    "patient_middleinitial": "",
+    "patient_ID": 0,
+    "patient_birthdate": "00:00:0000",
+    "patient_sex": "",
+    "patient_contact_A": 1234567890,
+    "patient_contact_B": 1234567890,
+    "patient_start_date": "00:00:0000",
+    "patient_start_time": "00:00"
+}

@@ -30,6 +30,8 @@ use this lol
 
 
 
+
+
 # FROM WEIGTH SENSOR
 def rate(self, interval=60):
     start_time = time.time()
