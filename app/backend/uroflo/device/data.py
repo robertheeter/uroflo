@@ -1,5 +1,5 @@
 '''
-UTILS
+DATA
 
 About
 - Useful functions for device
@@ -13,8 +13,8 @@ Documentation
 
 '''
 
-import sqlite3
 import os
+import sqlite3
 import json
 
 
