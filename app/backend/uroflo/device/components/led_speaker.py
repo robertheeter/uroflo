@@ -1,14 +1,12 @@
 '''
-LIGHT & SOUND
+LED & SPEAKER
 
-About
+Notes
+- For notification system
+
 - LED strip light using 3 R, G, and B N-channel MOSFETs
 - Speaker with sound alerts
 
-For
-- Notification system
-
-Notes
 - Pin allocation:
   PIN 24 (GPIO 8), PIN 26 (GPIO 7), PIN 28 (GPIO 1), PIN 30 (Ground)
 
@@ -21,9 +19,10 @@ import time
 import board
 import pwmio
 import pygame
+import os
 
 
-class LightSound():
+class LEDSpeaker():
     def __init__(self, red_pin, green_pin, blue_pin, verbose=False):
         self.red_pin = red_pin # GPIO red pin (BCM)
         self.green_pin = green_pin # GPIO green pin (BCM)
@@ -34,7 +33,7 @@ class LightSound():
         self.setup()
 
     def setup(self):
-        print("LightSound: setup")
+        print("LEDSpeaker: setup")
         self.red = pwmio.PWMOut(self.red_pin)
         self.green = pwmio.PWMOut(self.green_pin)
         self.blue = pwmio.PWMOut(self.blue_pin)
@@ -46,10 +45,10 @@ class LightSound():
     # turn on LED to color
     def light(self, color):
         if color not in ['off', 'default', 'yellow', 'orange', 'red']:
-            raise Exception(f"LightSound: color = {color} not available")
+            raise Exception(f"LEDSpeaker: color = {color} not available")
         
         if self.verbose:
-            print(f"LightSound: light (color = {color})")
+            print(f"LEDSpeaker: light (color = {color})")
         
         if color == 'off':
             self.red.duty_cycle = self.duty_cycle(0)
@@ -77,26 +76,20 @@ class LightSound():
             self.green.duty_cycle = self.duty_cycle(0)
 
     # play audio from speaker
-    def sound(self, tone):
-        if tone not in ['chime', 'alarm']:
-            raise Exception(f"LightSound: tone = {tone} not available")
+    def sound(self, file):
+        if not os.path.exists(file):
+            raise Exception(f"LEDSpeaker: file = {file} not found")
         
         if self.verbose:
-            print(f"LightSound: sound (tone = {tone})")
+            print(f"LEDSpeaker: sound (file = {file})")
 
         pygame.init()
-
-        if tone == 'chime':
-            audio = pygame.mixer.Sound('sound/chime.mp3') # play 1 time
-
-        elif tone == 'alarm':
-            audio = pygame.mixer.Sound('sound/alarm.mp3') # play 4 times
-        
+        audio = pygame.mixer.Sound(file)
         audio.set_volume(1.0)
         audio.play()
 
     def shutdown(self):
-        print("LightSound: shutdown")
+        print("LEDSpeaker: shutdown")
         self.light('off')
         self.red.deinit()
         self.green.deinit()
@@ -106,15 +99,16 @@ class LightSound():
 
 # example implementation
 if __name__ == '__main__':
-    light_sound = LightSound(red_pin=board.D8, green_pin=board.D7, blue_pin=board.D1, verbose=True) # use BOARD.D[GPIO] numbering (NOT pin numbering)
+    os.chdir("../device") # change current directory
+    led_speaker = LEDSpeaker(red_pin=board.D8, green_pin=board.D7, blue_pin=board.D1, verbose=True) # use BOARD.D[GPIO] numbering (NOT pin numbering)
     time.sleep(2) # wait for setup
 
     for color in ['default', 'off', 'yellow', 'orange', 'red']:
-        light_sound.light(color=color)
+        led_speaker.light(color=color)
         time.sleep(4)
     
-    for tone in ['chime', 'alarm']:
-        light_sound.sound(tone=tone)
+    for file in ['sound/chime.mp3', 'sound/alarm.mp3']:
+        led_speaker.sound(file=file)
         time.sleep(10)
 
-    light_sound.shutdown()
+    led_speaker.shutdown()

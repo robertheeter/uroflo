@@ -1,11 +1,8 @@
 '''
 MAIN
 
-About
-- Controls device
-
 Notes
-- 
+- Controls device
 
 Documentation
 - 

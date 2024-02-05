@@ -1,17 +1,16 @@
 '''
 WEIGHT SENSOR
 
-About
+Notes
+- For supply/waste volume measurement
+- For inflow/outflow rate measurement
+
 - HX711 weight sensor using GPIO
 
-For
-- Supply/waste volume measurement
-- Inflow/outflow rate measurement
-
-Notes
 - Recommend initial offset = 1
 - Recommend initial scale = -242.22
 - Recommend replicates = 15
+
 - Pin allocation:
   PIN 2 (5 V), PIN 4 (5 V), PIN 6 (Ground), PIN 8 (GPIO 14),
   PIN 10 (GPIO 15), PIN 12 (GPIO 18), PIN 14 (Ground), PIN 16 (GPIO 23)
@@ -25,6 +24,7 @@ import time
 import RPi.GPIO as GPIO
 import threading
 import numpy as np
+import os
 
 
 class WeightSensor():
@@ -42,7 +42,7 @@ class WeightSensor():
     def setup(self):
         print("WeightSensor: setup")
         GPIO.setwarnings(False)
-        GPIO.setmode(GPIO.BOARD) # BOARD mode
+        GPIO.setmode(GPIO.BCM) # BCM mode
 
         self.hx = HX711(self.pdsck_pin, self.dout_pin)
         self.hx.set_reading_format("MSB", "MSB")
@@ -448,6 +448,7 @@ class HX711():
 
 # example implementation
 if __name__ == '__main__':
+    os.chdir("../device") # change current directory
     weight_sensor = WeightSensor(pdsck_pin=8, dout_pin=10, offset=1, scale=-242.22, verbose=True) # use GPIO numbering (NOT pin numbering)
     time.sleep(2) # wait for setup
 

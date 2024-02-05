@@ -1,15 +1,14 @@
 '''
 LINEAR ACTUATOR
 
-About
+Notes
+- For inflow rate control
+
 - L298N driver
 - 12 V linear actuator (2 in stroke, 0.4 in/s, 1460 N / 330 lb)
 
-For
-- Inflow rate control
-
-Notes
 - Recommend PWM freq = 1000
+
 - Pin allocation:
   PIN 19 (GPIO 10), PIN 21 (GPIO 9), PIN 23 (GPIO 11), PIN 25 (Ground)
 
@@ -20,6 +19,7 @@ Documentation
 
 import time
 import RPi.GPIO as GPIO
+import os
 
 
 class LinearActuator():
@@ -94,6 +94,7 @@ class LinearActuator():
 
 # example implementation
 if __name__ == '__main__':
+    os.chdir("../device") # change current directory
     linear_actuator = LinearActuator(en_pin=10, in1_pin=9, in2_pin=11, freq=1000, verbose=True) # use pin numbering (NOT GPIO numbering)
     time.sleep(2) # wait for setup
 
