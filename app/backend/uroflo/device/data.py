@@ -57,7 +57,6 @@ def replace_data(file, verbose=False):
             mute                    INTEGER     NOT NULL,
             clear                   INTEGER     NOT NULL,
             off                     INTEGER     NOT NULL);''')
-        
         db.close()
         if verbose:
             print(f"table 'device' created in {file} successfully")
@@ -84,9 +83,7 @@ def replace_data(file, verbose=False):
             inflow_level                    INTEGER     NOT NULL,
             mute                            INTEGER     NOT NULL,
             clear_count                     INTEGER     NOT NULL,
-            off_count                       INTEGER     NOT NULL,
             reset_count                     INTEGER     NOT NULL);''')
-        
         db.close()
         if verbose:
             print(f"table 'control' created in {file} successfully")
