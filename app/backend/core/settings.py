@@ -54,6 +54,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 CSRF_TRUSTED_ORIGINS = ['http://localhost:5173']
 CSRF_COOKIE_SECURE = False
 CSRF_COOKIE_NAME = 'csrftoken'
+CSRF_COOKIE_HTTPONLY = False
 
 # CORS_ORIGIN_WHITELIST = [
 #     'http://localhost:8000',
