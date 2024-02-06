@@ -54,6 +54,8 @@ MIDDLEWARE = [
 CORS_ALLOW_ALL_ORIGINS = True
 CSRF_TRUSTED_ORIGINS = ['http://localhost:5173']
 
+CSRF_COOKIE_SECURE = True
+
 # CORS_ORIGIN_WHITELIST = [
 #     'http://localhost:8000',
 #     'http://localhost:5173', # replace with React frontend URL
