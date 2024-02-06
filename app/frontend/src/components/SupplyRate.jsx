@@ -24,7 +24,7 @@ const SupplyRate = () => {
       <div className="w-full h-full flex flex-col justify-between items-start px-5 py-4">
         <div className="text-3xl text-slate-200">SUPPLY INFLOW</div>
         <div className="w-full flex flex-col justify-center items-center mb-20">
-          <div className="font-bold text-slate-200 text-3xl pb-[4px]">
+          <div className="font-bold text-slate-200 text-3xl mb-[9px]">
             {rate} mL/min
           </div>
           <div className="w-full h-6 rounded-2xl bg-slate-200">
