@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.views.decorators.csrf import ensure_csrf_token
+from django.views.decorators.csrf import csrf_exempt
 
 import json
 
@@ -71,7 +71,7 @@ def handle_automatic(request):
     response = None
     return response
 
-@ensure_csrf_token
+@csrf_exempt
 def handle_inflow_level_increase(request):
     if request.method == 'POST':
         try:
