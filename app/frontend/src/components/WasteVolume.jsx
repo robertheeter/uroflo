@@ -41,7 +41,7 @@ const WasteVolume = () => {
                        flex flex-row "
     >
       <div className="w-[95%] flex flex-col justify-between items-start px-5 py-4">
-        <div className="text-3xl text-slate-200">Waste VOLUME</div>
+        <div className="text-3xl text-slate-200">WASTE VOLUME</div>
         <div className="w-full flex justify-between items-center mt-1 mb-1">
           <div
             className={`font-bold bg-slate-200 flex flex-row justify-left 
