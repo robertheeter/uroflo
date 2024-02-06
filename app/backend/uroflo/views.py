@@ -71,7 +71,7 @@ def handle_automatic(request):
     response = None
     return response
 
-@csrf_exempt
+# @csrf_exempt
 def handle_inflow_level_increase(request):
     if request.method == 'POST':
         try:
