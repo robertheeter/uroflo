@@ -70,6 +70,21 @@ def handle_automatic(request):
     return response
 
 def handle_inflow_level_increase(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            key1_value = data.get('inflow_level_increase', None)
+            # key2_value = data.get('key2', None)
+            print('SUCCESS')
+            print(key1_value)
+            return JsonResponse({'status': 'success', 'message': 'Request processed.'})
+        
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON data.'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+
+
     response = None
     return response
 
