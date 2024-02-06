@@ -5,7 +5,7 @@ import { TbTriangleInvertedFilled } from "react-icons/tb";
 
 const convertLevelToSeverity = (level) => {
   if (level < 25) {
-    return "MODERATE";
+    return "CLEAR";
   } else if (level >= 25 && level < 50) {
     return "MILD";
   } else if (level >= 50 && level < 75) {
