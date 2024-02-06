@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import { IoTriangle } from "react-icons/io5";
+import { TbTriangleInvertedFilled } from "react-icons/tb";
 
 const convertLevelToSeverity = (level) => {
   if (level < 25) {
@@ -79,7 +80,7 @@ const Hematuria = () => {
             className="w-10 h-5/6 absolute transition-all duration-500 -translate-x-1/2 flex flex-col justify-between items-center"
             style={{ left: `${level}%` }}
           >
-            <IoTriangle className="text-3xl text-slate-200 rotate-180" />
+            <TbTriangleInvertedFilled className="text-3xl text-slate-200" />
             {/* <IoTriangle className="text-3xl text-slate-200" /> */}
           </div>
         </div>
