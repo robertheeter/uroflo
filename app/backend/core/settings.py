@@ -51,10 +51,10 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ORIGIN_ALLOW_ALL = True
 CSRF_TRUSTED_ORIGINS = ['http://localhost:5173/','http://localhost:127.0.0.1:8000/']
 CSRF_COOKIE_SECURE = False
 CSRF_COOKIE_NAME = 'csrftoken'
-CSRF_COOKIE_HTTPONLY = False
 
 # CORS_ORIGIN_WHITELIST = [
 #     'http://localhost:8000',
