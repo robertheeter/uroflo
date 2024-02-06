@@ -16,7 +16,7 @@ const WasteVolume = () => {
   }, []);
 
   volume = volume / 1000;
-  let totalVolume = 6.0;
+  let totalVolume = 5.0;
   let percent = Math.round((volume / totalVolume) * 100);
 
   const [time, setTime] = useState(0);
