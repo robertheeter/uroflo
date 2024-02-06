@@ -99,7 +99,7 @@ class LEDSpeaker():
 
 # example implementation
 if __name__ == '__main__':
-    os.chdir("../device") # change current directory
+    os.chdir("device") # change current directory
     led_speaker = LEDSpeaker(red_pin=board.D8, green_pin=board.D7, blue_pin=board.D1, verbose=True) # use BOARD.D[GPIO] numbering (NOT pin numbering)
     time.sleep(2) # wait for setup
 
