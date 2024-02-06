@@ -5,7 +5,7 @@ import { TbTriangleInvertedFilled } from "react-icons/tb";
 
 const convertLevelToSeverity = (level) => {
   if (level < 25) {
-    return "CLEAR";
+    return "MODERATE";
   } else if (level >= 25 && level < 50) {
     return "MILD";
   } else if (level >= 50 && level < 75) {
@@ -45,33 +45,33 @@ const Hematuria = () => {
 
   return (
     <div
-      className="w-full h-[136px] bg-slate-700 rounded-xl 
-                       flex flex-col justify-between items-center px-4 py-3"
+      className="w-full h-[158px] bg-slate-700 rounded-2xl 
+                       flex flex-col justify-between items-center px-5 py-4"
     >
       <div className="w-full flex justify-between">
-        <div className="text-2xl text-slate-200">HEMATURIA SEVERITY</div>
-        <div className="text-2xl text-slate-200">
+        <div className="text-3xl text-slate-200">HEMATURIA SEVERITY</div>
+        <div className="text-3xl text-slate-200">
           {percent.toFixed(1)}% BLOOD
         </div>
       </div>
       <div className="w-full flex justify-between items-center">
         <div
-          className={`h-[54px] font-bold bg-slate-200 flex rounded-xl justify-left items-center text-slate-950 text-3xl px-3`}
+          className={`font-bold bg-slate-200 flex rounded-xl justify-left items-center text-slate-950 text-4xl px-3 py-2`}
         >
           {severity}
         </div>
-        <div className="w-[480px] h-20 flex flex-col justify-center items-center relative">
-          <div className="w-full h-7 rounded-3xl text-slate-200 bg-slate-200 flex flex-row">
-            <div className="w-1/4 h-full bg-[#ddc588] text-lg relative flex justify-center items-center rounded-l-2xl">
+        <div className="w-[600px] h-24 flex flex-col justify-center items-center relative">
+          <div className="w-full h-8 rounded-2xl text-slate-200 bg-slate-200 flex flex-row">
+            <div className="w-1/4 h-full bg-[#ddc588] text-xl relative flex justify-center items-center rounded-l-2xl">
               <p className="absolute -bottom-7">CLEAR</p>
             </div>
-            <div className="w-1/4 h-full bg-[#cf8f70] text-lg relative flex justify-center items-center">
+            <div className="w-1/4 h-full bg-[#cf8f70] text-xl relative flex justify-center items-center">
               <p className="absolute -bottom-7">MILD</p>
             </div>
-            <div className="w-1/4 h-full bg-[#a8372a] text-lg relative flex justify-center items-center">
+            <div className="w-1/4 h-full bg-[#a8372a] text-xl relative flex justify-center items-center">
               <p className="absolute -bottom-7">MODERATE</p>
             </div>
-            <div className="w-1/4 h-full bg-[#491210] text-lg relative flex justify-center items-center rounded-r-2xl">
+            <div className="w-1/4 h-full bg-[#491210] text-xl relative flex justify-center items-center rounded-r-2xl">
               <p className="absolute -bottom-7">SEVERE</p>
             </div>
           </div>

@@ -16,7 +16,7 @@ const WasteVolume = () => {
   }, []);
 
   volume = volume / 1000;
-  let totalVolume = 5.0;
+  let totalVolume = 6.0;
   let percent = Math.round((volume / totalVolume) * 100);
 
   const [time, setTime] = useState(0);
@@ -37,28 +37,28 @@ const WasteVolume = () => {
 
   return (
     <div
-      className="w-[48.5%] h-full bg-slate-900 rounded-xl
+      className="w-[48.5%] h-full bg-slate-900 rounded-2xl
                        flex flex-row "
     >
-      <div className="w-[95%] flex flex-col justify-between items-start px-4 py-3">
-        <div className="text-2xl text-slate-200">WASTE VOLUME</div>
-        <div className="w-full flex justify-between items-center">
+      <div className="w-[95%] flex flex-col justify-between items-start px-5 py-4">
+        <div className="text-3xl text-slate-200">Waste VOLUME</div>
+        <div className="w-full flex justify-between items-center mt-1 mb-1">
           <div
-            className={`h-[40px] font-bold bg-slate-200 flex flex-row justify-left 
-        items-center rounded-lg text-2xl text-slate-950 px-3`}
+            className={`font-bold bg-slate-200 flex flex-row justify-left 
+        items-center rounded-lg text-3xl text-slate-950 px-3 py-1`}
           >
             {percent}% FULL
           </div>
-          <div className="text-2xl text-slate-200 relative -right-3">
+          <div className="text-3xl text-slate-200 relative -right-3">
             {volume.toFixed(1)}/{totalVolume.toFixed(1)} L
           </div>
         </div>
-        <div className="text-lg text-slate-200">
+        <div className="text-xl text-slate-200">
           {hours} HR {minutes} MIN TO FULL
         </div>
       </div>
       <div className="w-16 flex justify-center items-center">
-        <div className="relative w-5 h-24 bg-slate-200 rounded-2xl">
+        <div className="relative w-6 h-28 mr-2 bg-slate-200 rounded-2xl">
           <div
             className="absolute w-full bottom-0 bg-yellow-500 transition-all duration-500 rounded-2xl"
             style={{ height: `${percent}%` }}

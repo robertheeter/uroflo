@@ -3,7 +3,7 @@ import WasteRate from "./WasteRate";
 
 const Waste = () => {
   return (
-    <div className="w-full h-[136px] flex flex-row justify-between items-center">
+    <div className="w-full h-[158px] flex flex-row justify-between items-center">
       <WasteVolume />
       <WasteRate />
     </div>

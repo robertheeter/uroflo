@@ -10,7 +10,7 @@ function App() {
       <div>
         <div
           className="bg-slate-950 flex flex-col justify-between items-center 
-                    py-6 fixed text-4xl w-3/4 h-5/6 px-6"
+                    py-8 fixed text-4xl w-3/4 h-5/6 px-8"
         >
           <Hematuria />
           <Supply />
