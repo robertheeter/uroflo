@@ -7,32 +7,32 @@ urlpatterns = [
 
     # INTERFACE DATA
     # SUPPLY
-    path('interface/supply_replace_volume', views.handle_supply_replace_volume),
-    path('interface/supply_replace_removed', views.handle_supply_replace_removed),
-    path('interface/supply_replace_added', views.handle_supply_replace_added),
+    path('control/supply_replace_volume', views.handle_supply_replace_volume),
+    path('control/supply_replace_removed', views.handle_supply_replace_removed),
+    path('control/supply_replace_added', views.handle_supply_replace_added),
 
     # WASTE
-    path('interface/waste_replace_volume', views.handle_waste_replace_volume),
-    path('interface/waste_replace_removed', views.handle_waste_replace_removed),
-    path('interface/waste_replace_added', views.handle_waste_replace_added),
+    path('control/waste_replace_volume', views.handle_waste_replace_volume),
+    path('control/waste_replace_removed', views.handle_waste_replace_removed),
+    path('control/waste_replace_added', views.handle_waste_replace_added),
 
     # CONTROL
-    path('interface/automatic', views.handle_automatic),
-    path('interface/inflow_level_increase', views.handle_inflow_level_increase),
-    path('interface/inflow_level_decrease', views.handle_inflow_level_decrease),
-    path('interface/clear', views.handle_clear),
-    path('interface/mute', views.handle_mute),
-    path('interface/reset', views.handle_reset),
+    path('control/automatic', views.handle_automatic),
+    path('control/inflow_level_increase', views.handle_inflow_level_increase),
+    path('control/inflow_level_decrease', views.handle_inflow_level_decrease),
+    path('control/clear', views.handle_clear),
+    path('control/mute', views.handle_mute),
+    path('control/reset', views.handle_reset),
 
     # PATIENT
-    path('interface/patient_firstname', views.handle_patient_firstname),
-    path('interface/patient_lastname', views.handle_patient_lastname),
-    path('interface/patient_middleinitial', views.handle_patient_middleinitial),
-    path('interface/patient_ID', views.handle_patient_ID),
-    path('interface/patient_birthdate', views.handle_patient_birthdate),
-    path('interface/patient_sex', views.handle_patient_sex),
+    path('control/patient_firstname', views.handle_patient_firstname),
+    path('control/patient_lastname', views.handle_patient_lastname),
+    path('control/patient_middleinitial', views.handle_patient_middleinitial),
+    path('control/patient_ID', views.handle_patient_ID),
+    path('control/patient_birthdate', views.handle_patient_birthdate),
+    path('control/patient_sex', views.handle_patient_sex),
 
     # CONTACT
-    path('interface/contact_A', views.handle_contact_A),
-    path('interface/contact_B', views.handle_contact_B)
+    path('control/contact_A', views.handle_contact_A),
+    path('control/contact_B', views.handle_contact_B)
 ]
