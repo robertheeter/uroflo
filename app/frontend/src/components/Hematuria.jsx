@@ -61,8 +61,8 @@ const Hematuria = () => {
           {severity}
         </div>
         <div className="w-[600px] h-24 flex flex-col justify-center items-center relative">
-          <div className="w-full h-8 rounded-2xl text-slate-200 bg-slate-200 flex flex-row">
-            <div className="w-1/4 h-full bg-[#ddc588] text-xl relative flex justify-center items-center rounded-l-2xl">
+          <div className="w-full h-8 rounded-2xl text-slate-200 flex flex-row">
+            {/* <div className="w-1/4 h-full bg-[#ddc588] text-xl relative flex justify-center items-center rounded-l-2xl">
               <p className="absolute -bottom-7">CLEAR</p>
             </div>
             <div className="w-1/4 h-full bg-[#cf8f70] text-xl relative flex justify-center items-center">
@@ -73,6 +73,22 @@ const Hematuria = () => {
             </div>
             <div className="w-1/4 h-full bg-[#491210] text-xl relative flex justify-center items-center rounded-r-2xl">
               <p className="absolute -bottom-7">SEVERE</p>
+            </div> */}
+
+            <div
+              className="w-[45%] h-full bg-gradient-to-r from-[#ddc588] from-50% to-70% to-[#cf8f70] text-xl 
+                            relative flex flex-row justify-between items-center rounded-l-2xl pl-12 pr-5"
+            >
+              <p className="relative -bottom-8">CLEAR</p>
+              <p className="relative -bottom-8">MILD</p>
+            </div>
+            <div className="w-[10%] h-full bg-gradient-to-r from-[#cf8f70] to-[#a8372a] text-xl relative flex justify-center items-center"></div>
+            <div
+              className="w-[45%] h-full bg-gradient-to-r from-[#a8372a] from-30% to-50% to-[#491210] text-xl 
+                          relative flex flex-row justify-between items-center rounded-r-2xl pr-9"
+            >
+              <p className="relative -bottom-8">MODERATE</p>
+              <p className="relative -bottom-8">SEVERE</p>
             </div>
           </div>
 
