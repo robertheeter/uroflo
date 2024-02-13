@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { IoTriangle } from "react-icons/io5";
+// import { IoTriangle } from "react-icons/io5";
 import { TbTriangleInvertedFilled } from "react-icons/tb";
 
 const convertLevelToSeverity = (level) => {
@@ -22,8 +22,8 @@ const Hematuria = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       axios
-        .get("http://localhost:8000/uroflo/device") // replace with your API endpoint
-        .then((response) => setPercent(response.data.hematuria_percent)) // replace 'rate' with the actual key in the response
+        .get("http://localhost:8000/uroflo/device") // API endpoint
+        .then((response) => setPercent(response.data.hematuria_percent)) // response key
         .catch((error) => console.error(error));
     }, 1000); // fetch every 1 second
 
@@ -33,15 +33,15 @@ const Hematuria = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       axios
-        .get("http://localhost:8000/uroflo/device") // replace with your API endpoint
-        .then((response) => setLevel(response.data.hematuria_level)) // replace 'rate' with the actual key in the response
+        .get("http://localhost:8000/uroflo/device") // API endpoint
+        .then((response) => setLevel(response.data.hematuria_level)) // response key
         .catch((error) => console.error(error));
     }, 1000); // fetch every 1 second
 
     return () => clearInterval(intervalId); // clean up on component unmount
   }, []);
 
-  let severity = convertLevelToSeverity(level); // Change this value to "CLEAR", "MILD", "MODERATE", or "SEVERE"
+  let severity = convertLevelToSeverity(level); // changes value to "CLEAR", "MILD", "MODERATE", or "SEVERE"
 
   return (
     <div
@@ -96,7 +96,7 @@ const Hematuria = () => {
             className="w-10 h-5/6 absolute transition-all duration-500 -translate-x-1/2 flex flex-col justify-between items-center"
             style={{ left: `${level}%` }}
           >
-            <TbTriangleInvertedFilled className="text-3xl text-slate-200" />
+            <TbTriangleInvertedFilled className="text-4xl text-slate-200" />
             {/* <IoTriangle className="text-3xl text-slate-200" /> */}
           </div>
         </div>
