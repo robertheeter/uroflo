@@ -11,8 +11,8 @@ Notes
 - Recommend max = 48000 (VIS) or 16000 (NIR)
 - Recommend replicates = 10
 - Pin allocation:
-  PIN 1 (3.3 V), PIN 3 (I2C SDA), PIN 5 (I2C SCL), PIN 7 (GPIO 4),
-  PIN 9 (Ground)
+  PIN 1 (3.3 V) [RED], PIN 3 (I2C SDA) [BLUE], PIN 5 (I2C SCL) [YELLOW], PIN 7 (GPIO 4) [GREEN],
+  PIN 9 (Ground) [BLACK]
 
 Documentation
 - Guide: https://learn.adafruit.com/adafruit-as7262-6-channel-visible-light-sensor
