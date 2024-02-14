@@ -38,7 +38,14 @@ const ControlPanel = () => {
   };
 
   return (
-    <div className="flex flex-col justify-around items-center w-full h-full pb-6">
+    <div className="flex flex-col justify-between items-center w-full h-full pb-6">
+      <div
+        className="flex flex-col rounded-2xl text-slate-200 
+                      bg-red-500 w-full h-40 px-5 py-4 gap-y-1"
+      >
+        <p className="font-bold text-3xl">STATUS CRITICAL</p>
+        <p className="text-xl">SEVERE HEMATURIA DETECTED FOR &gt; 30 MIN</p>
+      </div>
       <div className="flex flex-row justify-left items-center w-full mb-4">
         <img src={UroFloLogo} alt="Description of Image" className="w-[60%]" />
       </div>
@@ -74,13 +81,6 @@ const ControlPanel = () => {
         <div className="rounded-lg bg-yellow-900 text-slate-200 text-xl w-[48%] h-16 px-3 py-1">
           REPLACE WASTE BAG
         </div>
-      </div>
-      <div
-        className="flex flex-col rounded-lg border-4 border-red-500 text-slate-200 
-                      bg-slate-800 w-full h-40 px-3 py-1 gap-y-1"
-      >
-        <p className="font-bold text-3xl">STATUS: CRITICAL</p>
-        <p className="text-xl">SEVERE HEMATURIA DETECTED FOR &gt; 30 MIN</p>
       </div>
       <div className="flex flex-row justify-between items-center w-full">
         <p className="text-3xl text-slate-200">MUTE ALERTS</p>

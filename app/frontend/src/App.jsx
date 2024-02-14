@@ -18,7 +18,7 @@ function App() {
           <Supply />
           <Waste />
         </div>
-        <div className="fixed bg-slate-950 w-1/4 h-5/6 right-0 pt-5 pr-6">
+        <div className="fixed bg-slate-950 w-1/4 h-5/6 right-0 py-8 pr-8">
           <ControlPanel />
         </div>
         <div className="fixed bg-slate-950 text-white text-4xl right-0 bottom-0 w-1/4 h-1/6 pr-6 pb-5">
