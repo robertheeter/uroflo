@@ -94,7 +94,7 @@ class LinearActuator():
 
 # example implementation
 if __name__ == '__main__':
-    os.chdir("../device") # change current directory
+    os.chdir("..") # change current directory
     linear_actuator = LinearActuator(en_pin=10, in1_pin=9, in2_pin=11, freq=1000, verbose=True) # use pin numbering (NOT GPIO numbering)
     time.sleep(2) # wait for setup
 

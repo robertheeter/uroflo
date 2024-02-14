@@ -448,7 +448,7 @@ class HX711():
 
 # example implementation
 if __name__ == '__main__':
-    os.chdir("../device") # change current directory
+    os.chdir("..") # change current directory
     weight_sensor = WeightSensor(pdsck_pin=8, dout_pin=10, offset=1, scale=-242.22, verbose=True) # use GPIO numbering (NOT pin numbering)
     time.sleep(2) # wait for setup
 
