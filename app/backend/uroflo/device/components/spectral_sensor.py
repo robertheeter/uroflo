@@ -78,6 +78,8 @@ class SpectralSensor():
 
     # scan raw intensities
     def scan(self):
+        self.check_temperature()
+        
         if self.use_led == True:
             GPIO.output(self.led_pin, GPIO.LOW) # turn on LED
         
@@ -97,8 +99,6 @@ class SpectralSensor():
 
     # read wavelength intensities
     def read(self, replicates=10):
-        self.check_temperature()
-        
         intensities = []
         for _ in range(replicates):
             intensities.append(self.scan())
