@@ -130,7 +130,8 @@ if __name__ == '__main__':
     spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000, verbose=True) # use GPIO numbering (NOT pin numbering)
     time.sleep(2) # wait for setup
 
-    reading = spectral_sensor.read(replicates=20)
+    n = 20
+    reading = spectral_sensor.read(replicates=n)
 
     print(f"\nAVERAGE READINGS (n={n}):\n")
     print('450 nm / violet : {:.2f}'.format(reading[450]))
