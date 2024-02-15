@@ -60,7 +60,7 @@ const WasteVolume = () => {
       <div className="w-16 flex justify-center items-center">
         <div className="relative w-6 h-28 mr-2 bg-slate-200 rounded-2xl">
           <div
-            className="absolute w-full bottom-0 bg-yellow-500 transition-all duration-500 rounded-2xl"
+            className="absolute w-full bottom-0 bg-yellow-600 transition-all duration-500 rounded-2xl"
             style={{ height: `${percent}%` }}
           ></div>
         </div>

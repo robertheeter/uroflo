@@ -1,10 +1,10 @@
-import WasteVolume from "./WasteVolume";
+import SupplyRate from "./SupplyRate";
 import WasteRate from "./WasteRate";
 
 const Waste = () => {
   return (
     <div className="w-full h-[162px] flex flex-row justify-between items-center">
-      <WasteVolume />
+      <SupplyRate />
       <WasteRate />
     </div>
   );

@@ -29,7 +29,7 @@ const WasteRate = () => {
           </div>
           <div className="w-full h-6 rounded-2xl bg-slate-200">
             <div
-              className="h-full bg-yellow-500 rounded-2xl transition-all duration-500"
+              className="h-full bg-yellow-600 rounded-2xl transition-all duration-500"
               style={{ width: `${rate}%` }}
             ></div>
             <div className="flex flex-row justify-between items-center">

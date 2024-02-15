@@ -2,7 +2,6 @@ import axios from "axios";
 import { Switch } from "@chakra-ui/react";
 import { TbTriangleFilled } from "react-icons/tb";
 import { TbTriangleInvertedFilled } from "react-icons/tb";
-import UroFloLogo from "../assets/uroflo_blue_name_cropped.svg";
 
 const ControlPanel = () => {
   const increaseFlow = () => {
@@ -36,59 +35,60 @@ const ControlPanel = () => {
         console.error("Error:", error);
       });
   };
-
+  // [#7fb4df] uroflo blue
+  // amber-600
+  // red-600
   return (
-    <div className="flex flex-col justify-between items-center w-full h-full pb-6">
+    <div className="flex flex-col justify-start items-center w-full h-full gap-y-6">
       <div
         className="flex flex-col rounded-2xl text-slate-200 
-                      bg-red-500 w-full h-40 px-5 py-4 gap-y-1"
+                      bg-red-600 w-full h-[162px] px-5 py-4 gap-y-1"
       >
-        <p className="font-bold text-3xl">STATUS CRITICAL</p>
-        <p className="text-xl">SEVERE HEMATURIA DETECTED FOR &gt; 30 MIN</p>
+        <p className="text-3xl">
+          STATUS <p className="font-bold">CAUTION</p>
+        </p>
+        <p className="text-xl">SEVERE HEMATURIA FOR &gt; 30 MIN</p>
       </div>
-      <div className="flex flex-row justify-left items-center w-full mb-4">
-        <img src={UroFloLogo} alt="Description of Image" className="w-[60%]" />
+      <div className="flex flex-row justify-center items-center gap-x-6 w-full">
+        <div className="flex items-center justify-center text-center rounded-lg font-bold bg-slate-200 text-slate-950 text-2xl w-[45%] h-[90px] px-3 py-1">
+          REPLACE SUPPLY
+        </div>
+        <div className="flex items-center justify-center text-center rounded-lg font-bold bg-slate-200 text-slate-950 text-2xl w-[45%] h-[90px] px-3 py-1">
+          REPLACE WASTE
+        </div>
+      </div>
+      <div className="flex flex-row justify-center items-center gap-x-6 w-full">
+        <div className="flex items-center justify-center rounded-lg font-bold bg-slate-300 text-slate-950 text-2xl w-[45%] h-[90px] px-3 py-1">
+          MUTE
+        </div>
+        <div className="flex items-center justify-center rounded-lg font-bold bg-slate-950 border-2 border-slate-200 text-slate-200 text-2xl w-[45%] h-[90px] px-3 py-1">
+          RESET
+        </div>
       </div>
       <div className="flex flex-row justify-between items-center w-full">
-        <p className="text-3xl text-slate-200">AUTO CONTROL</p>
+        <p className="text-2xl text-slate-200">AUTO CONTROL</p>
         <Switch
           colorScheme="green"
           size="lg"
-          style={{ transform: "scale(1.4)" }}
+          style={{ transform: "scale(1.2)" }}
         />
       </div>
       <div className="flex flex-row justify-between items-center w-full">
-        <p className="text-3xl text-slate-200">SUPPLY INFLOW</p>
-        <div className="flex flex-row gap-x-3">
+        <p className="text-2xl text-slate-200">SUPPLY INFLOW</p>
+        <div className="flex flex-row gap-x-6">
           <button
-            className="h-[58px] w-[58px] rounded-lg bg-slate-300 flex justify-center items-center"
+            className="h-[50px] w-[50px] rounded-lg bg-slate-200 flex justify-center items-center"
             onClick={increaseFlow}
           >
-            <TbTriangleFilled className="text-4xl text-slate-950" />
+            <TbTriangleFilled className="text-3xl text-slate-950" />
           </button>
           <button
-            className="h-[58px] w-[58px] rounded-lg bg-slate-300 flex justify-center items-center"
+            className="h-[50px] w-[50px] rounded-lg bg-slate-200 flex justify-center items-center"
             onClick={decreaseFlow}
           >
-            <TbTriangleInvertedFilled className="text-4xl text-slate-950" />
+            <TbTriangleInvertedFilled className="text-3xl text-slate-950" />
           </button>
         </div>
-      </div>
-      <div className="flex flex-row justify-center items-center gap-x-3 w-full">
-        <div className="rounded-lg bg-blue-900 text-slate-200 text-xl w-[48%] h-16 px-3 py-1">
-          REPLACE SUPPLY BAG
-        </div>
-        <div className="rounded-lg bg-yellow-900 text-slate-200 text-xl w-[48%] h-16 px-3 py-1">
-          REPLACE WASTE BAG
-        </div>
-      </div>
-      <div className="flex flex-row justify-between items-center w-full">
-        <p className="text-3xl text-slate-200">MUTE ALERTS</p>
-        <Switch
-          colorScheme="linkedin"
-          size="lg"
-          style={{ transform: "scale(1.4)" }}
-        />
       </div>
     </div>
   );

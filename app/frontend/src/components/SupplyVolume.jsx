@@ -37,7 +37,7 @@ const SupplyVolume = () => {
 
   return (
     <div
-      className="w-[48.5%] h-full bg-slate-800 rounded-2xl
+      className="w-[48.5%] h-full bg-slate-900 rounded-2xl
                        flex flex-row "
     >
       <div className="w-[95%] flex flex-col justify-between items-start px-5 py-4">
@@ -60,7 +60,7 @@ const SupplyVolume = () => {
       <div className="w-16 flex justify-center items-center">
         <div className="relative w-6 h-28 mr-2 bg-slate-200 rounded-2xl">
           <div
-            className="absolute w-full bottom-0 bg-blue-400 transition-all duration-500 rounded-2xl"
+            className="absolute w-full bottom-0 bg-blue-600 transition-all duration-500 rounded-2xl"
             style={{ height: `${percent}%` }}
           ></div>
         </div>
