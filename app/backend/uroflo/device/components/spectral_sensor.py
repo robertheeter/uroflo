@@ -11,8 +11,8 @@ Notes
 - Recommend max = 48000 (VIS) or 16000 (NIR)
 - Recommend replicates = 10
 - Pin allocation:
-  PIN 1 (3.3 V), PIN 3 (I2C SDA), PIN 5 (I2C SCL), PIN 7 (GPIO 4),
-  PIN 9 (Ground)
+  PIN 1 (3.3 V) [RED], PIN 3 (I2C SDA) [BLUE], PIN 5 (I2C SCL) [YELLOW], PIN 7 (GPIO 4) [GREEN],
+  PIN 9 (Ground) [BLACK]
 
 Documentation
 - Guide: https://learn.adafruit.com/adafruit-as7262-6-channel-visible-light-sensor
@@ -126,11 +126,12 @@ class SpectralSensor():
 
 # example implementation
 if __name__ == '__main__':
-    os.chdir("../device") # change current directory
+    os.chdir("..") # change current directory
     spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000, verbose=True) # use GPIO numbering (NOT pin numbering)
     time.sleep(2) # wait for setup
 
-    reading = spectral_sensor.read(replicates=20)
+    n = 20
+    reading = spectral_sensor.read(replicates=n)
 
     print(f"\nAVERAGE READINGS (n={n}):\n")
     print('450 nm / violet : {:.2f}'.format(reading[450]))
