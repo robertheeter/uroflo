@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 const SupplyRate = () => {
   //  let rate = 63; // Change this value to a number between 0 and 100

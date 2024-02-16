@@ -1,33 +1,36 @@
 import App from "../App";
 import { useState } from "react";
-// import InputMask from "react-input-mask";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import "react-dropdown/style.css";
 import Keyboard from "react-simple-keyboard";
+import "react-dropdown/style.css";
+import "react-datepicker/dist/react-datepicker.css";
 import "react-simple-keyboard/build/css/index.css";
+// import InputMask from "react-input-mask";
 
 const StartPage = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [sex, setSex] = useState("");
   const [date, setDate] = useState(null);
-  const [MRN, setMRN] = useState("");
+  const [mrn, setMRN] = useState("");
   const [contactA, setContactA] = useState("");
   const [contactB, setContactB] = useState("");
+  const [inputField, setInputField] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
   const handleKeyPress = (button) => {
-    if (button === "{shift}") handleClearClick();
+    if (button === "{enter}") setIsKeyboardVisible(false); // Hide the keyboard
+    else if (button === "{shift}") handleClearClick();
     else if (button === "{bksp}") handleBackspaceClick();
     else if (button === "{space}") handleSpaceClick();
-    else if (button === "{enter}") handleEnterClick();
     else handleCharacterClick(button);
   };
 
   const handleClearClick = () => {
     if (inputField === "firstName") setFirstName("");
     else if (inputField === "lastName") setLastName("");
-    else if (inputField === "MRN") setMRN("");
+    else if (inputField === "mrn") setMRN("");
     else if (inputField === "contactA") setContactA("");
     else if (inputField === "contactB") setContactB("");
   };
@@ -35,7 +38,7 @@ const StartPage = () => {
   const handleBackspaceClick = () => {
     if (inputField === "firstName") setFirstName(firstName.slice(0, -1));
     else if (inputField === "lastName") setLastName(lastName.slice(0, -1));
-    else if (inputField === "MRN") setMRN(MRN.slice(0, -1));
+    else if (inputField === "mrn") setMRN(mrn.slice(0, -1));
     else if (inputField === "contactA") setContactA(contactA.slice(0, -1));
     else if (inputField === "contactB") setContactB(contactB.slice(0, -1));
   };
@@ -43,26 +46,22 @@ const StartPage = () => {
   const handleSpaceClick = () => {
     if (inputField === "firstName") setFirstName(firstName + " ");
     else if (inputField === "lastName") setLastName(lastName + " ");
-    else if (inputField === "MRN") setMRN(MRN + " ");
+    else if (inputField === "mrn") setMRN(mrn + " ");
     else if (inputField === "contactA") setContactA(contactA + " ");
     else if (inputField === "contactB") setContactB(contactB + " ");
   };
 
-  const handleEnterClick = () => {
-    // Handle the enter key press here
-  };
-
   const handleCharacterClick = (button) => {
-    if (inputField === "firstName") setFirstName(firstName + button);
-    else if (inputField === "lastName") setLastName(lastName + button);
-    else if (inputField === "MRN") setMRN(MRN + button);
-    else if (inputField === "contactA") setContactA(contactA + button);
-    else if (inputField === "contactB") setContactB(contactB + button);
+    if (inputField === "firstName")
+      setFirstName((prevValue) => prevValue + button.toUpperCase());
+    else if (inputField === "lastName")
+      setLastName((prevValue) => prevValue + button.toUpperCase());
+    else if (inputField === "mrn") setMRN((prevValue) => prevValue + button);
+    else if (inputField === "contactA")
+      setContactA((prevValue) => prevValue + button);
+    else if (inputField === "contactB")
+      setContactB((prevValue) => prevValue + button);
   };
-
-  const [inputField, setInputField] = useState(null);
-
-  const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -86,11 +85,13 @@ const StartPage = () => {
               <div className="flex flex-col w-[40%]">
                 <label className="text-slate-200 text-xl">First name</label>
                 <input
-                  onFocus={() => setInputField("firstName")}
+                  onFocus={() => {
+                    setInputField("firstName");
+                    setIsKeyboardVisible(true); // Show the keyboard
+                  }}
                   className="border-2 mt-2 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2 uppercase"
                   type="text"
                   value={firstName}
-                  onChange={(e) => setFirstName(e.target.value.toUpperCase())}
                   required
                   style={{ caretColor: "white" }}
                 />
@@ -98,11 +99,13 @@ const StartPage = () => {
               <div className="flex flex-col w-[40%]">
                 <label className="text-slate-200 text-xl">Last name</label>
                 <input
-                  onFocus={() => setInputField("lastName")}
+                  onFocus={() => {
+                    setInputField("lastName");
+                    setIsKeyboardVisible(true); // Show the keyboard
+                  }}
                   className="border-2 mt-2 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2 uppercase"
                   type="text"
                   value={lastName}
-                  onChange={(e) => setLastName(e.target.value.toUpperCase())}
                   required
                   style={{ caretColor: "white" }}
                 />
@@ -110,6 +113,9 @@ const StartPage = () => {
               <div className="flex flex-col w-[10%]">
                 <label className="text-slate-200 text-xl">Sex</label>
                 <select
+                  onFocus={() => {
+                    setIsKeyboardVisible(false); // hide the keyboard
+                  }}
                   className="border-2 mt-2 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2"
                   value={sex}
                   onChange={(e) => setSex(e.target.value)}
@@ -125,6 +131,9 @@ const StartPage = () => {
               <div className="flex flex-col w-[40%]">
                 <label className="text-slate-200 text-xl">Date of birth</label>
                 <DatePicker
+                  onFocus={() => {
+                    setIsKeyboardVisible(false); // hide the keyboard
+                  }}
                   className="border-2 mt-2 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2"
                   selected={date}
                   onChange={(date) => setDate(date)}
@@ -137,11 +146,13 @@ const StartPage = () => {
               <div className="flex flex-col w-[40%]">
                 <label className="text-slate-200 text-xl">MRN</label>
                 <input
-                  onFocus={() => setInputField("MRN")}
-                  className="border-2 mt-2 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2"
+                  onFocus={() => {
+                    setInputField("mrn");
+                    setIsKeyboardVisible(true); // Show the keyboard
+                  }}
+                  className="border-2 mt-2 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2 uppercase"
                   type="text"
-                  value={MRN}
-                  onChange={(e) => setMRN(e.target.value)}
+                  value={mrn}
                   required
                   style={{ caretColor: "white" }}
                 />
@@ -151,11 +162,13 @@ const StartPage = () => {
               <div className="flex flex-col w-[40%]">
                 <label className="text-slate-200 text-xl">Contact A</label>
                 <input
-                  onFocus={() => setInputField("contactA")}
-                  className="border-2 mt-2 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2"
+                  onFocus={() => {
+                    setInputField("contactA");
+                    setIsKeyboardVisible(true); // Show the keyboard
+                  }}
+                  className="border-2 mt-2 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2 uppercase"
                   type="text"
                   value={contactA}
-                  onChange={(e) => setContactA(e.target.value)}
                   required
                   style={{ caretColor: "white" }}
                 />
@@ -163,11 +176,13 @@ const StartPage = () => {
               <div className="flex flex-col w-[40%]">
                 <label className="text-slate-200 text-xl">Contact B</label>
                 <input
-                  onFocus={() => setInputField("contactB")}
-                  className="border-2 mt-2 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2"
+                  onFocus={() => {
+                    setInputField("contactB");
+                    setIsKeyboardVisible(true); // Show the keyboard
+                  }}
+                  className="border-2 mt-2 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2 uppercase"
                   type="text"
                   value={contactB}
-                  onChange={(e) => setContactB(e.target.value)}
                   required
                   style={{ caretColor: "white" }}
                 />
@@ -182,22 +197,25 @@ const StartPage = () => {
         </div>
       </div>
       <div className="fixed bottom-0 w-full">
-        <Keyboard
-          onKeyPress={(button) => handleKeyPress(button)}
-          layout={{
-            default: [
-              "1 2 3 4 5 6 7 8 9 0 {bksp}",
-              "Q W E R T Y U I O P",
-              "A S D F G H J K L",
-              "{shift} Z X C V B N M {shift}",
-            ],
-          }}
-          display={{
-            "{bksp}": "delete",
-            "{shift}": "clear",
-            "{space}": "space",
-          }}
-        />
+        {isKeyboardVisible && (
+          <Keyboard
+            onKeyPress={(button) => handleKeyPress(button)}
+            layout={{
+              default: [
+                "1 2 3 4 5 6 7 8 9 0 {bksp}",
+                "Q W E R T Y U I O P",
+                "A S D F G H J K L",
+                "{shift} Z X C V B N M {enter}",
+              ],
+            }}
+            display={{
+              "{bksp}": "delete",
+              "{shift}": "clear",
+              "{space}": "space",
+              "{enter}": "enter",
+            }}
+          />
+        )}
       </div>
     </div>
   );
