@@ -1,7 +1,7 @@
 import SupplyRate from "./SupplyRate";
 import WasteRate from "./WasteRate";
 
-const Waste = () => {
+const Rate = () => {
   return (
     <div className="w-full h-[162px] flex flex-row justify-between items-center">
       <SupplyRate />
@@ -10,4 +10,4 @@ const Waste = () => {
   );
 };
 
-export default Waste;
+export default Rate;
