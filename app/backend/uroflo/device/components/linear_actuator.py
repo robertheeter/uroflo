@@ -99,9 +99,9 @@ if __name__ == '__main__':
     time.sleep(2) # wait for setup
 
     for i in range(4):
-        linear_actuator.forward(duty_cycle=100, duration=2)
+        linear_actuator.extend(duty_cycle=100, duration=2)
         time.sleep(2)
-        linear_actuator.backward(duty_cycle=100, duration=2)
+        linear_actuator.retract(duty_cycle=100, duration=2)
         time.sleep(2)
     
     linear_actuator.shutdown()
