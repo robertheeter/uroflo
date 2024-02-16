@@ -18,7 +18,7 @@ const SupplyRate = () => {
 
   return (
     <div
-      className="w-[48.5%] h-full bg-slate-800 rounded-2xl 
+      className="w-[48.5%] h-full bg-slate-900 rounded-2xl 
                        flex flex-row "
     >
       <div className="w-full h-full flex flex-col justify-between items-start px-5 py-4">
@@ -29,7 +29,7 @@ const SupplyRate = () => {
           </div>
           <div className="w-full h-6 rounded-2xl bg-slate-200">
             <div
-              className="h-full bg-blue-400 rounded-2xl transition-all duration-500"
+              className="h-full bg-blue-600 rounded-2xl transition-all duration-500"
               style={{ width: `${rate}%` }}
             ></div>
             <div className="flex flex-row justify-between items-center">
