@@ -37,7 +37,7 @@ class LinearActuator():
     def setup(self):
         print("LinearActuator: setup")
         GPIO.setwarnings(False)
-        GPIO.setmode(GPIO.BOARD) # BOARD mode
+        GPIO.setmode(GPIO.BCM) # BCM mode
 
         GPIO.setup(self.in1_pin, GPIO.OUT)
         GPIO.setup(self.in2_pin, GPIO.OUT)
@@ -95,7 +95,7 @@ class LinearActuator():
 # example implementation
 if __name__ == '__main__':
     os.chdir("..") # change current directory
-    linear_actuator = LinearActuator(en_pin=10, in1_pin=9, in2_pin=11, freq=1000, verbose=True) # use pin numbering (NOT GPIO numbering)
+    linear_actuator = LinearActuator(en_pin=10, in1_pin=9, in2_pin=11, freq=1000, verbose=True) # use pin numbering (BCM) (NOT GPIO numbering)
     time.sleep(2) # wait for setup
 
     for i in range(4):

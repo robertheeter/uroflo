@@ -127,7 +127,7 @@ class SpectralSensor():
 # example implementation
 if __name__ == '__main__':
     os.chdir("..") # change current directory
-    spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000, verbose=True) # use GPIO numbering (NOT pin numbering)
+    spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000, verbose=True) # use pin numbering (BCM) (NOT GPIO numbering)
     time.sleep(2) # wait for setup
 
     n = 20
