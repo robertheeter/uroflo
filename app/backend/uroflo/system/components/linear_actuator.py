@@ -99,7 +99,8 @@ if __name__ == '__main__':
     time.sleep(2) # wait for setup
 
     for i in range(4):
-        linear_actuator.extend(duty_cycle=100, duration=4)
+        linear_actuator.retract(duty_cycle=100, duration=2)
+        linear_actuator.extend(duty_cycle=100, duration=6)
         time.sleep(2)
         for i in range(40):
             print(i)
