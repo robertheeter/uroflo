@@ -103,7 +103,7 @@ if __name__ == '__main__':
         time.sleep(2)
         for i in range(40):
             print(i)
-            linear_actuator.retract(duty_cycle=100, duration=0.05)
+            linear_actuator.retract(duty_cycle=100, duration=0.01)
             time.sleep(0.5)
 
         # linear_actuator.retract(duty_cycle=100, duration=2)
