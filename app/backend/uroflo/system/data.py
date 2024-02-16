@@ -163,8 +163,8 @@ def add_data(data, file, verbose=False):
 
 
 def get_data(keys, file, n=1, order='DESC', verbose=False):
-    if type(keys) is not list:
-        keys = list(keys)
+    if type(keys) is str or type(keys) is not list:
+        keys = [keys]
 
     if file in ['data/system.db', 'data/user.db']: # gets entry from Sqlite database
         db = sqlite3.connect(file)
@@ -173,7 +173,7 @@ def get_data(keys, file, n=1, order='DESC', verbose=False):
         
         cursor = db.cursor()
         keys_formatted = ', '.join(map(str, keys))
-
+ 
         if file == 'data/system.db':
             selection = cursor.execute(f"SELECT {keys_formatted} FROM system ORDER BY entry {order} LIMIT {int(n)}")
         elif file == 'data/user.db':
@@ -182,9 +182,9 @@ def get_data(keys, file, n=1, order='DESC', verbose=False):
         if n == 1:
             for row in selection:
                 if len(keys) == 1:
-                    data = row[0]
+                    data = [row[0]]
                 else:
-                    data = list(row)
+                    data = [[x] for x in list(row)]
             if len(keys) == 1:
                 data = dict(zip(keys, [data]))
             else:
@@ -224,7 +224,7 @@ if __name__ == '__main__':
     replace_data(file='data/system.db', verbose=True)
     replace_data(file='data/user.db', verbose=True)
     replace_data(file='data/patient.json', verbose=True)
-
+    
     data_in_1 = [1, 2, 3.0, 4, 5, 6, 7, 8, 9, 10, 11, 'twelve', 'thirteen', 14, 'fifteen', 'sixteen', 17, 18, 19, 20, 21, 22, 0, 24, 0]
     add_data(data=data_in_1, file='data/system.db', verbose=True)
 
@@ -232,4 +232,13 @@ if __name__ == '__main__':
     add_data(data=data_in_2, file='data/system.db', verbose=True)
 
     data_out = get_data(keys=['entry', 'time', 'supply_volume'], file='data/system.db', n=2, order='DESC', verbose=True)
+    print(data_out)
+    
+    data_out = get_data(keys='entry', file='data/system.db', n=2, order='DESC', verbose=True)
+    print(data_out)
+
+    data_out = get_data(keys=['entry', 'time', 'supply_volume'], file='data/system.db', n=1, order='DESC', verbose=True)
+    print(data_out)
+    
+    data_out = get_data(keys='entry', file='data/system.db', n=1, order='DESC', verbose=True)
     print(data_out)
