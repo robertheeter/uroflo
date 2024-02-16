@@ -39,20 +39,20 @@ class LinearActuator():
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BOARD) # BOARD mode
 
-        GPIO.setup(self.in1, GPIO.OUT)
-        GPIO.setup(self.in2, GPIO.OUT)
-        GPIO.setup(self.en, GPIO.OUT)
+        GPIO.setup(self.in1_pin, GPIO.OUT)
+        GPIO.setup(self.in2_pin, GPIO.OUT)
+        GPIO.setup(self.en_pin, GPIO.OUT)
 
-        GPIO.output(self.in1, GPIO.LOW)
-        GPIO.output(self.in2, GPIO.LOW)
+        GPIO.output(self.in1_pin, GPIO.LOW)
+        GPIO.output(self.in2_pin, GPIO.LOW)
 
         self.pwm = GPIO.PWM(self.en_pin, self.FREQ) # start PWM
         self.pwm.start(100)
     
     # stop movement
     def stop(self):
-        GPIO.output(self.in1, GPIO.LOW)
-        GPIO.output(self.in2, GPIO.LOW)
+        GPIO.output(self.in1_pin, GPIO.LOW)
+        GPIO.output(self.in2_pin, GPIO.LOW)
 
     # extend/move forward
     def extend(self, duty_cycle=100, duration=0):
@@ -64,8 +64,8 @@ class LinearActuator():
         
         self.pwm.ChangeDutyCycle(duty_cycle) # set speed via duty cycle
 
-        GPIO.output(self.in1, GPIO.HIGH)
-        GPIO.output(self.in2, GPIO.LOW)
+        GPIO.output(self.in1_pin, GPIO.HIGH)
+        GPIO.output(self.in2_pin, GPIO.LOW)
 
         time.sleep(duration)
         self.stop()
@@ -80,8 +80,8 @@ class LinearActuator():
         
         self.pwm.ChangeDutyCycle(duty_cycle) # set speed via duty cycle
 
-        GPIO.output(self.in1, GPIO.LOW)
-        GPIO.output(self.in2, GPIO.HIGH)
+        GPIO.output(self.in1_pin, GPIO.LOW)
+        GPIO.output(self.in2_pin, GPIO.HIGH)
 
         time.sleep(duration)
         self.stop()
