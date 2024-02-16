@@ -64,8 +64,8 @@ class LinearActuator():
         
         self.pwm.ChangeDutyCycle(duty_cycle) # set speed via duty cycle
 
-        GPIO.output(self.in1_pin, GPIO.HIGH)
-        GPIO.output(self.in2_pin, GPIO.LOW)
+        GPIO.output(self.in1_pin, GPIO.LOW)
+        GPIO.output(self.in2_pin, GPIO.HIGH)
 
         time.sleep(duration)
         self.stop()
@@ -80,8 +80,8 @@ class LinearActuator():
         
         self.pwm.ChangeDutyCycle(duty_cycle) # set speed via duty cycle
 
-        GPIO.output(self.in1_pin, GPIO.LOW)
-        GPIO.output(self.in2_pin, GPIO.HIGH)
+        GPIO.output(self.in1_pin, GPIO.HIGH)
+        GPIO.output(self.in2_pin, GPIO.LOW)
 
         time.sleep(duration)
         self.stop()
@@ -99,9 +99,9 @@ if __name__ == '__main__':
     time.sleep(2) # wait for setup
 
     for i in range(4):
-        linear_actuator.extend(duty_cycle=100, duration=3)
+        linear_actuator.extend(duty_cycle=100, duration=4)
         time.sleep(2)
-        linear_actuator.retract(duty_cycle=100, duration=3)
+        linear_actuator.retract(duty_cycle=100, duration=2)
         time.sleep(2)
     
     linear_actuator.shutdown()
