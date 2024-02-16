@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 const WasteVolume = () => {
   let [volume, setVolume] = useState(0);
