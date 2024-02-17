@@ -25,7 +25,7 @@ def replace_data(file, verbose=False):
             os.remove(path)
             if verbose:
                 print(f"removed {path} successfully")
-            
+        print(path)
         db = sqlite3.connect(path)
         if verbose:
             print(f"created {path} successfully")
@@ -239,11 +239,11 @@ if __name__ == '__main__':
     replace_data(file='user', verbose=True)
     replace_data(file='patient', verbose=True)
     
-    data_in_1 = [1, 2, 3.0, 4, 5, 6, 7, 8, 9, 10, 11, 'twelve', 'thirteen', 14, 'fifteen', 'sixteen', 17, 18, 19, 20, 21, 22, 0, 24, 0]
-    add_data(data=data_in_1, file='system', verbose=True)
-    
     data_in_2 = [101, 102, 103.0, 104, 105, 106, 107, 108, 109, 110, 111, 'one-hundred twelve', 'one-hundred thirteen', 114, 'one-hundred fifteen', 'one-hundred sixteen', 117, 118, 119, 120, 121, 122, 1, 124, 1]
     add_data(data=data_in_2, file='system', verbose=True)
+
+    data_in_1 = [1, 2, 3.0, 4, 5, 6, 7, 8, 9, 10, 11, 'twelve', 'thirteen', 14, 'fifteen', 'sixteen', 17, 18, 19, 20, 21, 22, 0, 24, 0]
+    add_data(data=data_in_1, file='system', verbose=True)
 
     data_out = get_data(keys=['entry', 'time', 'supply_volume'], file='system', n=2, order='DESC', verbose=True)
     print(data_out)
