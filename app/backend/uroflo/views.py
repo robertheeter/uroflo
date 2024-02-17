@@ -8,13 +8,13 @@ import os
 import sys
 sys.path.append('../backend')
 from system.data import *
-
+os.chdir("system")
 TESTING = False
 
 
 # SYSTEM DATA (system.db)
 def get_system_data(request):
-    os.chdir("system")
+    
 
     if TESTING == True:
         response = JsonResponse({'hematuria_level': random.randint(0, 99),
