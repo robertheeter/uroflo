@@ -8,9 +8,8 @@ import random
 
 TESTING = True
 
-# DEVICE DATA
-def send_device(request):
-
+# SYSTEM DATA
+def get_system_data(request):
     if TESTING == True:
         response = JsonResponse({'hematuria_level': random.randint(0, 99),
                                  'hematuria_percent': random.uniform(0, 10),
@@ -25,19 +24,27 @@ def send_device(request):
                                  'waste_volume_total': 5000,
                                  'waste_rate': random.randint(0, 100),
 
-                                 'status_message': 'Normal. This is a test message.',
-                                 'status_color': 'yellow',
+                                 'status_level': 'normal',
+                                 'status_message': 'This is a test message.',
 
                                  'active_time': random.randint(0, 1000),
                                  'date': '2014-07-05',
-                                 'time': '14:34:14'
+                                 'time': '14:34:14',
+
+                                 'supply_volume_total': 6000,
+                                 'waste_volume_total': 5000
                                  })
         return response
+    
+    response = JsonResponse({'level': random.randint(0, 100)})
+    return response
 
+def get_patient_data(request):
+    response = 0
+    return response
     # ADD HERE
 
-    response = JsonResponse({'level': random.randint(0,100)})
-    return response
+    
 
 # INTERFACE DATA
 # SUPPLY
