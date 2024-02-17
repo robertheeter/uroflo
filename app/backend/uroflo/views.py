@@ -54,57 +54,41 @@ def get_system_data(request):
 # USER DATA (user.db)
 @csrf_exempt
 def handle_user_supply_replace_volume(request):
-    os.chdir("system")
-
     response = None
     return response
 
 @csrf_exempt
 def handle_user_supply_replace_removed(request):
-    os.chdir("system")
-
     response = None
     return response
 
 @csrf_exempt
 def handle_user_supply_replace_added(request):
-    os.chdir("system")
-
     response = None
     return response
 
 @csrf_exempt
 def handle_user_waste_replace_volume(request):
-    os.chdir("system")
-
     response = None
     return response
 
 @csrf_exempt
 def handle_user_waste_replace_removed(request):
-    os.chdir("system")
-
     response = None
     return response
 
 @csrf_exempt
 def handle_user_waste_replace_added(request):
-    os.chdir("system")
-
     response = None
     return response
 
 @csrf_exempt
 def handle_user_automatic(request):
-    os.chdir("system")
-
     response = None
     return response
 
 @csrf_exempt
 def handle_user_inflow_level_increase(request):
-    os.chdir("system")
-
     if request.method == 'POST':
         try:
             data = json.loads(request.body.decode('utf-8'))
@@ -125,15 +109,11 @@ def handle_user_inflow_level_increase(request):
 
 @csrf_exempt
 def handle_user_inflow_level_decrease(request):
-    os.chdir("system")
-
     response = None
     return response
 
 @csrf_exempt
 def handle_user_mute(request):
-    os.chdir("system")
-
     response = None
     return response
 
@@ -164,7 +144,7 @@ def get_patient_data(request):
         response = JsonResponse({'firstname': 'PRINCE',
                                  'lastname': 'HUMPERDINCK',
                                  'MRN': random.randint(10000,99999),
-                                 'DOB': '01-01-1829',
+                                 'DOB': '01/01/1829',
                                  'sex': 'M',
 
                                  'contact_A': random.randint(1000000000, 9999999999),
@@ -172,55 +152,46 @@ def get_patient_data(request):
                                  })
         return response
     
-    response = None
+    keys = ['firstname', 'lastname', 'MRN', 'DOB', 'sex',
+            'contact_A', 'contact_B']
+    
+    data = get_data(keys=keys, file='patient')
+    response = JsonResponse(data)
+
     return response
 
 @csrf_exempt
 def handle_patient_firstname(request):
-    os.chdir("system")
-
     response = None
     return response
 
 @csrf_exempt
 def handle_patient_lastname(request):
-    os.chdir("system")
-
     response = None
     return response
 
 @csrf_exempt
 def handle_patient_MRN(request):
-    os.chdir("system")
-
     response = None
     return response
 
 @csrf_exempt
 def handle_patient_DOB(request):
-    os.chdir("system")
-
     response = None
     return response
 
 @csrf_exempt
 def handle_patient_sex(request):
-    os.chdir("system")
-    
     response = None
     return response
 
 @csrf_exempt
 def handle_patient_contact_A(request):
-    os.chdir("system")
-
     response = None
     return response
 
 @csrf_exempt
 def handle_patient_contact_B(request):
-    os.chdir("system")
-
     response = None
     return response
 
