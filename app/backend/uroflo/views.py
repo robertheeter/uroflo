@@ -12,7 +12,9 @@ TESTING = False
 
 # SYSTEM DATA (system.db)
 def get_system_data(request):
+    print(os.getcwd())
     os.chdir("system")
+    print(os.getcwd())
 
     if TESTING == True:
         response = JsonResponse({'hematuria_level': random.randint(0, 99),
