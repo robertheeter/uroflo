@@ -9,7 +9,8 @@ import sys
 sys.path.append('../backend')
 from system.data import *
 os.chdir("system")
-TESTING = False
+
+TESTING = True
 
 
 # SYSTEM DATA (system.db)
