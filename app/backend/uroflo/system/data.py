@@ -19,15 +19,16 @@ import json
 
 
 def replace_data(file, verbose=False):
-    if file == 'data/system.db':
-        if os.path.exists(file):
-            os.remove(file)
+    if file == 'system':
+        path = 'data/system.db'
+        if os.path.exists(path):
+            os.remove(path)
             if verbose:
-                print(f"removed {file} successfully")
+                print(f"removed {path} successfully")
             
-        db = sqlite3.connect(file)
+        db = sqlite3.connect(path)
         if verbose:
-            print(f"created {file} successfully")
+            print(f"created {path} successfully")
         
         db.execute('''CREATE TABLE IF NOT EXISTS system (
             entry                   INTEGER     NOT NULL   PRIMARY KEY,
@@ -57,17 +58,18 @@ def replace_data(file, verbose=False):
             mute                    INTEGER     NOT NULL);''')
         db.close()
         if verbose:
-            print(f"table 'system' created in {file} successfully")
+            print(f"table 'system' created in {path} successfully")
 
-    elif file == 'data/user.db':
-        if os.path.exists(file):
-            os.remove(file)
+    elif file == 'user':
+        path = 'data/user.db'
+        if os.path.exists(path):
+            os.remove(path)
             if verbose:
-                print(f"removed {file} successfully")
+                print(f"removed {path} successfully")
             
-        db = sqlite3.connect(file)
+        db = sqlite3.connect(path)
         if verbose:
-            print(f"created {file} successfully")
+            print(f"created {path} successfully")
         
         db.execute('''CREATE TABLE IF NOT EXISTS user (
             entry                           INTEGER     NOT NULL   PRIMARY KEY,
@@ -84,41 +86,43 @@ def replace_data(file, verbose=False):
             reset_count                     INTEGER     NOT NULL);''')
         db.close()
         if verbose:
-            print(f"table 'user' created in {file} successfully")
+            print(f"table 'user' created in {path} successfully")
 
-    elif file == 'data/patient.json':
-        if os.path.exists(file):
-            os.remove(file)
+    elif file == 'patient':
+        path = 'data/patient.json'
+        if os.path.exists(path):
+            os.remove(path)
             if verbose:
-                print(f"removed {file} successfully")
+                print(f"removed {path} successfully")
         
         patient = {
-            'patient_firstname': '',
-            'patient_lastname': '',
-            'patient_MRN': 0,
-            'patient_birthdate': '00:00:0000',
-            'patient_sex': '',
-            'patient_contact_A': 1234567890,
-            'patient_contact_B': 1234567890,
-            'patient_start_date': '00:00:0000',
-            'patient_start_time': '00:00'
+            'firstname': '',
+            'lastname': '',
+            'MRN': 0,
+            'birthdate': '00-00-0000',
+            'sex': '',
+            'contact_A': 1234567890,
+            'contact_B': 1234567890,
+            'start_date': '00-00-0000',
+            'start_time': '00:00'
         }
         
         js = json.dumps(patient, indent=4)
-        with open(file, "w") as outfile:
+        with open(path, "w") as outfile:
             outfile.write(js)
         if verbose:
-            print(f"created {file} successfully")
+            print(f"created {path} successfully")
 
     else:
-        raise Exception(f"error finding file {file}")
+        raise Exception(f"file [{file}] not valid")
 
 
 def add_data(data, file, verbose=False):
-    if file == 'data/system.db': # adds new entry to Sqlite database
-        db = sqlite3.connect(file)
+    if file == 'system': # adds new entry to Sqlite database
+        path = 'data/system.db'
+        db = sqlite3.connect(path)
         if verbose:
-            print(f"opened {file} successfully")
+            print(f"opened {path} successfully")
 
         data_formatted = ', '.join(f"'{item}'" if isinstance(item, str) else str(item) for item in data)
 
@@ -132,12 +136,13 @@ def add_data(data, file, verbose=False):
         db.commit()
         db.close()
         if verbose:
-            print(f"data added to 'system' in {file} successfully")
+            print(f"data added to 'system' in {path} successfully")
     
-    elif file == 'data/user.db': # adds new entry to Sqlite database
-        db = sqlite3.connect(file)
+    elif file == 'user': # adds new entry to Sqlite database
+        path = 'data/user.db'
+        db = sqlite3.connect(path)
         if verbose:
-            print(f"opened {file} successfully")
+            print(f"opened {path} successfully")
 
         data_formatted = ', '.join(f"'{item}'" if isinstance(item, str) else str(item) for item in data)
 
@@ -149,34 +154,40 @@ def add_data(data, file, verbose=False):
         db.commit()
         db.close()
         if verbose:
-            print(f"data added to 'user' in {file} successfully")
+            print(f"data added to 'user' in {path} successfully")
 
-    elif file == 'data/patient.json': # overwrites existing JSON data
+    elif file == 'patient': # overwrites existing JSON data
+        path = 'data/patient.json'
         js = json.dumps(data, indent=4)
-        with open(file, "w") as outfile:
+        with open(path, "w") as outfile:
             outfile.write(js)
         if verbose:
-            print(f"data added to {file} successfully")
+            print(f"data added to {path} successfully")
 
     else:
-        raise Exception(f"error finding file {file}")
+        raise Exception(f"file [{file}] not valid")
 
 
-def get_data(keys, file, n=1, order='DESC', verbose=False):
+def get_data(keys, file, n=1, order='DESC', format='list', verbose=False):
     if type(keys) is str or type(keys) is not list:
         keys = [keys]
 
-    if file in ['data/system.db', 'data/user.db']: # gets entry from Sqlite database
-        db = sqlite3.connect(file)
+    if file in ['system', 'user']: # gets entry from Sqlite database
+        if file == 'system':
+            path = 'data/system.db'
+        elif file == 'user':
+            path = 'data/user.db'
+
+        db = sqlite3.connect(path)
         if verbose:
-            print(f"opened {file} successfully")
+            print(f"opened {path} successfully")
         
         cursor = db.cursor()
         keys_formatted = ', '.join(map(str, keys))
  
-        if file == 'data/system.db':
+        if file == 'system':
             selection = cursor.execute(f"SELECT {keys_formatted} FROM system ORDER BY entry {order} LIMIT {int(n)}")
-        elif file == 'data/user.db':
+        elif file == 'user':
             selection = cursor.execute(f"SELECT {keys_formatted} FROM user ORDER BY entry {order} LIMIT {int(n)}")
         
         if n == 1:
@@ -184,9 +195,11 @@ def get_data(keys, file, n=1, order='DESC', verbose=False):
                 if len(keys) == 1:
                     data = [row[0]]
                 else:
-                    data = [[x] for x in list(row)]
+                    data = [x for x in list(row)]
+                    # data = [[x] for x in list(row)] # uncomment if single-item list format (i.e., [item]) is wanted for n = 1 condition
             if len(keys) == 1:
-                data = dict(zip(keys, [data]))
+                data = dict(zip(keys, data))
+                # data = dict(zip(keys, [data])) # uncomment if single-item list format (i.e., [item]) is wanted for n = 1 condition
             else:
                 data = dict(zip(keys, data))
 
@@ -204,41 +217,42 @@ def get_data(keys, file, n=1, order='DESC', verbose=False):
                 data = {key: list(values) for key, values in zip(keys, zip(*data))}
 
         if verbose:
-            print(f"data retrieved from {file} successfully")
+            print(f"data retrieved from {path} successfully")
             
-    elif file == 'data/patient.json': # gets data from JSON data
-        with open(file, 'r') as infile:
+    elif file == 'patient': # gets data from JSON data
+        path = 'data/patient.json'
+        with open(path, 'r') as infile:
             data = json.load(infile)
         data = {key: data[key] for key in keys}
         if verbose:
-            print(f"data retrieved from {file} successfully")
+            print(f"data retrieved from {path} successfully")
 
     else:
-        raise Exception(f"error finding file {file}")
+        raise Exception(f"file [{file}] not valid")
     
     return data
 
 
 # example implementation
 if __name__ == '__main__':
-    replace_data(file='data/system.db', verbose=True)
-    replace_data(file='data/user.db', verbose=True)
-    replace_data(file='data/patient.json', verbose=True)
+    replace_data(file='system', verbose=True)
+    replace_data(file='user', verbose=True)
+    replace_data(file='patient', verbose=True)
     
     data_in_1 = [1, 2, 3.0, 4, 5, 6, 7, 8, 9, 10, 11, 'twelve', 'thirteen', 14, 'fifteen', 'sixteen', 17, 18, 19, 20, 21, 22, 0, 24, 0]
-    add_data(data=data_in_1, file='data/system.db', verbose=True)
-
+    add_data(data=data_in_1, file='system', verbose=True)
+    
     data_in_2 = [101, 102, 103.0, 104, 105, 106, 107, 108, 109, 110, 111, 'one-hundred twelve', 'one-hundred thirteen', 114, 'one-hundred fifteen', 'one-hundred sixteen', 117, 118, 119, 120, 121, 122, 1, 124, 1]
-    add_data(data=data_in_2, file='data/system.db', verbose=True)
+    add_data(data=data_in_2, file='system', verbose=True)
 
-    data_out = get_data(keys=['entry', 'time', 'supply_volume'], file='data/system.db', n=2, order='DESC', verbose=True)
+    data_out = get_data(keys=['entry', 'time', 'supply_volume'], file='system', n=2, order='DESC', verbose=True)
     print(data_out)
     
-    data_out = get_data(keys='entry', file='data/system.db', n=2, order='DESC', verbose=True)
+    data_out = get_data(keys='entry', file='system', n=2, order='DESC', verbose=True)
     print(data_out)
 
-    data_out = get_data(keys=['entry', 'time', 'supply_volume'], file='data/system.db', n=1, order='DESC', verbose=True)
+    data_out = get_data(keys=['entry', 'time', 'supply_volume'], file='system', n=1, order='DESC', verbose=True)
     print(data_out)
     
-    data_out = get_data(keys='entry', file='data/system.db', n=1, order='DESC', verbose=True)
+    data_out = get_data(keys='entry', file='system', n=1, order='DESC', verbose=True)
     print(data_out)
