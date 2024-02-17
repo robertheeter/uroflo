@@ -5,15 +5,15 @@ import json
 import random
 import os
 
-from .data import *
+from .system.data import *
 
 TESTING = False
 
 
 # SYSTEM DATA (system.db)
 def get_system_data(request):
-    print(os.getcwd())
-    
+    os.chdir("system")
+
     if TESTING == True:
         response = JsonResponse({'hematuria_level': random.randint(0, 99),
                                  'hematuria_percent': random.uniform(0, 10),
