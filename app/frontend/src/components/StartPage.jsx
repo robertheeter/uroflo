@@ -196,9 +196,10 @@ const StartPage = () => {
           </form>
         </div>
       </div>
-      <div className="fixed bottom-0 w-full">
+      <div className="fixed bottom-0 w-full ">
         {isKeyboardVisible && (
           <Keyboard
+            theme={"hg-theme-default"}
             onKeyPress={(button) => handleKeyPress(button)}
             layout={{
               default: [
@@ -211,9 +212,19 @@ const StartPage = () => {
             display={{
               "{bksp}": "delete",
               "{shift}": "clear",
-              "{space}": "space",
               "{enter}": "enter",
             }}
+            buttonTheme={[
+              {
+                class: "text-3xl text-slate-950",
+                buttons:
+                  "{bksp} {shift} {enter} 1 2 3 4 5 6 7 8 9 0 Q W E R T Y U I O P A S D F G H J K L Z X C V B N M",
+              },
+              {
+                class: "font-bold",
+                buttons: "{bksp} {shift} {enter}",
+              },
+            ]}
           />
         )}
       </div>
