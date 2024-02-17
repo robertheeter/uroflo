@@ -5,7 +5,9 @@ import json
 import random
 import os
 
-from .system.data import *
+import sys
+sys.path.append('../backend')
+from system.data import *
 
 TESTING = False
 
