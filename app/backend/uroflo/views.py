@@ -7,16 +7,16 @@ import os
 
 import sys
 sys.path.append('../backend')
+
 from system.data import *
-os.chdir("system")
+
+os.chdir('system')
 
 TESTING = True
 
 
 # SYSTEM DATA (system.db)
 def get_system_data(request):
-    
-
     if TESTING == True:
         response = JsonResponse({'hematuria_level': random.randint(0, 99),
                                  'hematuria_percent': random.uniform(0, 10),
@@ -139,8 +139,6 @@ def handle_user_mute(request):
 
 @csrf_exempt
 def handle_user_reset(request):
-    os.chdir("system")
-
     if request.method == 'POST':
         try:
             data = json.loads(request.body.decode('utf-8'))
@@ -162,8 +160,6 @@ def handle_user_reset(request):
 
 # PATIENT DATA (patient.json)
 def get_patient_data(request):
-    os.chdir("system")
-
     if TESTING == True:
         response = JsonResponse({'firstname': 'PRINCE',
                                  'lastname': 'HUMPERDINCK',
