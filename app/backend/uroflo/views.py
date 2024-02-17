@@ -2,78 +2,73 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 import json
-
-# for testing
 import random
+
+from .system.data import *
 
 TESTING = True
 
-# SYSTEM DATA
+
+# SYSTEM DATA (system.db)
 def get_system_data(request):
     if TESTING == True:
         response = JsonResponse({'hematuria_level': random.randint(0, 99),
                                  'hematuria_percent': random.uniform(0, 10),
 
-                                 'supply_time': random.randint(0, 1000),
                                  'supply_volume': random.randint(0, 6000),
-                                 'supply_volume_total': 6000,
+                                 'supply_time': random.randint(0, 1000),
                                  'supply_rate': random.randint(0, 100),
 
-                                 'waste_time': random.randint(0, 1000),
                                  'waste_volume': random.randint(0, 5000),
-                                 'waste_volume_total': 5000,
+                                 'waste_time': random.randint(0, 1000),
                                  'waste_rate': random.randint(0, 100),
 
                                  'status_level': 'normal',
                                  'status_message': 'This is a test message.',
 
                                  'active_time': random.randint(0, 1000),
-                                 'date': '2014-07-05',
-                                 'time': '14:34:14',
 
                                  'supply_volume_total': 6000,
                                  'waste_volume_total': 5000
                                  })
         return response
     
-    response = JsonResponse({'level': random.randint(0, 100)})
+    response = None
     return response
 
-def get_patient_data(request):
-    response = 0
-    return response
-    # ADD HERE
 
-    
-
-# INTERFACE DATA
-# SUPPLY
+# USER DATA (user.db)
+@csrf_exempt
 def handle_supply_replace_volume(request):
     response = None
     return response
 
+@csrf_exempt
 def handle_supply_replace_removed(request):
     response = None
     return response
 
+@csrf_exempt
 def handle_supply_replace_added(request):
     response = None
     return response
 
-# WASTE
+@csrf_exempt
 def handle_waste_replace_volume(request):
     response = None
     return response
 
+@csrf_exempt
 def handle_waste_replace_removed(request):
     response = None
     return response
 
+@csrf_exempt
 def handle_waste_replace_added(request):
     response = None
     return response
 
-# CONTROL
+@csrf_exempt
 def handle_automatic(request):
     response = None
     return response
@@ -98,14 +93,12 @@ def handle_inflow_level_increase(request):
     response = None
     return response
 
+@csrf_exempt
 def handle_inflow_level_decrease(request):
     response = None
     return response
 
-def handle_clear(request):
-    response = None
-    return response
-
+@csrf_exempt
 def handle_mute(request):
     response = None
     return response
@@ -130,37 +123,56 @@ def handle_reset(request):
     response = None
     return response
 
-# PATIENT
+
+# PATIENT DATA (patient.json)
+def get_patient_data(request):
+    if TESTING == True:
+        response = JsonResponse({'firstname': 'PRINCE',
+                                 'lastname': 'HUMPERDINCK',
+                                 'MRN': random.randint(10000,99999),
+                                 'DOB': '01:01:1829',
+                                 'sex': 'M',
+
+                                 'contact_A': random.randint(1000000000, 9999999999),
+                                 'contact_B': random.randint(1000000000, 9999999999)
+                                 })
+        return response
+    
+    response = None
+    return response
+
+@csrf_exempt
 def handle_patient_firstname(request):
     response = None
     return response
 
+@csrf_exempt
 def handle_patient_lastname(request):
     response = None
     return response
 
-def handle_patient_middleinitial(request):
+@csrf_exempt
+def handle_patient_MRN(request):
     response = None
     return response
 
-def handle_patient_ID(request):
+@csrf_exempt
+def handle_patient_DOB(request):
     response = None
     return response
 
-def handle_patient_birthdate(request):
-    response = None
-    return response
-
+@csrf_exempt
 def handle_patient_sex(request):
     response = None
     return response
 
-# CONTACT
-def handle_contact_A(request):
+@csrf_exempt
+def handle_patient_contact_A(request):
     response = None
     return response
 
-def handle_contact_B(request):
+@csrf_exempt
+def handle_patient_contact_B(request):
     response = None
     return response
 
