@@ -8,6 +8,15 @@ import "react-datepicker/dist/react-datepicker.css";
 import "react-simple-keyboard/build/css/index.css";
 // import InputMask from "react-input-mask";
 
+function formatDOB(dob) {
+  let dobDate = new Date(dob);
+  let month = String(dobDate.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed in JavaScript
+  let day = String(dobDate.getDate()).padStart(2, "0");
+  let year = dobDate.getFullYear();
+  dob = month + "/" + day + "/" + year;
+  return dob;
+}
+
 const Start = () => {
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
@@ -19,6 +28,8 @@ const Start = () => {
   const [contactB, setContactB] = useState("");
   const [inputField, setInputField] = useState(null);
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+
+  const dob = formatDOB(date);
 
   const handleKeyPress = (button) => {
     if (button === "{enter}") {
@@ -83,7 +94,7 @@ const Start = () => {
       firstname: firstName,
       lastname: lastName,
       MRN: mrn,
-      DOB: date,
+      DOB: dob,
       sex: sex,
       contact_A: contactA,
       contact_B: contactB,
