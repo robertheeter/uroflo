@@ -1,13 +1,15 @@
-import App from "../App";
+import axios from "axios";
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import Keyboard from "react-simple-keyboard";
+import { useNavigate } from "react-router-dom";
 import "react-dropdown/style.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-simple-keyboard/build/css/index.css";
 // import InputMask from "react-input-mask";
 
-const StartPage = () => {
+const Start = () => {
+  const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [sex, setSex] = useState("");
@@ -16,12 +18,24 @@ const StartPage = () => {
   const [contactA, setContactA] = useState("");
   const [contactB, setContactB] = useState("");
   const [inputField, setInputField] = useState(null);
-  const [submitted, setSubmitted] = useState(false);
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
   const handleKeyPress = (button) => {
-    if (button === "{enter}") setIsKeyboardVisible(false); // Hide the keyboard
-    else if (button === "{shift}") handleClearClick();
+    if (button === "{enter}") {
+      if (inputField === "firstName" && firstName === "") {
+        return;
+      } else if (inputField === "lastName" && lastName === "") {
+        return;
+      } else if (inputField === "mrn" && mrn === "") {
+        return;
+      } else if (inputField === "contactA" && contactA === "") {
+        return;
+      } else if (inputField === "contactB" && contactB === "") {
+        return;
+      } else {
+        setIsKeyboardVisible(false); // hide the keyboard
+      }
+    } else if (button === "{shift}") handleClearClick();
     else if (button === "{bksp}") handleBackspaceClick();
     else if (button === "{space}") handleSpaceClick();
     else handleCharacterClick(button);
@@ -64,19 +78,32 @@ const StartPage = () => {
   };
 
   const handleSubmit = (event) => {
+    const url = "http://localhost:8000/uroflo/patient/update";
+    const data = {
+      firstname: firstName,
+      lastname: lastName,
+      MRN: mrn,
+      DOB: date,
+      sex: sex,
+      contact_A: contactA,
+      contact_B: contactB,
+    };
     event.preventDefault();
-    setSubmitted(true);
+    axios
+      .post(url, data)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+    navigate("/"); // navigate to StartPage
   };
-
-  if (submitted) {
-    return <App />;
-  }
 
   return (
     <div className="w-screen h-screen bg-slate-950 flex flex-col justify-between items-center">
-      <div className="w-[45%] h-[60%] fixed flex flex-col items-center justify-between pt-5">
-        <p className="text-slate-200 text-3xl">Enter patient information</p>
-        <div className="w-full h-[85%] bg-slate-800 rounded-lg flex flex-col items-center">
+      <div className="w-[45%] h-[56%] fixed flex flex-col items-center justify-between pt-6">
+        <div className="w-full h-[85%] bg-slate-800 rounded-2xl flex flex-col items-center">
           <form
             className="w-full h-full rounded-xl flex flex-col items-start justify-between py-4 px-8"
             onSubmit={handleSubmit}
@@ -89,11 +116,11 @@ const StartPage = () => {
                     setInputField("firstName");
                     setIsKeyboardVisible(true); // Show the keyboard
                   }}
-                  className="border-2 mt-2 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2 uppercase"
+                  className="border-2 mt-1 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2 uppercase"
                   type="text"
                   value={firstName}
                   required
-                  style={{ caretColor: "white" }}
+                  readOnly
                 />
               </div>
               <div className="flex flex-col w-[40%]">
@@ -103,11 +130,11 @@ const StartPage = () => {
                     setInputField("lastName");
                     setIsKeyboardVisible(true); // Show the keyboard
                   }}
-                  className="border-2 mt-2 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2 uppercase"
+                  className="border-2 mt-1 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2 uppercase"
                   type="text"
                   value={lastName}
                   required
-                  style={{ caretColor: "white" }}
+                  readOnly
                 />
               </div>
               <div className="flex flex-col w-[10%]">
@@ -116,7 +143,7 @@ const StartPage = () => {
                   onFocus={() => {
                     setIsKeyboardVisible(false); // hide the keyboard
                   }}
-                  className="border-2 mt-2 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2"
+                  className="border-2 mt-1 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2"
                   value={sex}
                   onChange={(e) => setSex(e.target.value)}
                   required
@@ -134,7 +161,7 @@ const StartPage = () => {
                   onFocus={() => {
                     setIsKeyboardVisible(false); // hide the keyboard
                   }}
-                  className="border-2 mt-2 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2"
+                  className="border-2 mt-1 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2"
                   selected={date}
                   onChange={(date) => setDate(date)}
                   dateFormat="MM/dd/yyyy"
@@ -150,11 +177,11 @@ const StartPage = () => {
                     setInputField("mrn");
                     setIsKeyboardVisible(true); // Show the keyboard
                   }}
-                  className="border-2 mt-2 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2 uppercase"
+                  className="border-2 mt-1 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2 uppercase"
                   type="text"
                   value={mrn}
                   required
-                  style={{ caretColor: "white" }}
+                  readOnly
                 />
               </div>
             </div>
@@ -166,11 +193,11 @@ const StartPage = () => {
                     setInputField("contactA");
                     setIsKeyboardVisible(true); // Show the keyboard
                   }}
-                  className="border-2 mt-2 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2 uppercase"
+                  className="border-2 mt-1 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2 uppercase"
                   type="text"
                   value={contactA}
                   required
-                  style={{ caretColor: "white" }}
+                  readOnly
                 />
               </div>
               <div className="flex flex-col w-[40%]">
@@ -180,11 +207,11 @@ const StartPage = () => {
                     setInputField("contactB");
                     setIsKeyboardVisible(true); // Show the keyboard
                   }}
-                  className="border-2 mt-2 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2 uppercase"
+                  className="border-2 mt-1 border-slate-200 bg-slate-950 rounded-lg w-full h-9 text-xl text-slate-200 px-2 uppercase"
                   type="text"
                   value={contactB}
                   required
-                  style={{ caretColor: "white" }}
+                  readOnly
                 />
               </div>
             </div>
@@ -200,7 +227,9 @@ const StartPage = () => {
         {isKeyboardVisible && (
           <Keyboard
             theme={"hg-theme-default"}
-            onKeyPress={(button) => handleKeyPress(button)}
+            onKeyPress={(button) => {
+              handleKeyPress(button);
+            }}
             layout={{
               default: [
                 "1 2 3 4 5 6 7 8 9 0 {bksp}",
@@ -232,4 +261,4 @@ const StartPage = () => {
   );
 };
 
-export default StartPage;
+export default Start;

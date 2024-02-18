@@ -3,12 +3,12 @@ import axios from "axios";
 
 const WasteRate = () => {
   //  let rate = 63; // Change this value to a number between 0 and 100
-  const [rate, setRate] = useState(0);
+  const [rate, setRate] = useState(1);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       axios
-        .get("http://localhost:8000/uroflo/device") // replace with your API endpoint
+        .get("http://localhost:8000/uroflo/system") // replace with your API endpoint
         .then((response) => setRate(response.data.waste_rate)) // replace 'rate' with the actual key in the response
         .catch((error) => console.error(error));
     }, 1000); // fetch every 1 second
@@ -29,7 +29,7 @@ const WasteRate = () => {
           </div>
           <div className="w-full h-6 rounded-2xl bg-slate-200">
             <div
-              className="h-full bg-yellow-600 rounded-2xl transition-all duration-500"
+              className="h-full bg-yellow-500 rounded-2xl transition-all duration-500"
               style={{ width: `${rate}%` }}
             ></div>
             <div className="flex flex-row justify-between items-center">
