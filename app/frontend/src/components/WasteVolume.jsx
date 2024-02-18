@@ -8,7 +8,7 @@ const WasteVolume = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       axios
-        .get("http://localhost:8000/uroflo/system") // replace with your API endpoint
+        .get("http://localhost:8000/system") // replace with your API endpoint
         .then((response) => setTotalVolume(response.data.waste_volume_total)) // replace 'rate' with the actual key in the response
         .catch((error) => console.error(error));
     }, 1000); // fetch every 1 second
@@ -19,7 +19,7 @@ const WasteVolume = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       axios
-        .get("http://localhost:8000/uroflo/system") // replace with your API endpoint
+        .get("http://localhost:8000/system") // replace with your API endpoint
         .then((response) => setVolume(response.data.waste_volume)) // replace 'rate' with the actual key in the response
         .catch((error) => console.error(error));
     }, 1000); // fetch every 1 second
@@ -36,7 +36,7 @@ const WasteVolume = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       axios
-        .get("http://localhost:8000/uroflo/system") // replace with your API endpoint
+        .get("http://localhost:8000/system") // replace with your API endpoint
         .then((response) => setTime(response.data.waste_time)) // replace 'rate' with the actual key in the response
         .catch((error) => console.error(error));
     }, 1000); // fetch every 1 second

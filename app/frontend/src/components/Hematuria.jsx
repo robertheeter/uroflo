@@ -22,7 +22,7 @@ const Hematuria = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       axios
-        .get("http://localhost:8000/uroflo/system") // API endpoint
+        .get("http://localhost:8000/system") // API endpoint
         .then((response) => setPercent(response.data.hematuria_percent)) // response key
         .catch((error) => console.error(error));
     }, 1000); // fetch every 1 second
@@ -33,7 +33,7 @@ const Hematuria = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       axios
-        .get("http://localhost:8000/uroflo/system") // API endpoint
+        .get("http://localhost:8000/system") // API endpoint
         .then((response) => setLevel(response.data.hematuria_level)) // response key
         .catch((error) => console.error(error));
     }, 1000); // fetch every 1 second

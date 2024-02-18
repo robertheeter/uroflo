@@ -12,7 +12,7 @@ const ReplaceSupplyStep2 = () => {
   };
 
   const next = () => {
-    const url = "http://localhost:8000/uroflo/user/supply_replace_added";
+    const url = "http://localhost:8000/user/supply_replace_added";
     const data = {
       supply_replace_count_added: "TRUE",
     };

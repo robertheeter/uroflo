@@ -12,7 +12,7 @@ const ReplaceSupplyStep3 = () => {
   };
 
   const done = () => {
-    const url = "http://localhost:8000/uroflo/user/supply_replace_volume";
+    const url = "http://localhost:8000/user/supply_replace_volume";
     const data = {
       supply_replace_volume: volume,
     };

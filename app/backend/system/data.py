@@ -65,12 +65,12 @@ def replace_data(file, verbose=False):
         'firstname': '–',
         'lastname': '–',
         'MRN': 0,
-        'DOB': '00-00-0000',
+        'DOB': '00/00/0000',
         'sex': '–',
         'contact_A': 0,
         'contact_B': 0,
         'start_date': '00/00/0000',
-        'start_time': '00:00'
+        'start_time': '00:00:00'
         }
     
     if file == 'system':
