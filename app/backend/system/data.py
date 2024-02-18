@@ -1,10 +1,9 @@
 '''
 DATA
 
-About
-- Helper functions for updating and querying databases
-
 Notes
+- Helper functions for creating, updating, and querying databases
+
 - Uses SQLite3 database format for system.db and user.db (see sqlite.org)
 - Uses JSON format for patient.json
 
@@ -188,6 +187,7 @@ def add_data(data, file, verbose=False, initialize=False):
         cursor.execute(f'INSERT INTO {file} ({keys_formatted}) VALUES ({values_formatted})')
         db.commit()
         db.close()
+
         if verbose:
             print(f"data added to '{file}' in {path} successfully")
 
@@ -196,6 +196,7 @@ def add_data(data, file, verbose=False, initialize=False):
         js = json.dumps(data, indent=4)
         with open(path, "w") as outfile:
             outfile.write(js)
+
         if verbose:
             print(f"data added to {path} successfully")
 
@@ -254,18 +255,15 @@ def get_data(keys, file, n=1, order='DESC', verbose=False):
         elif file == 'user':
             path = 'data/user.db'
 
+        keys_formatted = ', '.join(map(str, keys))
+
         db = sqlite3.connect(path)
         if verbose:
             print(f"opened {path} successfully")
         
         cursor = db.cursor()
-        keys_formatted = ', '.join(map(str, keys))
- 
-        if file == 'system':
-            selection = cursor.execute(f"SELECT {keys_formatted} FROM system ORDER BY entry {order} LIMIT {int(n)}")
-        elif file == 'user':
-            selection = cursor.execute(f"SELECT {keys_formatted} FROM user ORDER BY entry {order} LIMIT {int(n)}")
-        
+        selection = cursor.execute(f"SELECT {keys_formatted} FROM {file} ORDER BY entry {order} LIMIT {int(n)}")
+
         data = [None for key in keys]
 
         if n == 1: # format data before returning
@@ -302,7 +300,9 @@ def get_data(keys, file, n=1, order='DESC', verbose=False):
         path = 'data/patient.json'
         with open(path, 'r') as infile:
             data = json.load(infile)
+
         data = {key: data[key] for key in keys} # format data before returning
+
         if verbose:
             print(f"data retrieved from {path} successfully")
 
@@ -312,13 +312,45 @@ def get_data(keys, file, n=1, order='DESC', verbose=False):
     return data
 
 
+def remove_data(file, n=1, order='ASC', verbose=False):
+    if file in ['system', 'user']: # remove oldest entry from Sqlite database file
+        if file == 'system':
+            path = 'data/system.db'
+        elif file == 'user':
+            path = 'data/user.db'
+
+        db = sqlite3.connect(path)
+        if verbose:
+            print(f"opened {path} successfully")
+        
+        cursor = db.cursor()
+        cursor.execute(f"DELETE FROM {file} WHERE entry IN (SELECT entry FROM {file} ORDER BY entry {order} LIMIT {int(n)})")
+        db.commit()
+        db.close()
+
+        if verbose:
+            print(f"data removed from {path} successfully")
+
+    elif file == 'patient':
+        path = 'data/patient.json'
+        replace_data('patient')
+
+        if verbose:
+            print(f"data removed from {path} successfully")
+    
+    else:
+        raise Exception(f"file [{file}] not valid")
+
+
 # example implementation
 if __name__ == '__main__':
+    # test replace_data
     replace_data(file='system', verbose=True)
     replace_data(file='user', verbose=True)
     replace_data(file='patient', verbose=True)
 
-    # system test data entry 1
+    # test add_data
+    # entry 1
     data_in_1 = {
         'hematuria_level': 30,
         'hematuria_percent': 2.5,
@@ -347,7 +379,7 @@ if __name__ == '__main__':
         }
     add_data(data=data_in_1, file='system', verbose=True)
 
-    # system test data entry 2
+    # entry 2
     data_in_2 = {
         'hematuria_level': 20,
         'hematuria_percent': 5.5,
@@ -376,10 +408,11 @@ if __name__ == '__main__':
         }
     add_data(data=data_in_2, file='system', verbose=True)
 
-    # system test data entry 3
+    # entry 3
     data_in_3 = {'time': '04:10:59'}
     add_data(data=data_in_3, file='system', verbose=True)
 
+    # test get_data
     # n > 1, len(keys) > 1 condition
     data_out = get_data(keys=['entry', 'time', 'supply_volume'], file='system', n=3, order='DESC', verbose=True)
     print(data_out)
@@ -393,6 +426,11 @@ if __name__ == '__main__':
     print(data_out)
     
     # n = 1, len(keys) = 1 condition
-    data_out = get_data(keys='entry', file='system', n=1, order='DESC', verbose=True)
+    data_out = get_data(keys='entry', file='system', n=5, order='DESC', verbose=True)
     print(data_out)
-    
+
+    # test remove_data
+    remove_data(file='system', n=1, order='ASC', verbose=True)
+
+    data_out = get_data(keys='entry', file='system', n=3, order='DESC', verbose=True)
+    print(data_out)

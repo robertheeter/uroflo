@@ -1,11 +1,11 @@
 {
-    "firstname": "RT",
-    "lastname": "YU",
-    "MRN": "66666",
-    "DOB": "11/26/2023",
-    "sex": "M",
-    "contact_A": "09",
-    "contact_B": "08",
-    "start_date": "02/18/2024",
-    "start_time": "21:43:21"
+    "firstname": "\u2013",
+    "lastname": "\u2013",
+    "MRN": 0,
+    "DOB": "00/00/0000",
+    "sex": "\u2013",
+    "contact_A": 0,
+    "contact_B": 0,
+    "start_date": "00/00/0000",
+    "start_time": "00:00:00"
 }
