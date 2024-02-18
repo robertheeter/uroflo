@@ -1,11 +1,11 @@
 {
-    "firstname": "",
-    "lastname": "",
+    "firstname": "\u2013",
+    "lastname": "\u2013",
     "MRN": 0,
-    "birthdate": "00-00-0000",
-    "sex": "",
-    "contact_A": 1234567890,
-    "contact_B": 1234567890,
-    "start_date": "00-00-0000",
+    "DOB": "00-00-0000",
+    "sex": "\u2013",
+    "contact_A": 0,
+    "contact_B": 0,
+    "start_date": "00/00/0000",
     "start_time": "00:00"
 }

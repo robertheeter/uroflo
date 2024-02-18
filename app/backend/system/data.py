@@ -19,6 +19,60 @@ import json
 
 
 def replace_data(file, verbose=False):
+    SYSTEM_TEMPLATE = {
+        'entry': 0,
+        'hematuria_level': 0,
+        'hematuria_percent': 0.0,
+        'supply_percent': 0,
+        'supply_volume': 0,
+        'supply_time': 0,
+        'supply_rate': 0,
+        'waste_percent': 0,
+        'waste_volume': 0,
+        'waste_time': 0,
+        'waste_rate': 0,
+        'status_level': 'NORMAL',
+        'status_message': 'System normal',
+        'active_time': 0,
+        'date': '00/00/0000',
+        'time': '00:00:00',
+        'supply_volume_total': 0,
+        'supply_volume_gross': 0,
+        'supply_replace_count': 0,
+        'waste_volume_total': 0,
+        'waste_volume_gross': 0,
+        'waste_replace_count': 0,
+        'automatic': True,
+        'inflow_level': 0,
+        'mute': False
+        }
+
+    USER_TEMPLATE = {
+        'entry': 0,
+        'supply_replace_volume': 0,
+        'supply_replace_count_removed': 0,
+        'supply_replace_count_added': 0,
+        'waste_replace_volume': 0,
+        'waste_replace_count_removed': 0,
+        'waste_replace_count_added': 0,
+        'automatic': True,
+        'inflow_level': 0,
+        'mute_count': 0,
+        'reset_count': 0
+        }
+
+    PATIENT_TEMPLATE = {
+        'firstname': '–',
+        'lastname': '–',
+        'MRN': 0,
+        'DOB': '00-00-0000',
+        'sex': '–',
+        'contact_A': 0,
+        'contact_B': 0,
+        'start_date': '00/00/0000',
+        'start_time': '00:00'
+        }
+    
     if file == 'system':
         path = 'data/system.db'
         if os.path.exists(path): # remove existing database
@@ -57,6 +111,9 @@ def replace_data(file, verbose=False):
             inflow_level            INTEGER     NOT NULL,
             mute                    INTEGER     NOT NULL);''') # create new table in database
         db.close()
+
+        add_data(data=SYSTEM_TEMPLATE, file='system', initialize=True)
+
         if verbose:
             print(f"table 'system' created in {path} successfully")
 
@@ -84,6 +141,9 @@ def replace_data(file, verbose=False):
             mute_count                      INTEGER     NOT NULL,
             reset_count                     INTEGER     NOT NULL);''') # create new table in database
         db.close()
+
+        add_data(data=USER_TEMPLATE, file='user', initialize=True)
+
         if verbose:
             print(f"table 'user' created in {path} successfully")
 
@@ -94,19 +154,7 @@ def replace_data(file, verbose=False):
             if verbose:
                 print(f"removed {path} successfully")
         
-        patient = {
-            'firstname': '',
-            'lastname': '',
-            'MRN': 0,
-            'birthdate': '00-00-0000',
-            'sex': '',
-            'contact_A': 1234567890,
-            'contact_B': 1234567890,
-            'start_date': '00-00-0000',
-            'start_time': '00:00'
-        } # template placeholder for patient database
-        
-        js = json.dumps(patient, indent=4)
+        js = json.dumps(PATIENT_TEMPLATE, indent=4)
         with open(path, "w") as outfile:
             outfile.write(js)
         if verbose:
@@ -116,7 +164,7 @@ def replace_data(file, verbose=False):
         raise Exception(f"file [{file}] not valid")
 
 
-def add_data(data, file, initialize=False, verbose=False):
+def add_data(data, file, verbose=False, initialize=False):
     if file in ['system', 'user']: # gets most recent entry from Sqlite database and updates given key-value pairs
         if file == 'system':
             path = 'data/system.db'
@@ -158,20 +206,26 @@ def add_data(data, file, initialize=False, verbose=False):
 
 def get_data(keys, file, n=1, order='DESC', verbose=False):
     # lists of all keys available for each file
-    SYSTEM_KEYS = ['entry',
-                   'hematuria_level', 'hematuria_percent', 'supply_percent', 
-                   'supply_volume', 'supply_time', 'supply_rate', 'waste_percent', 'waste_volume', 'waste_time', 'waste_rate', 
-                   'status_level', 'status_message', 'active_time', 'date', 'time', 'supply_volume_total', 'supply_volume_gross', 
-                   'supply_replace_count', 'waste_volume_total', 'waste_volume_gross', 'waste_replace_count', 'automatic', 
-                   'inflow_level', 'mute']
-    USER_KEYS = ['entry',
-                 'supply_replace_volume', 'supply_replace_count_removed', 'supply_replace_count_added',
-                 'waste_replace_volume', 'waste_replace_count_removed', 'waste_replace_count_added',
-                 'automatic', 'inflow_level',
-                 'mute_count', 'reset_count']
-    PATIENT_KEYS = ['firstname', 'lastname', 'MRN', 'DOB', 'sex',
-                    'contact_A', 'contact_B',
-                    'start_date', 'start_time']
+    SYSTEM_KEYS = [
+        'entry',
+        'hematuria_level', 'hematuria_percent', 'supply_percent', 
+        'supply_volume', 'supply_time', 'supply_rate', 'waste_percent', 'waste_volume', 'waste_time', 'waste_rate', 
+        'status_level', 'status_message', 'active_time', 'date', 'time', 'supply_volume_total', 'supply_volume_gross', 
+        'supply_replace_count', 'waste_volume_total', 'waste_volume_gross', 'waste_replace_count', 'automatic', 
+        'inflow_level', 'mute'
+        ]
+    USER_KEYS = [
+        'entry',
+        'supply_replace_volume', 'supply_replace_count_removed', 'supply_replace_count_added',
+        'waste_replace_volume', 'waste_replace_count_removed', 'waste_replace_count_added',
+        'automatic', 'inflow_level',
+        'mute_count', 'reset_count'
+        ]
+    PATIENT_KEYS = [
+        'firstname', 'lastname', 'MRN', 'DOB', 'sex',
+        'contact_A', 'contact_B',
+        'start_date', 'start_time'
+        ]
     
     if keys == 'all': # allow keys input to be 'all'
         if file == 'system':
@@ -265,60 +319,61 @@ if __name__ == '__main__':
     replace_data(file='user', verbose=True)
     replace_data(file='patient', verbose=True)
 
-    data_in_1 = {'entry': 1,
-                 'hematuria_level': 30,
-                 'hematuria_percent': 2.5,
-                 'supply_percent': 20,
-                 'supply_volume': 9990,
-                 'supply_time': 321,
-                 'supply_rate': 24,
-                 'waste_percent': 94,
-                 'waste_volume': 2300,
-                 'waste_time': 123,
-                 'waste_rate': 92,
-                 'status_level': 'NORMAL',
-                 'status_message': 'SYSTEM NORMAL',
-                 'active_time': 4201,
-                 'date': '02/17/2024',
-                 'time': '04:10:12',
-                 'supply_volume_total': 6000,
-                 'supply_volume_gross': 12000,
-                 'supply_replace_count': 2,
-                 'waste_volume_total': 5000,
-                 'waste_volume_gross': 10000,
-                 'waste_replace_count': 2,
-                 'automatic': True,
-                 'inflow_level': 42,
-                 'mute': False
-                 }
+    data_in_1 = {
+        'hematuria_level': 30,
+        'hematuria_percent': 2.5,
+        'supply_percent': 20,
+        'supply_volume': 9990,
+        'supply_time': 321,
+        'supply_rate': 24,
+        'waste_percent': 94,
+        'waste_volume': 2300,
+        'waste_time': 123,
+        'waste_rate': 92,
+        'status_level': 'NORMAL',
+        'status_message': 'SYSTEM NORMAL',
+        'active_time': 4201,
+        'date': '02/17/2024',
+        'time': '04:10:12',
+        'supply_volume_total': 6000,
+        'supply_volume_gross': 12000,
+        'supply_replace_count': 2,
+        'waste_volume_total': 5000,
+        'waste_volume_gross': 10000,
+        'waste_replace_count': 2,
+        'automatic': True,
+        'inflow_level': 42,
+        'mute': False
+        }
     
-    add_data(data=data_in_1, file='system', initialize=True, verbose=True)
+    add_data(data=data_in_1, file='system', verbose=True)
 
-    data_in_2 = {'hematuria_level': 20,
-                 'hematuria_percent': 5.5,
-                 'supply_percent': 18,
-                 'supply_volume': 5120,
-                 'supply_time': 311,
-                 'supply_rate': 28,
-                 'waste_percent': 98,
-                 'waste_volume': 2500,
-                 'waste_time': 99,
-                 'waste_rate': 54,
-                 'status_level': 'NORMAL',
-                 'status_message': 'SYSTEM NORMAL',
-                 'active_time': 4901,
-                 'date': '02/18/2024',
-                 'time': '04:10:13',
-                 'supply_volume_total': 6000,
-                 'supply_volume_gross': 12000,
-                 'supply_replace_count': 2,
-                 'waste_volume_total': 5000,
-                 'waste_volume_gross': 10000,
-                 'waste_replace_count': 2,
-                 'automatic': True,
-                 'inflow_level': 42,
-                 'mute': False
-                 }
+    data_in_2 = {
+        'hematuria_level': 20,
+        'hematuria_percent': 5.5,
+        'supply_percent': 18,
+        'supply_volume': 5120,
+        'supply_time': 311,
+        'supply_rate': 28,
+        'waste_percent': 98,
+        'waste_volume': 2500,
+        'waste_time': 99,
+        'waste_rate': 54,
+        'status_level': 'NORMAL',
+        'status_message': 'SYSTEM NORMAL',
+        'active_time': 4901,
+        'date': '02/18/2024',
+        'time': '04:10:13',
+        'supply_volume_total': 6000,
+        'supply_volume_gross': 12000,
+        'supply_replace_count': 2,
+        'waste_volume_total': 5000,
+        'waste_volume_gross': 10000,
+        'waste_replace_count': 2,
+        'automatic': True,
+        'inflow_level': 42,
+        'mute': False
+        }
     
     add_data(data=data_in_2, file='system', verbose=True)
 
