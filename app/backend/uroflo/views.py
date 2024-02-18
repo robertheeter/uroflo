@@ -13,7 +13,7 @@ from system.data import *
 import os
 os.chdir('system')
 
-TESTING = True
+TESTING = False
 VERBOSE = True
 
 
