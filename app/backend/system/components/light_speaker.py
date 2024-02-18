@@ -1,11 +1,11 @@
 '''
-LED & SPEAKER
+LIGHT & SPEAKER
 
 Notes
 - For notification system
 
 - LED strip light using 3 R, G, and B N-channel MOSFETs
-- Speaker with sound alerts
+- USB speaker with sound alerts
 
 - Pin allocation:
   PIN 24 (GPIO 8), PIN 26 (GPIO 7), PIN 28 (GPIO 1), PIN 30 (Ground)
@@ -22,7 +22,7 @@ import pygame
 import os
 
 
-class LEDSpeaker():
+class Light():
     def __init__(self, red_pin, green_pin, blue_pin, verbose=False):
         self.red_pin = red_pin # GPIO red pin (BCM)
         self.green_pin = green_pin # GPIO green pin (BCM)
@@ -33,7 +33,7 @@ class LEDSpeaker():
         self.setup()
 
     def setup(self):
-        print("LEDSpeaker: setup")
+        print("Light: setup")
         self.red = pwmio.PWMOut(self.red_pin)
         self.green = pwmio.PWMOut(self.green_pin)
         self.blue = pwmio.PWMOut(self.blue_pin)
@@ -42,13 +42,13 @@ class LEDSpeaker():
     def duty_cycle(self, percent):
         return int(percent / 100.0 * 65535.0)
 
-    # turn on LED to color
-    def light(self, color):
+    # set LED light to color
+    def color(self, color):
         if color not in ['off', 'default', 'yellow', 'orange', 'red']:
-            raise Exception(f"LEDSpeaker: color = {color} not available")
+            raise Exception(f"Light: color = {color} not available")
         
         if self.verbose:
-            print(f"LEDSpeaker: light (color = {color})")
+            print(f"Light: color (color = {color})")
         
         if color == 'off':
             self.red.duty_cycle = self.duty_cycle(0)
@@ -75,41 +75,62 @@ class LEDSpeaker():
             self.blue.duty_cycle = self.duty_cycle(0)
             self.green.duty_cycle = self.duty_cycle(0)
 
-    # play audio from speaker
-    def sound(self, file):
-        if not os.path.exists(file):
-            raise Exception(f"LEDSpeaker: file = {file} not found")
-        
-        if self.verbose:
-            print(f"LEDSpeaker: sound (file = {file})")
-
-        pygame.init()
-        audio = pygame.mixer.Sound(file)
-        audio.set_volume(1.0)
-        audio.play()
-
     def shutdown(self):
-        print("LEDSpeaker: shutdown")
-        self.light('off')
+        print("Light: shutdown")
+        self.color(color='off')
         self.red.deinit()
         self.green.deinit()
         self.blue.deinit()
+
+
+class Speaker():
+    def __init__(self, verbose=False):
+        self.verbose = verbose
+
+        self.setup()
+
+    def setup(self):
+        print("Speaker: setup")
+        pygame.init()
+
+    # play audio from speaker
+    def play(self, file, volume=1.0):
+        if not os.path.exists(file):
+            raise Exception(f"Speaker: file = {file} not found")
+        
+        if self.verbose:
+            print(f"Speaker: play (file = {file})")
+        
+        audio = pygame.mixer.Sound(file)
+        audio.set_volume(volume)
+        audio.play()
+
+    def stop(self):
         pygame.quit()
+
+    def shutdown(self):
+        print("Speaker: shutdown")
+        self.stop()
 
 
 # example implementation
 if __name__ == '__main__':
     os.chdir('..') # change current directory
     
-    led_speaker = LEDSpeaker(red_pin=board.D8, green_pin=board.D7, blue_pin=board.D1, verbose=True) # use BOARD.D[GPIO] numbering (BCM) (NOT pin numbering)
+    light = Light(red_pin=board.D8, green_pin=board.D7, blue_pin=board.D1, verbose=True) # use BOARD.D[GPIO] numbering (BCM) (NOT pin numbering)
     time.sleep(2) # wait for setup
 
     for color in ['default', 'off', 'yellow', 'orange', 'red']:
-        led_speaker.light(color=color)
+        light.color(color=color)
         time.sleep(4)
     
+    light.shutdown()
+
+    speaker = Speaker(verbose=True) # use BOARD.D[GPIO] numbering (BCM) (NOT pin numbering)
+    time.sleep(2) # wait for setup
+
     for file in ['sound/chime.mp3', 'sound/alarm.mp3']:
-        led_speaker.sound(file=file)
+        speaker.play(file=file, volume=1.0)
         time.sleep(10)
 
-    led_speaker.shutdown()
+    speaker.shutdown()

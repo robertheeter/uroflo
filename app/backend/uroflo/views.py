@@ -318,7 +318,7 @@ def patient_data(request):
     elif request.method == 'POST':
         try:
             patient = json.loads(request.body.decode('utf-8'))
-
+            
             start_date = datetime.now().strftime("%m/%d/%Y")
             start_time = datetime.now().strftime("%H:%M:%S")
             patient.update({'start_date': start_date, 'start_time': start_time})
