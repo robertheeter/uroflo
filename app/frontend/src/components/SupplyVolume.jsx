@@ -2,12 +2,24 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 const SupplyVolume = () => {
-  let [volume, setVolume] = useState(0);
+  let [volume, setVolume] = useState(1);
+  let [totalVolume, setTotalVolume] = useState(1);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       axios
-        .get("http://localhost:8000/uroflo/device") // replace with your API endpoint
+        .get("http://localhost:8000/uroflo/system") // replace with your API endpoint
+        .then((response) => setTotalVolume(response.data.supply_volume_total)) // replace 'rate' with the actual key in the response
+        .catch((error) => console.error(error));
+    }, 1000); // fetch every 1 second
+
+    return () => clearInterval(intervalId); // clean up on component unmount
+  }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      axios
+        .get("http://localhost:8000/uroflo/system") // replace with your API endpoint
         .then((response) => setVolume(response.data.supply_volume)) // replace 'rate' with the actual key in the response
         .catch((error) => console.error(error));
     }, 1000); // fetch every 1 second
@@ -16,7 +28,7 @@ const SupplyVolume = () => {
   }, []);
 
   volume = volume / 1000;
-  let totalVolume = 6.0;
+  totalVolume = totalVolume / 1000;
   let percent = Math.round((volume / totalVolume) * 100);
 
   const [time, setTime] = useState(0);
@@ -24,7 +36,7 @@ const SupplyVolume = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       axios
-        .get("http://localhost:8000/uroflo/device") // replace with your API endpoint
+        .get("http://localhost:8000/uroflo/system") // replace with your API endpoint
         .then((response) => setTime(response.data.supply_time)) // replace 'rate' with the actual key in the response
         .catch((error) => console.error(error));
     }, 1000); // fetch every 1 second
@@ -54,13 +66,13 @@ const SupplyVolume = () => {
           </div>
         </div>
         <div className="text-xl text-slate-200">
-          {hours} HR {minutes} MIN TO EMPTY
+          {hours} h {minutes} min TO EMPTY
         </div>
       </div>
       <div className="w-16 flex justify-center items-center">
         <div className="relative w-6 h-28 mr-2 bg-slate-200 rounded-2xl">
           <div
-            className="absolute w-full bottom-0 bg-blue-600 transition-all duration-500 rounded-2xl"
+            className="absolute w-full bottom-0 bg-blue-500 transition-all duration-500 rounded-2xl"
             style={{ height: `${percent}%` }}
           ></div>
         </div>

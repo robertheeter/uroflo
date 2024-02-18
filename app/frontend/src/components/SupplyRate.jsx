@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 
 const SupplyRate = () => {
   //  let rate = 63; // Change this value to a number between 0 and 100
-  const [rate, setRate] = useState(0);
+  const [rate, setRate] = useState(1);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       axios
-        .get("http://localhost:8000/uroflo/device") // replace with your API endpoint
+        .get("http://localhost:8000/uroflo/system") // replace with your API endpoint
         .then((response) => setRate(response.data.supply_rate)) // replace 'rate' with the actual key in the response
         .catch((error) => console.error(error));
     }, 1000); // fetch every 1 second
@@ -29,7 +29,7 @@ const SupplyRate = () => {
           </div>
           <div className="w-full h-6 rounded-2xl bg-slate-200">
             <div
-              className="h-full bg-blue-600 rounded-2xl transition-all duration-500"
+              className="h-full bg-blue-500 rounded-2xl transition-all duration-500"
               style={{ width: `${rate}%` }}
             ></div>
             <div className="flex flex-row justify-between items-center">
