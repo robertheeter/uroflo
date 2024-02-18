@@ -35,21 +35,6 @@ const decreaseFlow = () => {
     });
 };
 
-const replaceWaste = () => {
-  const url = "http://localhost:8000/uroflo/user/waste_replace_volume";
-  const data = {
-    waste_replace_volume: "TRUE",
-  };
-  axios
-    .post(url, data)
-    .then((response) => {
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
-};
-
 const mute = () => {
   const url = "http://localhost:8000/uroflo/user/mute";
   const data = {
@@ -76,7 +61,7 @@ const ControlPanel = () => {
     setAuto(!auto);
     const data = {};
     const url = "http://localhost:8000/uroflo/user/automatic";
-    if (auto) {
+    if (!auto) {
       data["automatic"] = "TRUE";
     } else {
       data["automatic"] = "FALSE";
@@ -108,18 +93,10 @@ const ControlPanel = () => {
   };
 
   const replaceSupply = () => {
-    const url = "http://localhost:8000/uroflo/user/supply_replace_volume";
-    const data = {
-      supply_replace_volume: "TRUE",
-    };
-    axios
-      .post(url, data)
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    navigate("/replace/supply/step1");
+  };
+
+  const replaceWaste = () => {
     navigate("/replace/supply/step1");
   };
 

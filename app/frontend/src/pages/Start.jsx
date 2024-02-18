@@ -78,7 +78,7 @@ const Start = () => {
   };
 
   const handleSubmit = (event) => {
-    const url = "http://localhost:8000/uroflo/patient/update";
+    const url = "http://localhost:8000/uroflo/patient";
     const data = {
       firstname: firstName,
       lastname: lastName,

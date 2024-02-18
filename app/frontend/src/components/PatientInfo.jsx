@@ -1,11 +1,20 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+function formatDOB(dob) {
+  let dobDate = new Date(dob);
+  let month = String(dobDate.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed in JavaScript
+  let day = String(dobDate.getDate()).padStart(2, "0");
+  let year = dobDate.getFullYear();
+  dob = month + "/" + day + "/" + year;
+  return dob;
+}
+
 const PatientInfo = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [mrn, setMRN] = useState("");
-  const [dob, setDOB] = useState("");
+  let [dob, setDOB] = useState("");
   const [sex, setSex] = useState("");
   const [contactA, setContactA] = useState("");
   const [contactB, setContactB] = useState("");
@@ -118,6 +127,8 @@ const PatientInfo = () => {
 
     return () => clearInterval(intervalId); // clean up on component unmount
   }, []);
+
+  dob = formatDOB(dob);
 
   return (
     <div className="h-full w-full flex flex-row text-slate-200">
