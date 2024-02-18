@@ -115,7 +115,7 @@ def replace_data(file, verbose=False):
         add_data(data=SYSTEM_TEMPLATE, file='system', initialize=True)
 
         if verbose:
-            print(f"table 'system' created in {path} successfully")
+            print(f"table 'system' created in {path} successfully with template data")
 
     elif file == 'user':
         path = 'data/user.db'
@@ -145,7 +145,7 @@ def replace_data(file, verbose=False):
         add_data(data=USER_TEMPLATE, file='user', initialize=True)
 
         if verbose:
-            print(f"table 'user' created in {path} successfully")
+            print(f"table 'user' created in {path} successfully with template data")
 
     elif file == 'patient':
         path = 'data/patient.json'
@@ -154,11 +154,10 @@ def replace_data(file, verbose=False):
             if verbose:
                 print(f"removed {path} successfully")
         
-        js = json.dumps(PATIENT_TEMPLATE, indent=4)
-        with open(path, "w") as outfile:
-            outfile.write(js)
+        add_data(data=PATIENT_TEMPLATE, file='patient', initialize=True)
+
         if verbose:
-            print(f"created {path} successfully")
+            print(f"created {path} successfully with template data")
 
     else:
         raise Exception(f"file [{file}] not valid")
@@ -319,6 +318,7 @@ if __name__ == '__main__':
     replace_data(file='user', verbose=True)
     replace_data(file='patient', verbose=True)
 
+    # system test data entry 1
     data_in_1 = {
         'hematuria_level': 30,
         'hematuria_percent': 2.5,
@@ -345,9 +345,9 @@ if __name__ == '__main__':
         'inflow_level': 42,
         'mute': False
         }
-    
     add_data(data=data_in_1, file='system', verbose=True)
 
+    # system test data entry 2
     data_in_2 = {
         'hematuria_level': 20,
         'hematuria_percent': 5.5,
@@ -374,11 +374,10 @@ if __name__ == '__main__':
         'inflow_level': 42,
         'mute': False
         }
-    
     add_data(data=data_in_2, file='system', verbose=True)
 
+    # system test data entry 3
     data_in_3 = {'time': '04:10:59'}
-    
     add_data(data=data_in_3, file='system', verbose=True)
 
     # n > 1, len(keys) > 1 condition

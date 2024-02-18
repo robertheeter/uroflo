@@ -448,14 +448,17 @@ class HX711():
 
 # example implementation
 if __name__ == '__main__':
-    os.chdir("..") # change current directory
+    os.chdir('..') # change current directory
+    
     weight_sensor = WeightSensor(pdsck_pin=8, dout_pin=10, offset=1, scale=-242.22, verbose=True) # use pin numbering (BCM) (NOT GPIO numbering)
     time.sleep(2) # wait for setup
 
     time.sleep(10) # remove all weight from sensor
     weight_sensor.zero(replicates=15)
+
     time.sleep(10) # add 6000 g weight
     weight_sensor.calibrate(known_mass=6000, replicates=15)
+
     time.sleep(10) # add unknown weight
     weight_sensor.read(replicates=15)
 
