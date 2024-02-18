@@ -231,7 +231,7 @@ def handle_user_inflow_level_decrease(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body.decode('utf-8'))
-            value = data.get('inflow_level_increase', None)
+            value = data.get('inflow_level_decrease', None)
             
             if value == 'TRUE':
                 inflow_level = get_data(keys=['inflow_level'], file='user', n=1)
