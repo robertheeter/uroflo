@@ -92,20 +92,19 @@ def handle_user_inflow_level_increase(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body.decode('utf-8'))
-            key1_value = data.get('inflow_level_increase', None)
-            # key2_value = data.get('key2', None)
-            print('SUCCESS')
-            print(key1_value)
-            return JsonResponse({'status': 'success', 'message': 'Request processed.'})
-        
+            value = data.get('inflow_level_increase', None)
+            
+            if value == 'TRUE':
+                inflow_level = get_data(keys=['inflow_level'], file='user', n=1)
+                inflow_level += 1
+                add_data(data={'inflow_level': inflow_level}, file='user')
+                print(f"INFLOW_LEVEL = {inflow_level}")
+
+            return JsonResponse({'status': 'success', 'message': 'request processed'})
         except json.JSONDecodeError:
-            return JsonResponse({'status': 'error', 'message': 'Invalid JSON data.'})
+            return JsonResponse({'status': 'error', 'message': 'invalid JSON'})
     else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
-
-
-    response = None
-    return response
+        return JsonResponse({'status': 'error', 'message': 'invalid request method'})
 
 @csrf_exempt
 def handle_user_inflow_level_decrease(request):
@@ -134,10 +133,6 @@ def handle_user_reset(request):
         return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
 
-    response = None
-    return response
-
-
 # PATIENT DATA (patient.json)
 def get_patient_data(request):
     if TESTING == True:
@@ -147,8 +142,8 @@ def get_patient_data(request):
                                  'DOB': '01/01/1829',
                                  'sex': 'M',
 
-                                 'contact_A': random.randint(1000000000, 9999999999),
-                                 'contact_B': random.randint(1000000000, 9999999999)
+                                 'contact_A': '(123) 456-7890',
+                                 'contact_B': '(421) 512-1231'
                                  })
         return response
     
