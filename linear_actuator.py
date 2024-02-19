@@ -99,13 +99,14 @@ if __name__ == '__main__':
     linear_actuator = LinearActuator(en_pin=10, in1_pin=9, in2_pin=11, freq=1000, verbose=True) # use pin numbering (BCM) (NOT GPIO numbering)
     time.sleep(2) # wait for setup
 
-    linear_actuator.retract(duty_cycle=100, duration=2)
-    linear_actuator.extend(duty_cycle=100, duration=6)
-    time.sleep(2)
+    linear_actuator.retract(duty_cycle=100, duration=4)
+    linear_actuator.extend(duty_cycle=100, duration=8)
+    time.sleep(4)
+    print("FULLY OCCLUDED")
 
     for i in range(1000):
-        input("Press Enter to continue...")
-        print(i)
+        input("PRESS ENTER TO INCREASE FLOW")
+        print(f"COUNT = {i+1}")
         linear_actuator.retract(duty_cycle=100, duration=0.01)
         time.sleep(0.5)
     
