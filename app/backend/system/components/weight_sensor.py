@@ -23,7 +23,6 @@ Documentation
 import time
 import RPi.GPIO as GPIO
 import threading
-import numpy as np
 import os
 
 

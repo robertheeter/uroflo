@@ -17,7 +17,25 @@ import sqlite3
 import json
 
 
-def replace_data(file, verbose=False):
+def delete_data(file, verbose=False):
+    if file == 'system':
+        path = 'data/system.db'
+    elif file == 'user':
+        path = 'data/user.db'
+    elif file == 'patient':
+        path = 'data/patient.json'
+    else:
+        raise Exception(f"file [{file}] not valid")
+
+    if os.path.exists(path): # remove database if it exists
+        os.remove(path)
+        if verbose:
+            print(f"removed {path} successfully")
+    else:
+        print(f"path {path} does not exist")
+
+
+def create_data(file, verbose=False):
     SYSTEM_TEMPLATE = {
         'entry': 0,
         'hematuria_level': 0,
@@ -74,10 +92,8 @@ def replace_data(file, verbose=False):
     
     if file == 'system':
         path = 'data/system.db'
-        if os.path.exists(path): # remove existing database
-            os.remove(path)
-            if verbose:
-                print(f"removed {path} successfully")
+        if os.path.exists(path):
+            raise Exception(f"path {path} already exists")
 
         db = sqlite3.connect(path)
         if verbose:
@@ -118,10 +134,8 @@ def replace_data(file, verbose=False):
 
     elif file == 'user':
         path = 'data/user.db'
-        if os.path.exists(path): # remove existing database
-            os.remove(path)
-            if verbose:
-                print(f"removed {path} successfully")
+        if os.path.exists(path):
+            raise Exception(f"path {path} already exists")
             
         db = sqlite3.connect(path)
         if verbose:
@@ -148,10 +162,8 @@ def replace_data(file, verbose=False):
 
     elif file == 'patient':
         path = 'data/patient.json'
-        if os.path.exists(path): # remove existing database
-            os.remove(path)
-            if verbose:
-                print(f"removed {path} successfully")
+        if os.path.exists(path):
+            raise Exception(f"path {path} already exists")
         
         add_data(data=PATIENT_TEMPLATE, file='patient', initialize=True)
 
@@ -344,10 +356,15 @@ def remove_data(file, n=1, order='ASC', verbose=False):
 
 # example implementation
 if __name__ == '__main__':
-    # test replace_data
-    replace_data(file='system', verbose=True)
-    replace_data(file='user', verbose=True)
-    replace_data(file='patient', verbose=True)
+    # test delete_data
+    delete_data(file='system', verbose=True)
+    delete_data(file='user', verbose=True)
+    delete_data(file='patient', verbose=True)
+
+    # test create_data
+    create_data(file='system', verbose=True)
+    create_data(file='user', verbose=True)
+    create_data(file='patient', verbose=True)
 
     # test add_data
     # entry 1
