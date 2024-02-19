@@ -102,16 +102,16 @@ if __name__ == '__main__':
     linear_actuator.retract(duty_cycle=100, duration=4)
     linear_actuator.extend(duty_cycle=100, duration=8)
 
-    # print("FULLY OCCLUDED")
-    # time.sleep(4)
+    print("FULLY OCCLUDED")
+    time.sleep(4)
 
-    # for i in range(1000):
-    #     input("PRESS ENTER TO INCREASE FLOW")
-    #     print(f"COUNT = {i+1}")
-    #     linear_actuator.retract(duty_cycle=100, duration=0.01)
-    #     time.sleep(0.5)
+    for i in range(1000):
+        input("PRESS ENTER TO INCREASE FLOW")
+        print(f"COUNT = {i+1}")
+        linear_actuator.retract(duty_cycle=100, duration=0.01)
+        time.sleep(0.5)
 
-    count = 14
-    linear_actuator.retract(duty_cycle=100, duration=0.01*count)
+    # count = 14
+    # linear_actuator.retract(duty_cycle=100, duration=0.01*count)
     
     linear_actuator.shutdown()
