@@ -96,7 +96,7 @@ class LinearActuator():
 if __name__ == '__main__':
     os.chdir('..') # change current directory
     
-    linear_actuator = LinearActuator(en_pin=10, in1_pin=9, in2_pin=11, freq=1000, verbose=True) # use pin numbering (BCM) (NOT GPIO numbering)
+    linear_actuator = LinearActuator(en_pin=10, in1_pin=9, in2_pin=11, freq=1000, verbose=True) # use GPIO numbering (BCM) (NOT pin numbering)
     time.sleep(2) # wait for setup
 
     linear_actuator.retract(duty_cycle=100, duration=4)

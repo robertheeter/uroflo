@@ -53,7 +53,7 @@ class Speaker():
 if __name__ == '__main__':
     os.chdir('..') # change current directory
     
-    speaker = Speaker(verbose=True) # use BOARD.D[GPIO] numbering (BCM) (NOT pin numbering)
+    speaker = Speaker(verbose=True)
     time.sleep(2) # wait for setup
 
     for file in ['sound/chime.mp3', 'sound/alarm.mp3']:
