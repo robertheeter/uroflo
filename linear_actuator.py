@@ -126,7 +126,7 @@ if __name__ == '__main__':
     down = 0
 
     while True:
-        input = user_input("INPUT: r/u/w for UP e/d/s for DOWN")
+        input = user_input("\nINPUT: r/u/w for UP e/d/s for DOWN: ")
         print(input)
         if input in ['r','u','w']:
             up += 1
