@@ -145,5 +145,6 @@ if __name__ == '__main__':
             linear_actuator.extend(duty_cycle=100, duration=INCREMENT_SIZE)
         else:
             print("ERROR: invalid input")
+        time.sleep(0.5)
     
     linear_actuator.shutdown()
