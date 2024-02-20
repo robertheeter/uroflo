@@ -20,7 +20,7 @@ Documentation
 import time
 import RPi.GPIO as GPIO
 import os
-import readline
+import curses
 
 
 class LinearActuator():
@@ -94,16 +94,23 @@ class LinearActuator():
 
 
 def user_input(prompt):
-    def hook():
-        readline.insert_text("")
-        return ""
-    
-    readline.set_pre_input_hook(hook)
+    stdscr = curses.initscr()
+    curses.noecho()
+    stdscr.keypad(True)
+
     try:
-        return input(prompt)
-    
+        stdscr.addstr(prompt)
+        stdscr.refresh()
+
+        while True:
+            key = stdscr.getch()
+            if key == curses.KEY_UP:
+                return 'up'
+            elif key == curses.KEY_DOWN:
+                return 'down'
+            
     finally:
-        readline.set_pre_input_hook()
+        curses.endwin()
 
 
 # example implementation
@@ -120,17 +127,18 @@ if __name__ == '__main__':
     
     # adjust compression
     INCREMENT_SIZE = 0.01 # can try 0.005 or 0.001
+    print(f"INCREMENT_SIZE = {INCREMENT_SIZE}")
     up = 0
     down = 0
 
     while True:
         input = user_input(f"INPUT: press UP or DOWN")
-        if input == '\x1b[A':
+        if input == 'up':
             up += 1
             print(f"up count = {up}")
             print(f"down count = {down}")
             linear_actuator.retract(duty_cycle=100, duration=INCREMENT_SIZE)
-        elif input == '\x1b[B':
+        elif input == 'down':
             down += 1
             print(f"up count = {up}")
             print(f"down count = {down}")
