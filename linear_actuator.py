@@ -126,7 +126,7 @@ if __name__ == '__main__':
     down = 0
 
     while True:
-        input = user_input("\nINPUT: r/u/w for UP e/d/s for DOWN: ")
+        input = user_input("\nINPUT: r/u/w for UP, e/d/s for DOWN, q to QUIT: ")
         print(input)
         if input in ['r','u','w']:
             up += 1
@@ -138,7 +138,7 @@ if __name__ == '__main__':
             print(f"retract (up) count = {up}")
             print(f"extend (down) count = {down}")
             linear_actuator.extend(duty_cycle=100, duration=increment_time)
-        elif input == 'esc':
+        elif input == 'q':
             break
         else:
             print("ERROR: invalid input")
