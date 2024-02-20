@@ -451,13 +451,17 @@ if __name__ == '__main__':
     
     weight_sensor = WeightSensor(pdsck_pin=14, dout_pin=15, offset=1, scale=-242.22, verbose=True) # use GPIO numbering (BCM) (NOT pin numbering)
     time.sleep(2) # wait for setup
+
+    # basic test
     while True:
         weight_sensor.read(replicates=1)
         time.sleep(1)
+
+    # zeroing, calibration, and reading test
     input("ZERO: remove all weight from sensor, then press ENTER")
     weight_sensor.zero(replicates=15)
 
-    known_mass = input("CALIBRATE: add known mass to sensor, input the mass (grams), then press ENTER\nknown_mass = ")
+    known_mass = input("CALIBRATE: add known mass to sensor, input the known mass (grams), then press ENTER\nknown_mass = ")
     weight_sensor.calibrate(known_mass=int(known_mass), replicates=15)
 
     input("READ: add unknown mass to sensor, then press ENTER")

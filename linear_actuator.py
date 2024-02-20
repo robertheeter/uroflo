@@ -97,25 +97,6 @@ class LinearActuator():
 
 
 def user_input(prompt):
-    stdscr = curses.initscr()
-    # curses.noecho()
-    stdscr.keypad(True)
-
-    try:
-        # stdscr.addstr(prompt)
-        stdscr.refresh()
-
-        while True:
-            key = stdscr.getch()
-            if key == curses.KEY_UP:
-                return 'up'
-            elif key == curses.KEY_DOWN:
-                return 'down'
-            
-    finally:
-        curses.endwin()
-
-def get_single_char_input(prompt):
     print(prompt, end='', flush=True)
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
@@ -125,16 +106,10 @@ def get_single_char_input(prompt):
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
-def main():
-    single_char = get_single_char_input("Enter a single character: ")
-    print("\nYou entered:", single_char)
 
 # example implementation
 if __name__ == '__main__':
-    main()
     os.chdir('..') # change current directory
-    user_input = input("Enter something: ")
-    print("You entered:", user_input)
 
     linear_actuator = LinearActuator(en_pin=10, in1_pin=9, in2_pin=11, freq=1000, verbose=True) # use GPIO numbering (BCM) (NOT pin numbering)
     time.sleep(2) # wait for setup
@@ -145,23 +120,25 @@ if __name__ == '__main__':
     print("NOTE: fully occluded")
     
     # adjust compression
-    INCREMENT_SIZE = 0.01 # can try 0.005 or 0.001
-    print(f"INCREMENT_SIZE = {INCREMENT_SIZE}")
+    increment_time = 0.01 # can try 0.005 or 0.001
+    print(f"NOTE: increment_time = {increment_time}")
     up = 0
     down = 0
 
     while True:
-        input = user_input(f"INPUT: press UP or DOWN")
-        if input == 'up':
+        input = user_input("Enter a single character: ")
+        print(input)
+        time.sleep(10)
+        if input in ['r','u','w']:
             up += 1
-            print(f"up count = {up}")
-            print(f"down count = {down}")
-            linear_actuator.retract(duty_cycle=100, duration=INCREMENT_SIZE)
-        elif input == 'down':
+            print(f"retract (up) count = {up}")
+            print(f"extend (down) count = {down}")
+            linear_actuator.retract(duty_cycle=100, duration=increment_time)
+        elif input in ['e','d','s']:
             down += 1
-            print(f"up count = {up}")
-            print(f"down count = {down}")
-            linear_actuator.extend(duty_cycle=100, duration=INCREMENT_SIZE)
+            print(f"retract (up) count = {up}")
+            print(f"extend (down) count = {down}")
+            linear_actuator.extend(duty_cycle=100, duration=increment_time)
         elif input == 'esc':
             break
         else:
