@@ -20,6 +20,7 @@ Documentation
 import time
 import RPi.GPIO as GPIO
 import os
+import readline
 
 
 class LinearActuator():
@@ -92,6 +93,19 @@ class LinearActuator():
         GPIO.cleanup()
 
 
+def user_input(prompt):
+    def hook():
+        readline.insert_text("")
+        return ""
+    
+    readline.set_pre_input_hook(hook)
+    try:
+        return input(prompt)
+    
+    finally:
+        readline.set_pre_input_hook()
+
+
 # example implementation
 if __name__ == '__main__':
     os.chdir('..') # change current directory
@@ -99,20 +113,29 @@ if __name__ == '__main__':
     linear_actuator = LinearActuator(en_pin=10, in1_pin=9, in2_pin=11, freq=1000, verbose=True) # use GPIO numbering (BCM) (NOT pin numbering)
     time.sleep(2) # wait for setup
 
+    # occlude tubing
     linear_actuator.retract(duty_cycle=100, duration=4)
     linear_actuator.extend(duty_cycle=100, duration=8)
-
-    print("FULLY OCCLUDED")
-    time.sleep(4)
-
+    print("NOTE: fully occluded")
+    
+    # adjust compression
     INCREMENT_SIZE = 0.01 # can try 0.005 or 0.001
+    up = 0
+    down = 0
 
-    i = 1
     while True:
-        input("PRESS ENTER TO INCREASE FLOW")
-        print(f"COUNT = {i}")
-        linear_actuator.retract(duty_cycle=100, duration=INCREMENT_SIZE)
-        time.sleep(0.5)
-        i+=1
+        input = user_input(f"INPUT: press UP or DOWN")
+        if input == '\x1b[A':
+            up += 1
+            print(f"up count = {up}")
+            print(f"down count = {down}")
+            linear_actuator.retract(duty_cycle=100, duration=INCREMENT_SIZE)
+        elif input == '\x1b[B':
+            down += 1
+            print(f"up count = {up}")
+            print(f"down count = {down}")
+            linear_actuator.extend(duty_cycle=100, duration=INCREMENT_SIZE)
+        else:
+            print("ERROR: invalid input")
     
     linear_actuator.shutdown()
