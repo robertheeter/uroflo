@@ -456,10 +456,10 @@ if __name__ == '__main__':
     weight_sensor.zero(replicates=15)
 
     known_mass = input("CALIBRATE: add known mass to sensor, input the mass (grams), then press ENTER\nknown_mass = ")
-    weight_sensor.calibrate(known_mass=known_mass, replicates=15)
+    weight_sensor.calibrate(known_mass=int(known_mass), replicates=15)
 
     input("READ: add unknown mass to sensor, then press ENTER")
     weight_sensor.read(replicates=15)
-    
+
     weight_sensor.shutdown()
     
