@@ -116,6 +116,8 @@ def user_input(prompt):
 # example implementation
 if __name__ == '__main__':
     os.chdir('..') # change current directory
+    user_input = input("Enter something: ")
+    print("You entered:", user_input)
     
     linear_actuator = LinearActuator(en_pin=10, in1_pin=9, in2_pin=11, freq=1000, verbose=True) # use GPIO numbering (BCM) (NOT pin numbering)
     time.sleep(2) # wait for setup
@@ -143,6 +145,8 @@ if __name__ == '__main__':
             print(f"up count = {up}")
             print(f"down count = {down}")
             linear_actuator.extend(duty_cycle=100, duration=INCREMENT_SIZE)
+        elif input == 'esc':
+            break
         else:
             print("ERROR: invalid input")
         time.sleep(0.5)
