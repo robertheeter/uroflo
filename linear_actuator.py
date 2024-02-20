@@ -120,24 +120,24 @@ if __name__ == '__main__':
     print("NOTE: fully occluded")
     
     # adjust compression
-    increment_time = 0.01 # can try 0.005 or 0.001
-    print(f"NOTE: increment_time = {increment_time}")
-    up = 0
-    down = 0
+    increment_size = 0.01 # can try 0.005 or 0.001
+    print(f"NOTE: increment_size = {increment_size}")
+    increase = 0
+    decrease = 0
 
     while True:
-        input = user_input("\nINPUT: r/u/w for UP, e/d/s for DOWN, q to QUIT: ")
+        input = user_input("\nINPUT: 'r'/'i' for INCREASE FLOW, 'e'/'d' for DECREASE FLOW, 'q' to QUIT: ")
         print(input)
-        if input in ['r','u','w']:
-            up += 1
-            print(f"retract (up) count = {up}")
-            print(f"extend (down) count = {down}")
-            linear_actuator.retract(duty_cycle=100, duration=increment_time)
-        elif input in ['e','d','s']:
-            down += 1
-            print(f"retract (up) count = {up}")
-            print(f"extend (down) count = {down}")
-            linear_actuator.extend(duty_cycle=100, duration=increment_time)
+        if input in ['r','i']:
+            increase += 1
+            print(f"increase count = {increase}")
+            print(f"decrease count = {decrease}")
+            linear_actuator.retract(duty_cycle=100, duration=increment_size)
+        elif input in ['e','d']:
+            decrease += 1
+            print(f"increase count = {increase}")
+            print(f"decrease count = {decrease}")
+            linear_actuator.extend(duty_cycle=100, duration=increment_size)
         elif input == 'q':
             break
         else:
