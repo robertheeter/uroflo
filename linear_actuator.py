@@ -95,11 +95,11 @@ class LinearActuator():
 
 def user_input(prompt):
     stdscr = curses.initscr()
-    curses.noecho()
+    # curses.noecho()
     stdscr.keypad(True)
 
     try:
-        stdscr.addstr(prompt)
+        # stdscr.addstr(prompt)
         stdscr.refresh()
 
         while True:
