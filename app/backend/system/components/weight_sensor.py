@@ -452,7 +452,8 @@ if __name__ == '__main__':
     weight_sensor = WeightSensor(pdsck_pin=14, dout_pin=15, offset=1, scale=-242.22, verbose=True) # use GPIO numbering (BCM) (NOT pin numbering)
     time.sleep(2) # wait for setup
     while True:
-        weight_sensor.read(repliates=1)
+        weight_sensor.read(replicates=1)
+        time.sleep(1)
     input("ZERO: remove all weight from sensor, then press ENTER")
     weight_sensor.zero(replicates=15)
 
