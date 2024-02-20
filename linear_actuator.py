@@ -21,6 +21,9 @@ import time
 import RPi.GPIO as GPIO
 import os
 import curses
+import sys
+import termios
+import tty
 
 
 class LinearActuator():
@@ -112,13 +115,27 @@ def user_input(prompt):
     finally:
         curses.endwin()
 
+def get_single_char_input(prompt):
+    print(prompt, end='', flush=True)
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    try:
+        tty.setraw(fd)
+        return sys.stdin.read(1)
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+
+def main():
+    single_char = get_single_char_input("Enter a single character: ")
+    print("\nYou entered:", single_char)
 
 # example implementation
 if __name__ == '__main__':
+    main()
     os.chdir('..') # change current directory
     user_input = input("Enter something: ")
     print("You entered:", user_input)
-    
+
     linear_actuator = LinearActuator(en_pin=10, in1_pin=9, in2_pin=11, freq=1000, verbose=True) # use GPIO numbering (BCM) (NOT pin numbering)
     time.sleep(2) # wait for setup
 
