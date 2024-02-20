@@ -126,9 +126,8 @@ if __name__ == '__main__':
     down = 0
 
     while True:
-        input = user_input("Enter a single character: ")
+        input = user_input("INPUT: r/u/w for UP e/d/s for DOWN")
         print(input)
-        time.sleep(10)
         if input in ['r','u','w']:
             up += 1
             print(f"retract (up) count = {up}")
