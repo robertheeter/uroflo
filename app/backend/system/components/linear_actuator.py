@@ -20,6 +20,9 @@ Documentation
 import time
 import RPi.GPIO as GPIO
 import os
+import sys
+import termios
+import tty
 
 
 class LinearActuator():
@@ -49,12 +52,12 @@ class LinearActuator():
         self.pwm = GPIO.PWM(self.en_pin, self.FREQ) # start PWM
         self.pwm.start(100)
     
-    # stop movement
+    # stop actuator movement
     def stop(self):
         GPIO.output(self.in1_pin, GPIO.LOW)
         GPIO.output(self.in2_pin, GPIO.LOW)
 
-    # extend/move forward
+    # extend/move actuator forward
     def extend(self, duty_cycle=100, duration=0):
         if self.verbose:
             print(f"LinearActuator: extend (duty_cycle = {duty_cycle}, duration = {duration})")
@@ -70,7 +73,7 @@ class LinearActuator():
         time.sleep(duration)
         self.stop()
 
-    # retract/move backward
+    # retract/move actuator backward
     def retract(self, duty_cycle=100, duration=0):
         if self.verbose:
             print(f"LinearActuator: retract (duty_cycle = {duty_cycle}, duration = {duration})")
@@ -92,22 +95,53 @@ class LinearActuator():
         GPIO.cleanup()
 
 
+# for testing
+def user_input(prompt):
+    print(prompt, end='', flush=True)
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    try:
+        tty.setraw(fd)
+        return sys.stdin.read(1)
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+
+
 # example implementation
 if __name__ == '__main__':
     os.chdir('..') # change current directory
-    
+
     linear_actuator = LinearActuator(en_pin=10, in1_pin=9, in2_pin=11, freq=1000, verbose=True) # use GPIO numbering (BCM) (NOT pin numbering)
     time.sleep(2) # wait for setup
 
-    for i in range(4):
-        linear_actuator.retract(duty_cycle=100, duration=2)
-        linear_actuator.extend(duty_cycle=100, duration=6)
-        time.sleep(2)
-        for i in range(40):
-            print(i)
-            linear_actuator.retract(duty_cycle=100, duration=0.01)
-            time.sleep(0.5)
+    # occlude tubing
+    linear_actuator.retract(duty_cycle=100, duration=4)
+    linear_actuator.extend(duty_cycle=100, duration=8)
+    print("NOTE: fully occluded")
+    
+    # adjust compression
+    increment_size = 0.01 # can try 0.005 or 0.001
+    print(f"NOTE: increment_size = {increment_size}")
+    increase = 0
+    decrease = 0
 
-        time.sleep(2)
+    while True:
+        input = user_input("\nINPUT: 'r'/'i' to INCREASE FLOW, 'e'/'d' to DECREASE FLOW, 'q' to QUIT: ")
+
+        if input in ['r','i']:
+            increase += 1
+            print(f"increase count = {increase}")
+            print(f"decrease count = {decrease}")
+            linear_actuator.retract(duty_cycle=100, duration=increment_size)
+        elif input in ['e','d']:
+            decrease += 1
+            print(f"increase count = {increase}")
+            print(f"decrease count = {decrease}")
+            linear_actuator.extend(duty_cycle=100, duration=increment_size)
+        elif input == 'q':
+            break
+        else:
+            print("ERROR: invalid input")
+        time.sleep(0.5)
     
     linear_actuator.shutdown()

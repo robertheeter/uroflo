@@ -27,7 +27,7 @@ import os
 
 
 class WeightSensor():
-    def __init__(self, pdsck_pin, dout_pin, offset=1, scale=-242.22, verbose=False):
+    def __init__(self, pdsck_pin, dout_pin, offset=1, scale=1, verbose=False):
         self.pdsck_pin = pdsck_pin # GPIO SCK pin (BCM)
         self.dout_pin = dout_pin # GPIO DOUT pin (BCM)
 
@@ -43,7 +43,7 @@ class WeightSensor():
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM) # BCM mode
 
-        self.hx = HX711(self.pdsck_pin, self.dout_pin)
+        self.hx = HX711(pd_sck=self.pdsck_pin, dout=self.dout_pin)
         self.hx.set_reading_format("MSB", "MSB")
         
         self.set_offset(self.OFFSET)
@@ -64,38 +64,45 @@ class WeightSensor():
         self.hx.set_reference_unit(self.SCALE)
         self.hx.reset()
 
+    # read mass
+    def read(self, replicates=15, truncate=True, method='median'):
+        if method == 'median':
+            raw = self.hx.read_median(replicates)
+        elif method == 'mean':
+            raw = self.hx.read_average(replicates)
+
+        self.hx.reset()
+
+        mass = (raw - self.OFFSET) / self.SCALE
+
+        if truncate == True:
+            mass = max(0, mass)
+        
+        if self.verbose:
+            print(f"WeightSensor: mass = {mass} (replicates = {replicates}, truncate = {truncate}, method = {method})")
+        
+        return mass
+
     # zero sensor reading
     def zero(self, replicates=15):
         if self.verbose:
             print(f"WeightSensor: zero (replicates = {replicates})")
-        scale = self.hx.get_reference_unit()
-        self.hx.set_reference_unit(reference_unit=1)
-        offset = self.hx.read_average(replicates)
-        self.hx.set_reference_unit(reference_unit=scale)
+        
+        mass = self.read(replicates=replicates, truncate=False, method='mean')
+        raw = (mass * self.SCALE) + self.OFFSET
+        offset = raw
         self.set_offset(offset)
     
     # calibrate sensor reading to match known_mass
     def calibrate(self, known_mass, replicates=15):
         if self.verbose:
             print(f"WeightSensor: calibrate (known_mass = {known_mass}, replicates = {replicates})")
-        mass = self.hx.get_weight(replicates)
-        self.hx.reset()
-        print(mass)
-        print(self.SCALE)
-        raw = mass * self.SCALE
-        scale = raw/known_mass
+        mass = self.read(replicates=replicates, truncate=False, method='median')
+        raw = (mass * self.SCALE) + self.OFFSET
+        scale = (raw - self.OFFSET) / known_mass
         self.set_scale(scale)
-
-    # read mass
-    def read(self, replicates=15):
-        mass = max(0, int(self.hx.get_weight(replicates)))
-        self.hx.reset()
-
-        if self.verbose:
-            print(f"WeightSensor: mass = {mass} (replicates = {replicates})")
-        
-        return mass
     
+    # shutdown sensor
     def shutdown(self):
         print(f"WeightSensor: shutdown")
         GPIO.cleanup()
@@ -455,20 +462,21 @@ if __name__ == '__main__':
     weight_sensor = WeightSensor(pdsck_pin=14, dout_pin=15, offset=1, scale=1, verbose=True) # use GPIO numbering (BCM) (NOT pin numbering)
     time.sleep(2) # wait for setup
 
-    # basic test
+    # basic test (uncomment for testing)
     # while True:
     #     weight_sensor.read(replicates=1)
     #     time.sleep(1)
 
-    # zeroing, calibration, and reading test
+    # zeroing, calibration, and reading test (uncomment for testing)
     input("ZERO: remove all weight from sensor, then press ENTER")
     weight_sensor.zero(replicates=15)
 
     known_mass = input("CALIBRATE: add known mass to sensor, input the known mass (grams), then press ENTER\nknown_mass = ")
     weight_sensor.calibrate(known_mass=int(known_mass), replicates=15)
 
-    input("READ: add unknown mass to sensor, then press ENTER")
-    weight_sensor.read(replicates=15)
+    for i in range (5):
+        input("READ: add unknown mass to sensor, then press ENTER")
+        weight_sensor.read(replicates=15)
 
     weight_sensor.shutdown()
     

@@ -20,7 +20,6 @@ Documentation
 import time
 import RPi.GPIO as GPIO
 import os
-import curses
 import sys
 import termios
 import tty
@@ -53,12 +52,12 @@ class LinearActuator():
         self.pwm = GPIO.PWM(self.en_pin, self.FREQ) # start PWM
         self.pwm.start(100)
     
-    # stop movement
+    # stop actuator movement
     def stop(self):
         GPIO.output(self.in1_pin, GPIO.LOW)
         GPIO.output(self.in2_pin, GPIO.LOW)
 
-    # extend/move forward
+    # extend/move actuator forward
     def extend(self, duty_cycle=100, duration=0):
         if self.verbose:
             print(f"LinearActuator: extend (duty_cycle = {duty_cycle}, duration = {duration})")
@@ -74,7 +73,7 @@ class LinearActuator():
         time.sleep(duration)
         self.stop()
 
-    # retract/move backward
+    # retract/move actuator backward
     def retract(self, duty_cycle=100, duration=0):
         if self.verbose:
             print(f"LinearActuator: retract (duty_cycle = {duty_cycle}, duration = {duration})")
@@ -96,6 +95,7 @@ class LinearActuator():
         GPIO.cleanup()
 
 
+# for testing
 def user_input(prompt):
     print(prompt, end='', flush=True)
     fd = sys.stdin.fileno()
@@ -126,8 +126,8 @@ if __name__ == '__main__':
     decrease = 0
 
     while True:
-        input = user_input("\nINPUT: 'r'/'i' for INCREASE FLOW, 'e'/'d' for DECREASE FLOW, 'q' to QUIT: ")
-        print(input)
+        input = user_input("\nINPUT: 'r'/'i' to INCREASE FLOW, 'e'/'d' to DECREASE FLOW, 'q' to QUIT: ")
+
         if input in ['r','i']:
             increase += 1
             print(f"increase count = {increase}")

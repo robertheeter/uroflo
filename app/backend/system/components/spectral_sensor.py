@@ -134,7 +134,7 @@ if __name__ == '__main__':
     n = 20
     reading = spectral_sensor.read(replicates=n)
 
-    print(f"\nAVERAGE READINGS (n={n}):\n")
+    print(f"\SPECTRAL SENSOR AVERAGED READINGS (replicates={n}):\n")
     print('450 nm / violet : {:.2f}'.format(reading[450]))
     print('500 nm / blue   : {:.2f}'.format(reading[500]))
     print('550 nm / green  : {:.2f}'.format(reading[550]))
