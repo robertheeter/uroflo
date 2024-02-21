@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Switch } from "@chakra-ui/react";
 import { TbTriangleFilled } from "react-icons/tb";
 import { TbTriangleInvertedFilled } from "react-icons/tb";
@@ -50,12 +50,46 @@ const mute = () => {
     });
 };
 
+const getStatusColor = (statusLevel) => {
+  if (statusLevel === "NORMAL") {
+    return "bg-[#7fb4df]";
+  } else if (statusLevel === "CAUTION") {
+    return "bg-orange-600";
+  } else if (statusLevel === "CRITICAL") {
+    return "bg-red-600";
+  } else {
+    return "bg-[#7fb4df]";
+  }
+};
+
 const ControlPanel = () => {
-  // [#7fb4df] uroflo blue
-  // amber-600
-  // red-600
   const navigate = useNavigate();
   const [auto, setAuto] = useState(true);
+  const [statusLevel, setStatusLevel] = useState("NORMAL");
+  const [statusMessage, setStatusMessage] = useState("System normal");
+  let resetInitiated = false;
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      axios
+        .get("http://localhost:8000/system") // replace with your API endpoint
+        .then((response) => setStatusLevel(response.data.status_level)) // replace 'rate' with the actual key in the response
+        .catch((error) => console.error(error));
+    }, 1000); // fetch every 1 second
+
+    return () => clearInterval(intervalId); // clean up on component unmount
+  }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      axios
+        .get("http://localhost:8000/system") // replace with your API endpoint
+        .then((response) => setStatusMessage(response.data.status_message)) // replace 'rate' with the actual key in the response
+        .catch((error) => console.error(error));
+    }, 1000); // fetch every 1 second
+
+    return () => clearInterval(intervalId); // clean up on component unmount
+  }, []);
 
   const handleSwitch = () => {
     setAuto(!auto);
@@ -77,6 +111,7 @@ const ControlPanel = () => {
   };
 
   const reset = () => {
+    resetInitiated = true;
     const url = "http://localhost:8000/user/reset";
     const data = {
       reset_count: "TRUE",
@@ -89,27 +124,29 @@ const ControlPanel = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
-    navigate("/start");
+    navigate("/start", { state: { resetInitiated } });
   };
 
   const replaceSupply = () => {
-    navigate("/replace/supply/step1");
+    navigate("/replace/supply/step1", { state: { resetInitiated } });
   };
 
   const replaceWaste = () => {
-    navigate("/replace/supply/step1");
+    navigate("/replace/waste/step1", { state: { resetInitiated } });
   };
 
   return (
     <div className="flex flex-col justify-start items-center w-full h-full gap-y-6">
       <div
-        className="flex flex-col rounded-2xl text-slate-200 
-                      bg-red-600 w-full h-[162px] px-5 py-4 gap-y-1"
+        className={`flex flex-col rounded-2xl text-slate-200 
+              ${getStatusColor(
+                statusLevel
+              )} w-full h-[162px] px-5 py-4 gap-y-1`}
       >
         <div className="text-3xl">
-          STATUS <p className="font-bold">CAUTION</p>
+          STATUS <p className="font-bold">{statusLevel}</p>
         </div>
-        <p className="text-xl">SEVERE HEMATURIA FOR &gt; 30 min</p>
+        <p className="text-xl">{statusMessage}</p>
       </div>
       <div className="flex flex-row justify-center items-center gap-x-6 w-full">
         <button

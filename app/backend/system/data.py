@@ -398,8 +398,8 @@ if __name__ == '__main__':
 
     # entry 2
     data_in_2 = {
-        'hematuria_level': 90,
-        'hematuria_percent': 9.5,
+        'hematuria_level': 20,
+        'hematuria_percent': 0.5,
         'supply_percent': 18,
         'supply_volume': 5120,
         'supply_time': 311,
@@ -408,8 +408,8 @@ if __name__ == '__main__':
         'waste_volume': 2500,
         'waste_time': 99,
         'waste_rate': 54,
-        'status_level': 'CRITICAL',
-        'status_message': 'Severe hematuria detected for >30 min.',
+        'status_level': 'CAUTION',
+        'status_message': 'Waste bag almost full',
         'active_time': 4901,
         'date': '02/18/2024',
         'time': '04:10:13',

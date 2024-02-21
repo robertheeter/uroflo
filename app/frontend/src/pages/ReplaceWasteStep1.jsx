@@ -3,19 +3,19 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { FaArrowLeftLong } from "react-icons/fa6";
 
-const ReplaceSupplyStep2 = () => {
+const ReplaceWasteStep1 = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const resetInitiated = location.state?.resetInitiated;
 
-  const back = () => {
-    navigate("/replace/supply/step1", { state: { resetInitiated } });
+  const cancel = () => {
+    navigate("/home");
   };
 
   const next = () => {
-    const url = "http://localhost:8000/user/supply_replace_added";
+    const url = "http://localhost:8000/user/waste_replace_removed";
     const data = {
-      supply_replace_count_added: "TRUE",
+      waste_replace_count_removed: "TRUE",
     };
     axios
       .post(url, data)
@@ -25,28 +25,30 @@ const ReplaceSupplyStep2 = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
-    console.log(resetInitiated);
-    navigate("/replace/supply/step3", { state: { resetInitiated } });
+    navigate("/replace/waste/step2", { state: { resetInitiated } });
   };
 
   return (
     <div className="w-screen h-screen bg-slate-950 flex flex-col justify-center items-center">
       <div className="w-[50%] h-[60%] bg-slate-800 rounded-2xl flex flex-col justify-between items-center pt-16 pb-10">
-        <h1 className="text-5xl text-slate-200 font-bold">
-          Add new supply bag
-        </h1>
+        <h1 className="text-5xl text-slate-200 font-bold">Remove waste bag</h1>
+
         <div className="w-full flex flex-row justify-between items-center px-10">
           <button
-            className="bg-slate-800 border-slate-200 border-2 w-40 h-20 rounded-lg flex justify-center items-center"
-            onClick={back}
+            className="bg-slate-800 border-slate-200 border-2 w-40 h-20 rounded-lg text-3xl text-slate-200 flex justify-center items-center"
+            onClick={cancel}
           >
-            <FaArrowLeftLong className="text-6xl text-slate-200" />
+            {resetInitiated ? (
+              <FaArrowLeftLong className="text-6xl" />
+            ) : (
+              "Cancel"
+            )}
           </button>
           <button
             className="bg-green-600 w-40 h-20 rounded-lg flex justify-center items-center"
             onClick={next}
           >
-            <FaArrowRightLong className="text-6xl text-slate-950" />
+            <FaArrowRightLong className="text-6xl" />
           </button>
         </div>
       </div>
@@ -54,4 +56,4 @@ const ReplaceSupplyStep2 = () => {
   );
 };
 
-export default ReplaceSupplyStep2;
+export default ReplaceWasteStep1;

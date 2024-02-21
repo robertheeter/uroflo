@@ -1,13 +1,19 @@
 import axios from "axios";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { FaArrowRightLong } from "react-icons/fa6";
+import { FaArrowLeftLong } from "react-icons/fa6";
 
 const ReplaceSupplyStep1 = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const resetInitiated = location.state?.resetInitiated;
 
   const cancel = () => {
-    navigate("/home");
+    if (resetInitiated) {
+      navigate("/start", { state: { resetInitiated } });
+    } else {
+      navigate("/home");
+    }
   };
 
   const next = () => {
@@ -23,7 +29,7 @@ const ReplaceSupplyStep1 = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
-    navigate("/replace/supply/step2");
+    navigate("/replace/supply/step2", { state: { resetInitiated } });
   };
 
   return (
@@ -33,16 +39,20 @@ const ReplaceSupplyStep1 = () => {
 
         <div className="w-full flex flex-row justify-between items-center px-10">
           <button
-            className="bg-slate-800 border-slate-200 border-2 w-40 h-20 rounded-lg text-3xl text-slate-200"
+            className="bg-slate-800 border-slate-200 border-2 w-40 h-20 rounded-lg text-3xl text-slate-200 flex justify-center items-center"
             onClick={cancel}
           >
-            Cancel
+            {resetInitiated ? (
+              <FaArrowLeftLong className="text-6xl" />
+            ) : (
+              "Cancel"
+            )}
           </button>
           <button
             className="bg-green-600 w-40 h-20 rounded-lg flex justify-center items-center"
             onClick={next}
           >
-            <FaArrowRightLong className="text-6xl" />
+            <FaArrowRightLong className="text-6xl text-slate-950" />
           </button>
         </div>
       </div>

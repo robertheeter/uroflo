@@ -11,9 +11,13 @@ const PatientInfo = () => {
   const [contactB, setContactB] = useState("");
   const [activeTime, setActiveTime] = useState(0);
 
-  let days = Math.floor(activeTime / 1440);
-  let hours = Math.floor(activeTime / 60);
-  let minutes = activeTime % 60;
+  function convertMinutes(minutes) {
+    let days = Math.floor(minutes / (60 * 24));
+    minutes -= days * 60 * 24;
+    let hours = Math.floor(minutes / 60);
+    minutes -= hours * 60;
+    return { days, hours, minutes };
+  }
 
   function calculateAge(dob) {
     const dobDate = new Date(dob);
@@ -30,6 +34,7 @@ const PatientInfo = () => {
   }
 
   let age = calculateAge(dob);
+  let { days, hours, minutes } = convertMinutes(activeTime);
 
   useEffect(() => {
     const intervalId = setInterval(() => {

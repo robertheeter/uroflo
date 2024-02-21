@@ -1,23 +1,23 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaArrowRightLong } from "react-icons/fa6";
 import { FaArrowLeftLong } from "react-icons/fa6";
+import { FaArrowRightLong } from "react-icons/fa6";
 
-const ReplaceSupplyStep3 = () => {
+const ReplaceWasteStep3 = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const resetInitiated = location.state?.resetInitiated;
   const [volume, setVolume] = useState(null);
 
   const back = () => {
-    navigate("/replace/supply/step2", { state: { resetInitiated } });
+    navigate("/replace/waste/step2", { state: { resetInitiated } });
   };
 
   const done = () => {
-    const url = "http://localhost:8000/user/supply_replace_volume";
+    const url = "http://localhost:8000/user/waste_replace_volume";
     const data = {
-      supply_replace_volume: volume,
+      waste_replace_volume: volume,
     };
     axios
       .post(url, data)
@@ -27,9 +27,8 @@ const ReplaceSupplyStep3 = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
-
     if (resetInitiated) {
-      navigate("/replace/waste/step1", { state: { resetInitiated } });
+      navigate("/replace/tubing", { state: { resetInitiated } });
     } else {
       navigate("/home");
     }
@@ -99,4 +98,4 @@ const ReplaceSupplyStep3 = () => {
   );
 };
 
-export default ReplaceSupplyStep3;
+export default ReplaceWasteStep3;

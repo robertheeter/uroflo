@@ -3,7 +3,7 @@ import axios from "axios";
 
 const WasteRate = () => {
   //  let rate = 63; // Change this value to a number between 0 and 100
-  const [rate, setRate] = useState(1);
+  const [rate, setRate] = useState(0);
 
   useEffect(() => {
     const intervalId = setInterval(() => {

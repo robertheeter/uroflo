@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import Keyboard from "react-simple-keyboard";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "react-dropdown/style.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-simple-keyboard/build/css/index.css";
@@ -18,6 +18,8 @@ function formatDOB(dob) {
 }
 
 const Start = () => {
+  const location = useLocation();
+  const resetInitiated = location.state?.resetInitiated;
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -108,7 +110,7 @@ const Start = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
-    navigate("/"); // navigate to StartPage
+    navigate("/replace/supply/step1", { state: { resetInitiated } }); // navigate to StartPage
   };
 
   return (
@@ -227,9 +229,18 @@ const Start = () => {
               </div>
             </div>
             <input
-              className="w-[85%] h-9 bg-green-700 rounded-lg text-slate-200 text-xl font-bold"
+              className="w-[85%] h-9 bg-green-600 rounded-lg text-slate-200 text-xl font-bold"
               type="submit"
               value="Submit"
+              disabled={
+                !firstName ||
+                !lastName ||
+                !sex ||
+                !date ||
+                !mrn ||
+                !contactA ||
+                !contactB
+              }
             />
           </form>
         </div>

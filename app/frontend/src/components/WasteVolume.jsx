@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 const WasteVolume = () => {
-  let [volume, setVolume] = useState(1);
+  let [volume, setVolume] = useState(0);
   let [totalVolume, setTotalVolume] = useState(1);
 
   useEffect(() => {
