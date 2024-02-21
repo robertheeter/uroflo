@@ -12,10 +12,12 @@ Documentation
 
 '''
 
+import os
 import time
 import numpy as np
 from datetime import datetime
 
+from data import *
 from simple_pid import PID
 
 from components.light import Light
@@ -26,7 +28,24 @@ from components.weight_sensor import WeightSensor
 
 
 def main():
-    pass
+
+    reset = False
+
+    # Initialize databases
+    if not os.path.isfile('data/system.db'):
+        create_data(file='system', verbose=True)
+        reset = True
+    if not os.path.isfile('data/user.db'):
+        create_data(file='user', verbose=True)
+        reset = True
+    if not os.path.isfile('data/patient.json'):
+        create_data(file='patient', verbose=True)
+        reset = True
+
+    system_data = get_data(keys='all', file='system', n=1, order='DESC')
+    # need to assign to script variables
+
+    
 
 
 
