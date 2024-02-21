@@ -126,8 +126,8 @@ if __name__ == '__main__':
 
     while True:
         input = user_input("\nINPUT: 'r'/'i' to INCREASE FLOW, 'e'/'d' to DECREASE FLOW, 'q' to QUIT: ")
-        print()
-        
+        print("\n")
+
         if input in ['r','i']:
             increase += 1
             print(f"increase count = {increase}")
