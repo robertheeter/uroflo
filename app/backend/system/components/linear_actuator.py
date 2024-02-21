@@ -120,7 +120,7 @@ if __name__ == '__main__':
     print("NOTE: fully occluded")
     
     # adjust compression
-    increment_size = float(input("/nINPUT: increment_size = "))
+    increment_size = float(input("\nINPUT: increment_size = "))
     increase = 0
     decrease = 0
 
