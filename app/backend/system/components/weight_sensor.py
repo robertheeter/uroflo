@@ -78,7 +78,8 @@ class WeightSensor():
     def calibrate(self, known_mass, replicates=15):
         if self.verbose:
             print(f"WeightSensor: calibrate (known_mass = {known_mass}, replicates = {replicates})")
-        mass = self.read(replicates)
+        mass = self.hx.get_weight(replicates)
+        self.hx.reset()
         raw = mass * self.SCALE
         scale = raw/known_mass
         self.set_scale(scale)
@@ -458,14 +459,14 @@ if __name__ == '__main__':
         time.sleep(1)
 
     # zeroing, calibration, and reading test
-    input("ZERO: remove all weight from sensor, then press ENTER")
-    weight_sensor.zero(replicates=15)
+    # input("ZERO: remove all weight from sensor, then press ENTER")
+    # weight_sensor.zero(replicates=15)
 
-    known_mass = input("CALIBRATE: add known mass to sensor, input the known mass (grams), then press ENTER\nknown_mass = ")
-    weight_sensor.calibrate(known_mass=int(known_mass), replicates=15)
+    # known_mass = input("CALIBRATE: add known mass to sensor, input the known mass (grams), then press ENTER\nknown_mass = ")
+    # weight_sensor.calibrate(known_mass=int(known_mass), replicates=15)
 
-    input("READ: add unknown mass to sensor, then press ENTER")
-    weight_sensor.read(replicates=15)
+    # input("READ: add unknown mass to sensor, then press ENTER")
+    # weight_sensor.read(replicates=15)
 
-    weight_sensor.shutdown()
+    # weight_sensor.shutdown()
     
