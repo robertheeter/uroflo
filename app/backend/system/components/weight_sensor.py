@@ -80,6 +80,8 @@ class WeightSensor():
             print(f"WeightSensor: calibrate (known_mass = {known_mass}, replicates = {replicates})")
         mass = self.hx.get_weight(replicates)
         self.hx.reset()
+        print(mass)
+        print(self.SCALE)
         raw = mass * self.SCALE
         scale = raw/known_mass
         self.set_scale(scale)
