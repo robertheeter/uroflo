@@ -12,6 +12,18 @@ const ReplaceTubing = () => {
   };
 
   const done = () => {
+    const url = "http://localhost:8000/user/setup";
+    const data = {
+      setup: "TRUE",
+    };
+    axios
+      .post(url, data)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
     navigate("/home");
   };
 
