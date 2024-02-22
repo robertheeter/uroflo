@@ -120,7 +120,8 @@ if __name__ == '__main__':
     print("NOTE: fully occluded")
     
     # adjust compression
-    increment_size = float(input("\nINPUT: increment_size = "))
+    retract_increment_size = float(input("\nINPUT: retract_increment_size = "))
+    extend_increment_size = float(input("\nINPUT: extend_increment_size = "))
     increase = 0
     decrease = 0
 
@@ -132,12 +133,12 @@ if __name__ == '__main__':
             increase += 1
             print(f"increase count = {increase}")
             print(f"decrease count = {decrease}")
-            linear_actuator.retract(duty_cycle=100, duration=increment_size)
+            linear_actuator.retract(duty_cycle=100, duration=retract_increment_size)
         elif input in ['e','d']:
             decrease += 1
             print(f"increase count = {increase}")
             print(f"decrease count = {decrease}")
-            linear_actuator.extend(duty_cycle=100, duration=increment_size)
+            linear_actuator.extend(duty_cycle=100, duration=extend_increment_size)
         elif input == 'q':
             break
         else:
