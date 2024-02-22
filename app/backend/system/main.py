@@ -251,11 +251,8 @@ def main():
         # waste weight sensor
 
             # example implementation
-        
         reading = spectral_sensor.read(replicates=10)
-
         reading = supply_weight_sensor.read(replicates=15)
-
         reading = waste_weight_sensor.read(replicates=15)
 
 
@@ -298,7 +295,7 @@ def main():
         status_level =
         status_message = 
 
-        # example implementations
+            # example implementations
         for color in ['default', 'off', 'yellow', 'orange', 'red']:
             light.color(color=color)
             time.sleep(4)
