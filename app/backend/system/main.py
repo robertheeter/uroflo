@@ -28,6 +28,31 @@ from components.spectral_sensor import SpectralSensor
 from components.weight_sensor import WeightSensor
 
 
+# system parameters
+INFLOW_ADJUSTMENT_SIZE = 0.005
+SPECTRAL_SENSOR_REPLICATES = 10
+WEIGHT_SENSOR_REPLICATES = 15
+
+SUPPLY_DENSITY = 1.0
+WASTE_DENSITY = 1.0
+
+
+# function to subtract date-time strings in minutes
+def datetime_difference(date_1, time_1, date_2, time_2):
+    datetime_1 = f"{date_1} {time_1}"
+    datetime_2 = f"{date_2} {time_2}"
+
+    format = "%m/%d/%Y %H:%M:%S"
+    dt1 = datetime.strptime(datetime_1, format)
+    dt2 = datetime.strptime(datetime_2, format)
+
+    diff = dt2 - dt1
+    diff_min = diff.total_seconds() / 60
+
+    return diff_min
+
+
+# main loop
 def main():
 
     # instantiate components and PID
@@ -45,7 +70,8 @@ def main():
     for file in ['system', 'user', 'patient']:
         if not exists_data(file=file):
             reset = True
-
+            break
+    
     # initialize new data if reset
     if reset == True:
         for file in ['system', 'user', 'patient']:
@@ -68,7 +94,7 @@ def main():
     _ = system_data['waste_time'] # not necessary
     _ = system_data['waste_rate'] # not necessary
 
-    _ = system_data['status_level'] # not necessary
+    status_level = system_data['status_level']
     _ = system_data['status_message'] # not necessary
 
     _ = system_data['active_time'] # not necessary
@@ -106,24 +132,15 @@ def main():
 
     _ = user_data['setup'] # not necessary
     _ = user_data['reset'] # not necessary
-
-    # get stored patient data from database and assign to variables
-    patient_data = get_data(key='all', file='user')
-    
-    _ = patient_data['firstname'] # not necessary (add back for alert SMS texting)
-    _ = patient_data['lastname'] # not necessary (add back for alert SMS texting)
-    _ = patient_data['MRN'] # not necessary (add back for alert SMS texting)
-    _ = patient_data['DOB'] # not necessary (add back for alert SMS texting)
-    _ = patient_data['sex'] # not necessary (add back for alert SMS texting)
-    _ = patient_data['contact_A'] # not necessary (add back for alert SMS texting)
-    _ = patient_data['contact_B'] # not necessary (add back for alert SMS texting)
-
-    start_date = patient_data['start_date']
-    start_time = patient_data['start_time']
     
     # ensure consistency between databases
     supply_volume_total = supply_replace_volume
     waste_volume_total = waste_replace_volume
+
+    # define additional variables
+    low_supply = False
+    low_waste = False
+    status_level_prev = ''
 
     # perform reset if reset
     if reset == True:
@@ -141,7 +158,7 @@ def main():
             val = get_data(key='supply_replace_count_removed', file='user')
             if  val > supply_replace_count_removed:
                 supply_replace_count_removed = val
-                supply_weight_sensor.zero(replicates=15) # zero weight sensor
+                supply_weight_sensor.zero(replicates=WEIGHT_SENSOR_REPLICATES) # zero weight sensor
                 break
             time.sleep(0.01)
         
@@ -150,7 +167,7 @@ def main():
             if val > supply_replace_count_added:
                 supply_replace_count_added = val
                 supply_replace_volume = get_data(key='supply_replace_volume', file='user')
-                supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=15) # calibrate weight sensor with known mass
+                supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=WEIGHT_SENSOR_REPLICATES) # calibrate weight sensor with known mass
                 supply_volume_total = supply_replace_volume # update
                 supply_replace_count += 1 # update
                 break
@@ -161,7 +178,7 @@ def main():
             val = get_data(key='waste_replace_count_removed', file='user')
             if val > waste_replace_count_removed:
                 waste_replace_count_removed = val
-                waste_weight_sensor.zero(replicates=15) # zero weight sensor
+                waste_weight_sensor.zero(replicates=WEIGHT_SENSOR_REPLICATES) # zero weight sensor
                 break
             time.sleep(0.01)
         
@@ -170,7 +187,7 @@ def main():
             if  val > waste_replace_count_added:
                 waste_replace_count_added = val
                 waste_replace_volume = get_data(key='waste_replace_volume', file='user')
-                waste_weight_sensor.calibrate(known_mass=waste_replace_volume, replicates=15) # calibrate weight sensor with known mass
+                waste_weight_sensor.calibrate(known_mass=waste_replace_volume, replicates=WEIGHT_SENSOR_REPLICATES) # calibrate weight sensor with known mass
                 waste_volume_total = waste_replace_volume # update
                 waste_replace_count += 1 # update
                 break
@@ -187,6 +204,20 @@ def main():
     
         reset = False
     
+    # get stored patient data from database and assign to variables
+    patient_data = get_data(key='all', file='user')
+    
+    _ = patient_data['firstname'] # not necessary (add back for alert SMS texting)
+    _ = patient_data['lastname'] # not necessary (add back for alert SMS texting)
+    _ = patient_data['MRN'] # not necessary (add back for alert SMS texting)
+    _ = patient_data['DOB'] # not necessary (add back for alert SMS texting)
+    _ = patient_data['sex'] # not necessary (add back for alert SMS texting)
+    _ = patient_data['contact_A'] # not necessary (add back for alert SMS texting)
+    _ = patient_data['contact_B'] # not necessary (add back for alert SMS texting)
+
+    start_date = patient_data['start_date']
+    start_time = patient_data['start_time']
+
     # begin normal operation
     while True:
     
@@ -195,45 +226,46 @@ def main():
         val = get_data(key='supply_replace_count_removed')
         if  val > supply_replace_count_removed:
             supply_replace_count_removed = val
-            supply_weight_sensor.zero(replicates=15) # zero weight sensor
+            supply_weight_sensor.zero(replicates=WEIGHT_SENSOR_REPLICATES) # zero weight sensor
 
         val = get_data(key='supply_replace_count_added', file='user')
         if val > supply_replace_count_added:
             supply_replace_count_added = val
             supply_replace_volume = get_data(key='supply_replace_volume', file='user')
-            supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=15) # calibrate weight sensor with known mass
+            supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=WEIGHT_SENSOR_REPLICATES) # calibrate weight sensor with known mass
             supply_volume_gross +=  supply_volume_total - supply_volume # update
             supply_volume_total = supply_replace_volume # update
             supply_replace_count += 1 # update
+            low_supply = False
 
         # waste_replace_volume, waste_replace_count_removed, waste_replace_count_added
         val = get_data(key='waste_replace_count_removed')
         if  val > waste_replace_count_removed:
             waste_replace_count_removed = val
-            waste_weight_sensor.zero(replicates=15) # zero weight sensor
+            waste_weight_sensor.zero(replicates=WEIGHT_SENSOR_REPLICATES) # zero weight sensor'
 
         val = get_data(key='waste_replace_count_added', file='user')
         if val > waste_replace_count_added:
             waste_replace_count_added = val
             waste_replace_volume = get_data(key='waste_replace_volume', file='user')
-            waste_weight_sensor.calibrate(known_mass=waste_replace_volume, replicates=15) # calibrate weight sensor with known mass
+            waste_weight_sensor.calibrate(known_mass=waste_replace_volume, replicates=WEIGHT_SENSOR_REPLICATES) # calibrate weight sensor with known mass
             waste_volume_gross += waste_volume # update
             supply_volume_total = supply_replace_volume # update
             supply_replace_count += 1 # update
+            low_waste = False
             
         # automatic, inflow_level
         automatic = get_data(key='automatic', file='user')
         val = get_data(key='inflow_level', file='user')
-        if val > inflow_level:
-            inflow_level_increase = val - inflow_level
-        elif val < inflow_level:
-            inflow_level_decrease = inflow_level - val
+        inflow_level_adjust = val - inflow_level
         inflow_level = val
 
         # mute_count
+        mute = False
         val = get_data(key='mute_count', file='user')
         if val > mute_count:
             mute = True
+            speaker.stop()
         mute_count = val
 
         # reset
@@ -243,87 +275,84 @@ def main():
                 delete_data(file=file)
             break
 
-
-
-        
-
-
-
-
-
-        # CONTINUE HERE
-
-
-
-
-
-
-
-
-
-
         # run sensors
-        # hematuria sensor
-
-        # supply weight sensor
-
-        # waste weight sensor
-
-            # example implementation
-        reading = spectral_sensor.read(replicates=10)
-        reading = supply_weight_sensor.read(replicates=15)
-        reading = waste_weight_sensor.read(replicates=15)
-
-
+        intensities = spectral_sensor.read(replicates=SPECTRAL_SENSOR_REPLICATES)
+        supply_mass = supply_weight_sensor.read(replicates=WEIGHT_SENSOR_REPLICATES)
+        waste_mass = waste_weight_sensor.read(replicates=WEIGHT_SENSOR_REPLICATES)
 
         # calculate, format, and update system data
-        hematuria_percent = 
-        hematuria_level = 
+        hematuria_percent = 0 # from regression analysis TODO
+        hematuria_level = 0 # from survey TODO
         
-        supply_volume = 
-        supply_percent = 
-        supply_rate = 
-        supply_time = 
-        
-        waste_volume = 
-        waste_percent = 
-        waste_rate = 
-        waste_time = 
+        supply_volume = supply_mass / SUPPLY_DENSITY
+        supply_volume = min(supply_volume_total, supply_volume)
+        supply_volume = max(0, supply_volume)
 
-        active_time = # using start_date and start_time
+        supply_percent = (supply_volume / supply_volume_total) * 100.0
+
+        supply_rate = 
+
+        supply_time = supply_volume / supply_rate
+        
+        waste_volume = waste_mass / WASTE_DENSITY
+        waste_volume = min(waste_volume_total, waste_volume)
+        waste_volume = max(0, waste_volume)
+
+        waste_percent = (waste_volume / waste_volume_total) * 100.0
+
+        waste_rate = 
+
+        waste_time = waste_volume / waste_rate
+
         date = datetime.now().strftime("%m/%d/%Y")
         time = datetime.now().strftime("%H:%M:%S")
+        active_time = datetime_difference(start_date, start_time, date, time)
 
         # adjust inflow rate
         if automatic == True:
-            # PID control
-            # output = pid(hematuria_level or hematuria_percent)
-            # example implementation
-            linear_actuator.retract(duty_cycle=100, duration=4)
-            linear_actuator.extend(duty_cycle=100, duration=8)
-            pass
-        else:
-            # manual flow rate control with inflow_level_increase and inflow_level_decrease
-            # example implementation
-            linear_actuator.retract(duty_cycle=100, duration=4)
-            linear_actuator.extend(duty_cycle=100, duration=8)
-
-            pass
+            inflow_level_adjust = round(pid(hematuria_percent))
+        
+        if inflow_level_adjust > 0:
+            for _ in range(inflow_level_adjust):
+                linear_actuator.retract(duty_cycle=100, duration=INFLOW_ADJUSTMENT_SIZE)
+        elif inflow_level_adjust < 0:
+            for _ in range(abs(inflow_level_adjust)):
+                linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_SIZE)
 
         # check alert conditions
-        status_level =
-        status_message = 
+        status_level = ''
 
-            # example implementations
-        for color in ['default', 'off', 'yellow', 'orange', 'red']:
-            light.color(color=color)
-            time.sleep(4)
+        status_message = ''
+        
+        if supply_percent < 10:
+            if low_supply == False:
+                new_alert = True
+            low_supply = True
+        
+        if waste_percent < 10:
+            if low_waste == False:
+                new_alert = True
+            low_waste = True
 
-        for file in ['sound/chime.mp3', 'sound/alarm.mp3']:
-            speaker.play(file=file, volume=1.0)
-            time.sleep(10)
+        if low_supply == True or low_waste == True:
+            status_level = 'CAUTION'
+            status_message = ''
+        
 
+        
+        if status_level == 'CAUTION' and (new_alert == True) and mute == False:
+            speaker.play(file='sound/chime.mp3')
+        elif status_level == 'CRITICAL' and (status_message != status_message_prev) and mute == False:
+            speaker.play(file='sound/alarm.mp3')
 
+        if status_level == 'NORMAL':
+            light.color(color='default')
+        elif status_level == 'CAUTION':
+            light.color(color='orange')
+        elif status_level == 'CRITICAL':
+            light.color(color='red')
+
+        status_level_prev = status_level
 
         # add updated system data to database
         data = {
@@ -427,5 +456,5 @@ def main():
 
 if __name__ == '__main__':
     while True:
-        main()
+        main() # run main loop
         time.sleep(1)
