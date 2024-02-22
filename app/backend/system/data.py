@@ -17,6 +17,19 @@ import sqlite3
 import json
 
 
+def exists_data(file, verbose=False):
+    if file == 'system':
+        path = 'data/system.db'
+    elif file == 'user':
+        path = 'data/user.db'
+    elif file == 'patient':
+        path = 'data/patient.json'
+    else:
+        raise Exception(f"file [{file}] not valid")
+    
+    return os.path.isfile(path)
+
+
 def delete_data(file, verbose=False):
     if file == 'system':
         path = 'data/system.db'
@@ -32,7 +45,8 @@ def delete_data(file, verbose=False):
         if verbose:
             print(f"removed {path} successfully")
     else:
-        print(f"path {path} does not exist")
+        if verbose:
+            print(f"path {path} does not exist")
 
 
 def create_data(file, verbose=False):
@@ -75,15 +89,16 @@ def create_data(file, verbose=False):
         'automatic': True,
         'inflow_level': 0,
         'mute_count': 0,
-        'reset_count': 0
+        'setup': False,
+        'reset': False
         }
 
     PATIENT_TEMPLATE = {
-        'firstname': '–',
-        'lastname': '–',
+        'firstname': '',
+        'lastname': '',
         'MRN': 0,
         'DOB': '00/00/0000',
-        'sex': '–',
+        'sex': '',
         'contact_A': 0,
         'contact_B': 0,
         'start_date': '00/00/0000',
@@ -152,7 +167,8 @@ def create_data(file, verbose=False):
             automatic                       INTEGER     NOT NULL,
             inflow_level                    INTEGER     NOT NULL,
             mute_count                      INTEGER     NOT NULL,
-            reset_count                     INTEGER     NOT NULL);''') # create new table in database
+            setup                           INTEGER     NOT NULL,
+            reset                           INTEGER     NOT NULL);''') # create new table in database
         db.close()
 
         add_data(data=USER_TEMPLATE, file='user', initialize=True)
@@ -186,17 +202,17 @@ def add_data(data, file, verbose=False, initialize=False):
             print(f"opened {path} successfully")
 
         if initialize == False: # if initializing database, do not reference prior entries in database
-            old_data = get_data(keys='all', file=file, n=1, order='DESC')
+            old_data = get_data(key='all', file=file, n=1, order='DESC')
             entry = int(old_data['entry']) + 1
-            old_data.update({key: data[key] for key in old_data.keys() & data.keys()})
+            old_data.update({k: data[k] for k in old_data.keys() & data.keys()})
             old_data.update({'entry': entry})
             data = old_data
         
-        keys_formatted = ', '.join(f"'{item}'" if isinstance(item, str) else str(item) for item in list(data.keys()))
+        key_formatted = ', '.join(f"'{item}'" if isinstance(item, str) else str(item) for item in list(data.keys()))
         values_formatted = ', '.join(f"'{item}'" if isinstance(item, str) else str(item) for item in list(data.values()))
 
         cursor = db.cursor()
-        cursor.execute(f'INSERT INTO {file} ({keys_formatted}) VALUES ({values_formatted})')
+        cursor.execute(f'INSERT INTO {file} ({key_formatted}) VALUES ({values_formatted})')
         db.commit()
         db.close()
 
@@ -216,7 +232,7 @@ def add_data(data, file, verbose=False, initialize=False):
         raise Exception(f"file [{file}] not valid")
 
 
-def get_data(keys, file, n=1, order='DESC', verbose=False):
+def get_data(key, file, n=1, order='DESC', verbose=False):
     # lists of all keys available for each file
     SYSTEM_KEYS = [
         'entry',
@@ -231,7 +247,7 @@ def get_data(keys, file, n=1, order='DESC', verbose=False):
         'supply_replace_volume', 'supply_replace_count_removed', 'supply_replace_count_added',
         'waste_replace_volume', 'waste_replace_count_removed', 'waste_replace_count_added',
         'automatic', 'inflow_level',
-        'mute_count', 'reset_count'
+        'mute_count', 'setup', 'reset'
         ]
     PATIENT_KEYS = [
         'firstname', 'lastname', 'MRN', 'DOB', 'sex',
@@ -239,27 +255,27 @@ def get_data(keys, file, n=1, order='DESC', verbose=False):
         'start_date', 'start_time'
         ]
     
-    if keys == 'all': # allow keys input to be 'all'
+    if key == 'all': # allow keys input to be 'all'
         if file == 'system':
-            keys = SYSTEM_KEYS
+            key = SYSTEM_KEYS
         elif file == 'user':
-            keys = USER_KEYS
+            key = USER_KEYS
         elif file == 'patient':
-            keys = PATIENT_KEYS
+            key = PATIENT_KEYS
     
-    if type(keys) is str or type(keys) is not list: # ensure keys input is a list
-        keys = [keys]
+    if type(key) is str or type(key) is not list: # ensure keys input is a list
+        key = [key]
 
-    for key in keys: # check that all key inputs are valid keys for given file
+    for k in key: # check that all key inputs are valid keys for given file
         if file == 'system':
-            if key not in SYSTEM_KEYS:
-                raise Exception(f"key [{key}] not valid for file [{file}]")
+            if k not in SYSTEM_KEYS:
+                raise Exception(f"key [{k}] not valid for file [{file}]")
         if file == 'user':
-            if key not in USER_KEYS:
-                raise Exception(f"key [{key}] not valid for file [{file}]")
+            if k not in USER_KEYS:
+                raise Exception(f"key [{k}] not valid for file [{file}]")
         if file == 'patient':
-            if key not in PATIENT_KEYS:
-                raise Exception(f"key [{key}] not valid for file [{file}]")
+            if k not in PATIENT_KEYS:
+                raise Exception(f"key [{k}] not valid for file [{file}]")
             
     if file in ['system', 'user']: # get entry from Sqlite database file
         if file == 'system':
@@ -267,43 +283,43 @@ def get_data(keys, file, n=1, order='DESC', verbose=False):
         elif file == 'user':
             path = 'data/user.db'
 
-        keys_formatted = ', '.join(map(str, keys))
+        key_formatted = ', '.join(map(str, key))
 
         db = sqlite3.connect(path)
         if verbose:
             print(f"opened {path} successfully")
         
         cursor = db.cursor()
-        selection = cursor.execute(f"SELECT {keys_formatted} FROM {file} ORDER BY entry {order} LIMIT {int(n)}")
+        selection = cursor.execute(f"SELECT {key_formatted} FROM {file} ORDER BY entry {order} LIMIT {int(n)}")
 
-        data = [None for key in keys]
+        data = [None for k in key]
 
         if n == 1: # format data before returning
             for row in selection:
-                if len(keys) == 1:
+                if len(key) == 1:
                     data = [row[0]]
                 else:
                     data = [x for x in list(row)]
                     # data = [[x] for x in list(row)] # uncomment if single-item list format (i.e., [item]) is wanted for n = 1 condition
-            if len(keys) == 1:
+            if len(key) == 1:
                 data = data[0]
-                # data = dict(zip(keys, [data])) # uncomment if single-item list format (i.e., [item]) is wanted for n = 1 condition
+                # data = dict(zip(key, [data])) # uncomment if single-item list format (i.e., [item]) is wanted for n = 1 condition
             else:
-                data = dict(zip(keys, data))
+                data = dict(zip(key, data))
 
         elif n > 1:
             data = []
             for row in selection:
-                if len(keys) == 1:
+                if len(key) == 1:
                     row = row[0]
                 else:
                     row = list(row)
                 data.append(row)
-            if len(keys) == 1:
+            if len(key) == 1:
                 data = data
-                # data = dict(zip(keys, [data]))
+                # data = dict(zip(key, [data]))
             else:
-                data = {key: list(values) for key, values in zip(keys, zip(*data))}
+                data = {k: list(values) for k, values in zip(key, zip(*data))}
 
         if verbose:
             print(f"data retrieved from {path} successfully")
@@ -313,7 +329,10 @@ def get_data(keys, file, n=1, order='DESC', verbose=False):
         with open(path, 'r') as infile:
             data = json.load(infile)
 
-        data = {key: data[key] for key in keys} # format data before returning
+        if len(key) == 1:
+            data = data[key]
+        else:
+            data = {k: data[k] for k in key} # format data before returning
 
         if verbose:
             print(f"data retrieved from {path} successfully")
@@ -430,24 +449,24 @@ if __name__ == '__main__':
     add_data(data=data_in_3, file='system', verbose=True)
 
     # test get_data
-    # n > 1, len(keys) > 1 condition
-    data_out = get_data(keys=['entry', 'time', 'supply_volume'], file='system', n=3, order='DESC', verbose=True)
+    # n > 1, len(key) > 1 condition
+    data_out = get_data(key=['entry', 'time', 'supply_volume'], file='system', n=3, order='DESC', verbose=True)
     print(data_out)
     
-    # n > 1, len(keys) = 1 condition
-    data_out = get_data(keys='entry', file='system', n=3, order='DESC', verbose=True)
+    # n > 1, len(key) = 1 condition
+    data_out = get_data(key='entry', file='system', n=3, order='DESC', verbose=True)
     print(data_out)
 
-    # n = 1, len(keys) > 1 condition
-    data_out = get_data(keys=['entry', 'time', 'supply_volume'], file='system', n=1, order='DESC', verbose=True)
+    # n = 1, len(key) > 1 condition
+    data_out = get_data(key=['entry', 'time', 'supply_volume'], file='system', n=1, order='DESC', verbose=True)
     print(data_out)
     
-    # n = 1, len(keys) = 1 condition
-    data_out = get_data(keys='entry', file='system', n=5, order='DESC', verbose=True)
+    # n = 1, len(key) = 1 condition
+    data_out = get_data(key='entry', file='system', n=5, order='DESC', verbose=True)
     print(data_out)
 
     # test remove_data
     remove_data(file='system', n=1, order='ASC', verbose=True)
 
-    data_out = get_data(keys='entry', file='system', n=3, order='DESC', verbose=True)
+    data_out = get_data(key='entry', file='system', n=3, order='DESC', verbose=True)
     print(data_out)
