@@ -243,6 +243,25 @@ def main():
                 delete_data(file=file)
             break
 
+
+
+        
+
+
+
+
+
+        # CONTINUE HERE
+
+
+
+
+
+
+
+
+
+
         # run sensors
         # hematuria sensor
 
