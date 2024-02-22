@@ -345,7 +345,7 @@ def remove_data(file, n=1, order='ASC', verbose=False):
 
     elif file == 'patient':
         path = 'data/patient.json'
-        replace_data('patient')
+        delete_data('patient')
 
         if verbose:
             print(f"data removed from {path} successfully")
