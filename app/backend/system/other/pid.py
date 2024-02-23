@@ -28,6 +28,11 @@ hematuria_setpoint = 56
 pid = PID(Kp, Ki, Kd, setpoint=hematuria_setpoint, output_limits=(0, 15))
 # use output_limits to contrain the output to a range
 
+
+# set sample time to have updates every 1 second (allow enough time for response)
+# (note that this doesn't stop the loop it is in, pid has internal timing for that)
+pid.sample_time = 1
+
 i = 0
 
 while True:
@@ -36,5 +41,6 @@ while True:
     control = pid(h)
 
     print(f'Hematuria: {h}, Control: {control}')
-    time.sleep(1)
+#    time.sleep(1)
+    print(i)
     i += 1
