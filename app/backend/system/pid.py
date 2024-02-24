@@ -17,7 +17,7 @@ from components.linear_actuator import LinearActuator
 
 import csv
 
-INFLOW_LEVEL_ADJUST_LIMIT = 15
+INFLOW_LEVEL_ADJUST_LIMIT = 10
 INFLOW_ADJUSTMENT_SIZE = 0.005
 HEMATURIA_SETPOINT = 0.4
 
@@ -28,7 +28,7 @@ Kd = 0.05
 linear_actuator = LinearActuator(en_pin=10, in1_pin=9, in2_pin=11, freq=1000)
 spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000)
 
-pid = PID(Kp, Ki, Kd, setpoint=HEMATURIA_SETPOINT, output_limits=(0, INFLOW_LEVEL_ADJUST_LIMIT))
+pid = PID(Kp, Ki, Kd, setpoint=HEMATURIA_SETPOINT, output_limits=(-1*INFLOW_LEVEL_ADJUST_LIMIT, INFLOW_LEVEL_ADJUST_LIMIT))
 pid.sample_time = 1 # sample every 1 second
 
 violet = ['violet']
