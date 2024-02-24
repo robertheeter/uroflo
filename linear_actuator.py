@@ -111,7 +111,7 @@ def user_input(prompt):
 if __name__ == '__main__':
     os.chdir('..') # change current directory
 
-    linear_actuator = LinearActuator(en_pin=10, in1_pin=9, in2_pin=11, freq=1000, verbose=True) # use GPIO numbering (BCM) (NOT pin numbering)
+    linear_actuator = LinearActuator(en_pin=13, in1_pin=19, in2_pin=26, freq=1000, verbose=True) # use GPIO numbering (BCM) (NOT pin numbering)
     time.sleep(2) # wait for setup
 
     # occlude tubing
