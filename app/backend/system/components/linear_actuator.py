@@ -125,24 +125,30 @@ if __name__ == '__main__':
     increase = 0
     decrease = 0
 
-    while True:
-        input = user_input("\nINPUT: 'r'/'i' to INCREASE FLOW, 'e'/'d' to DECREASE FLOW, 'q' to QUIT: ")
-        print("\n")
+    for i in range(500):
+        decrease += 1
+        print(f"decrease count = {decrease}")
+        linear_actuator.retract(duty_cycle=100, duration=retract_increment_size)
+    
 
-        if input in ['r','i']:
-            increase += 1
-            print(f"increase count = {increase}")
-            print(f"decrease count = {decrease}")
-            linear_actuator.retract(duty_cycle=100, duration=retract_increment_size)
-        elif input in ['e','d']:
-            decrease += 1
-            print(f"increase count = {increase}")
-            print(f"decrease count = {decrease}")
-            linear_actuator.extend(duty_cycle=100, duration=extend_increment_size)
-        elif input == 'q':
-            break
-        else:
-            print("ERROR: invalid input")
-        time.sleep(0.5)
+    # while True:
+    #     input = user_input("\nINPUT: 'r'/'i' to INCREASE FLOW, 'e'/'d' to DECREASE FLOW, 'q' to QUIT: ")
+    #     print("\n")
+
+    #     if input in ['r','i']:
+    #         increase += 1
+    #         print(f"increase count = {increase}")
+    #         print(f"decrease count = {decrease}")
+    #         linear_actuator.retract(duty_cycle=100, duration=retract_increment_size)
+    #     elif input in ['e','d']:
+    #         decrease += 1
+    #         print(f"increase count = {increase}")
+    #         print(f"decrease count = {decrease}")
+    #         linear_actuator.extend(duty_cycle=100, duration=extend_increment_size)
+    #     elif input == 'q':
+    #         break
+    #     else:
+    #         print("ERROR: invalid input")
+    #     time.sleep(0.5)
     
     linear_actuator.shutdown()
