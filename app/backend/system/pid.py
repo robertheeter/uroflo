@@ -22,8 +22,8 @@ INFLOW_ADJUSTMENT_SIZE = 0.005
 HEMATURIA_SETPOINT = 0.4
 
 Kp = -1
-Ki = 0.1
-Kd = 0.05
+Ki = -0.1
+Kd = -0.05
 
 linear_actuator = LinearActuator(en_pin=10, in1_pin=9, in2_pin=11, freq=1000)
 spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000)
