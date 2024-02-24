@@ -2,7 +2,7 @@
 PID
 
 Notes
-- 
+- 500 mL water in container
 
 Documentation
 
@@ -59,14 +59,16 @@ def get_hematuria():
 
 while True:
     hematuria_percent = get_hematuria()
-    inflow_level_adjust = round(pid(hematuria_percent))
-            
-    if inflow_level_adjust > 0:
-        for _ in range(inflow_level_adjust):
-            linear_actuator.retract(duty_cycle=100, duration=INFLOW_ADJUSTMENT_SIZE)
-    elif inflow_level_adjust < 0:
-        for _ in range(abs(inflow_level_adjust)):
-            linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_SIZE)
+    print(hematuria_percent)
+    
+    # inflow_level_adjust = round(pid(hematuria_percent))
+    
+    # if inflow_level_adjust > 0:
+    #     for _ in range(inflow_level_adjust):
+    #         linear_actuator.retract(duty_cycle=100, duration=INFLOW_ADJUSTMENT_SIZE)
+    # elif inflow_level_adjust < 0:
+    #     for _ in range(abs(inflow_level_adjust)):
+    #         linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_SIZE)
 
 
 
