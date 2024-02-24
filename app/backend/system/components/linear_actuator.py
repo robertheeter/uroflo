@@ -93,7 +93,7 @@ class LinearActuator():
         print(f"LinearActuator: shutdown")
         self.stop()
         GPIO.cleanup()
-
+    
 
 # for testing
 def user_input(prompt):
