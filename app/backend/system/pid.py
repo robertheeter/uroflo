@@ -51,6 +51,13 @@ def get_hematuria():
     x_yellow = intensities[570]
     x_orange = intensities[600]
     x_red = intensities[650]
+    
+    print(f"\nviolet: {x_violet}")
+    print(f"blue: {x_blue}")
+    print(f"green: {x_green}")
+    print(f"yellow: {x_yellow}")
+    print(f"orange: {x_orange}")
+    print(f"red: {x_red}")
 
     hematuria = w_violet*(1/(x_violet - b_violet)) + w_blue*(1/(x_blue - b_blue)) + w_green*(1/(x_green - b_green)) + w_yellow*(1/(x_yellow - b_yellow)) + w_orange*(1/(x_orange - b_orange)) + w_red*(1/(x_red - b_red))
     return hematuria
