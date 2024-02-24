@@ -129,6 +129,7 @@ if __name__ == '__main__':
         decrease += 1
         print(f"decrease count = {decrease}")
         linear_actuator.retract(duty_cycle=100, duration=retract_increment_size)
+        time.sleep(0.3)
     
 
     # while True:
