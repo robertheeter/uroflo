@@ -102,7 +102,7 @@ class SpectralSensor():
             GPIO.output(self.led_pin, GPIO.LOW) # turn on LED
         else:
             GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
-        time.sleep(0.05)
+        time.sleep(0.1)
 
         intensities = []
         for _ in range(replicates):
@@ -112,7 +112,7 @@ class SpectralSensor():
                 scan.append(min(self.MAX, channel)) # cap maximum sensor scan intensity
 
             intensities.append(scan)
-            time.sleep(0.01)
+            time.sleep(0.05)
         
         GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
 

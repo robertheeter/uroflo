@@ -44,7 +44,7 @@ def get_hematuria():
     w_red = -81318.9
     b_red = -9016.87
 
-    intensities = spectral_sensor.read(replicates=5)
+    intensities = spectral_sensor.read(replicates=20)
     x_violet = intensities[450]
     x_blue = intensities[500]
     x_green = intensities[550]
@@ -60,7 +60,7 @@ def get_hematuria():
 while True:
     hematuria_percent = get_hematuria()
     print(hematuria_percent)
-    
+
     # inflow_level_adjust = round(pid(hematuria_percent))
     
     # if inflow_level_adjust > 0:
