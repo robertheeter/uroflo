@@ -41,6 +41,7 @@ class Speaker():
         audio.set_volume(volume)
         audio.play()
 
+    # stop audio from speaker
     def stop(self):
         pygame.quit()
 

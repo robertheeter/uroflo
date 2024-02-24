@@ -10,7 +10,7 @@ Notes
 - Recommend PWM freq = 1000
 
 - Pin allocation:
-  PIN 19 (GPIO 10), PIN 21 (GPIO 9), PIN 23 (GPIO 11), PIN 25 (Ground)
+  PIN 19 (GPIO 10) [YELLOW], PIN 21 (GPIO 9) [GREEN], PIN 23 (GPIO 11) [BLUE], PIN 25 (Ground) [BLACK]
 
 Documentation
 - Guide: https://www.electronicshub.org/raspberry-pi-l298n-interface-tutorial-control-dc-motor-l298n-raspberry-pi/

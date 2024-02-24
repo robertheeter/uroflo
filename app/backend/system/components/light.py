@@ -7,7 +7,7 @@ Notes
 - LED strip light using 3 R, G, and B N-channel MOSFETs
 
 - Pin allocation:
-  PIN 24 (GPIO 8), PIN 26 (GPIO 7), PIN 28 (GPIO 1), PIN 30 (Ground)
+  PIN 24 (GPIO 8) [RED], PIN 26 (GPIO 7) [GREEN], PIN 28 (GPIO 1) [BLUE], PIN 30 (Ground) [BLACK]
 
 Documentation
 - Guide: https://learn.adafruit.com/rgb-led-strips

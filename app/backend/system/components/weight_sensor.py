@@ -12,8 +12,8 @@ Notes
 - Recommend replicates = 15
 
 - Pin allocation:
-  PIN 2 (5 V), PIN 4 (5 V), PIN 6 (Ground), PIN 8 (GPIO 14),
-  PIN 10 (GPIO 15), PIN 12 (GPIO 18), PIN 14 (Ground), PIN 16 (GPIO 23)
+  PIN 2 (5 V) [RED], PIN 4 (5 V) [RED], PIN 6 (Ground) [BLACK], PIN 8 (GPIO 14) [BLUE],
+  PIN 10 (GPIO 15) [YELLOW], PIN 12 (GPIO 18) [BLUE], PIN 14 (Ground) [BLACK], PIN 16 (GPIO 23) [YELLOW]
 
 Documentation
 - See HX711 class below
@@ -70,14 +70,11 @@ class WeightSensor():
             raw = self.hx.read_median(replicates)
         elif method == 'mean':
             raw = self.hx.read_average(replicates)
-
         self.hx.reset()
 
         mass = (raw - self.OFFSET) / self.SCALE
-
         if truncate == True:
             mass = max(0, mass)
-        
         if self.verbose:
             print(f"WeightSensor: mass = {mass} (replicates = {replicates}, truncate = {truncate}, method = {method})")
         
