@@ -8,12 +8,12 @@ GPIO.setmode(GPIO.BCM)
 button_pin = 10  # You can change this to the desired GPIO pin
 
 # Set up the button pin as an input with a pull-up resistor
-GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 try:
     print("Press the button (CTRL+C to exit):")
     while True:
-        if GPIO.input(button_pin) == GPIO.LOW:
+        if GPIO.input(button_pin) == GPIO.HIGH:
             print("Button pressed!")
             # You can add your desired actions here
             time.sleep(0.2)  # Add a small delay to debounce the button
