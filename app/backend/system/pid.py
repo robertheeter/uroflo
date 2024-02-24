@@ -25,7 +25,7 @@ Kp = -1
 Ki = -0.1
 Kd = -0.05
 
-linear_actuator = LinearActuator(en_pin=10, in1_pin=9, in2_pin=11, freq=1000)
+linear_actuator = LinearActuator(en_pin=13, in1_pin=19, in2_pin=26)
 spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000)
 
 pid = PID(Kp, Ki, Kd, setpoint=HEMATURIA_SETPOINT, output_limits=(-1*INFLOW_LEVEL_ADJUST_LIMIT, INFLOW_LEVEL_ADJUST_LIMIT))
@@ -93,6 +93,7 @@ for i in range(3):
     if inflow_level_adjust > 0:
         for _ in range(inflow_level_adjust):
             linear_actuator.retract(duty_cycle=100, duration=INFLOW_ADJUSTMENT_SIZE)
+
     elif inflow_level_adjust < 0:
         for _ in range(abs(inflow_level_adjust)):
             linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_SIZE)
