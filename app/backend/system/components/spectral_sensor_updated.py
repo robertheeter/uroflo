@@ -77,34 +77,47 @@ class SpectralSensor():
         self.MAX = new_max
 
     # scan raw intensities
-    def scan(self):
-        if self.use_led == True:
-            GPIO.output(self.led_pin, GPIO.LOW) # turn on LED
+    # def scan(self):
+    #     if self.use_led == True:
+    #         GPIO.output(self.led_pin, GPIO.LOW) # turn on LED
+    #     else:
+    #         GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
         
-        else:
-            GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
-        
-        time.sleep(0.3)
-        intensities = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values with LED
-        time.sleep(0.1)
-        GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
+    #     time.sleep(0.3)
+    #     intensities = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values with LED
+    #     time.sleep(0.1)
+    #     GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
 
-        scan = []
-        for intensity in intensities:
-            scan.append(min(self.MAX, intensity)) # cap maximum sensor scan intensity
+    #     scan = []
+    #     for intensity in intensities:
+    #         scan.append(min(self.MAX, intensity)) # cap maximum sensor scan intensity
 
-        return scan # return scanned intensities
+    #     return scan # return scanned intensities
 
     # read wavelength intensities
     def read(self, replicates=10):
         self.check_temperature()
-        
+
+        if self.use_led == True:
+            GPIO.output(self.led_pin, GPIO.LOW) # turn on LED
+        else:
+            GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
+        time.sleep(0.1)
+
         intensities = []
         for _ in range(replicates):
-            intensities.append(self.scan())
-            time.sleep(0.1)
+            scan = []
+            channels = [self.sensor.violet, self.sensor.blue, self.sensor.green, self.sensor.yellow, self.sensor.orange, self.sensor.red] # get raw values with LED
+            for channel in channels:
+                scan.append(min(self.MAX, channel)) # cap maximum sensor scan intensity
+
+            intensities.append(scan)
+            time.sleep(0.05)
         
-        intensities = np.average(np.array(intensities), axis=0) # get median intensities across replicates
+        GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
+
+        if replicates > 1:
+            intensities = np.average(np.array(intensities), axis=0) # get median intensities across replicates
 
         if self.sensor_type in ['VIS', 'AS7262']:
             wavelengths = [450, 500, 550, 570, 600, 650] # visible channel wavelengths (AS7262)
@@ -134,7 +147,7 @@ if __name__ == '__main__':
     n = 20
     reading = spectral_sensor.read(replicates=n)
 
-    print(f"\nAVERAGE READINGS (n={n}):\n")
+    print(f"\nSPECTRAL SENSOR AVERAGED READINGS (replicates={n}):\n")
     print('450 nm / violet : {:.2f}'.format(reading[450]))
     print('500 nm / blue   : {:.2f}'.format(reading[500]))
     print('550 nm / green  : {:.2f}'.format(reading[550]))
