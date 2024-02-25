@@ -3,7 +3,7 @@ from .scale_class import Scale
 
 
 if __name__ == '__main__':
-    scale = Scale(pd_sck_pin=2, dout_pin=3)
+    scale = Scale(pd_sck_pin=18, dout_pin=23)
     
     while True:
         try:
