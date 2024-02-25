@@ -3,7 +3,7 @@ MAIN
 
 Notes
 - Automatically controls irrigation with PID feedback
-- Monitors all sensors/peripherals and user interface via the user.db database
+- Monitors all sensors/peripherals and user interface via the interface.db database
 - Initiates alerts
 - Updates system.db database
 
@@ -67,14 +67,14 @@ def main():
 
     # check if reset
     reset = False
-    for file in ['system', 'user', 'patient']:
+    for file in ['system', 'interface', 'patient']:
         if not exists_data(file=file):
             reset = True
             break
     
     # initialize new data if reset
     if reset == True:
-        for file in ['system', 'user', 'patient']:
+        for file in ['system', 'interface', 'patient']:
             delete_data(file=file)
             create_data(file=file)
     
@@ -114,24 +114,24 @@ def main():
 
     _ = system_data['mute'] # not necessary
 
-    # get stored user data from database and assign to variables
-    user_data = get_data(key='all', file='user')
+    # get stored user interface data from database and assign to variables
+    interface_data = get_data(key='all', file='interface')
 
-    supply_replace_volume = user_data['supply_replace_volume']
-    supply_replace_count_removed = user_data['supply_replace_count_removed']
-    supply_replace_count_added = user_data['supply_replace_count_added']
+    supply_replace_volume = interface_data['supply_replace_volume']
+    supply_replace_count_removed = interface_data['supply_replace_count_removed']
+    supply_replace_count_added = interface_data['supply_replace_count_added']
     
-    waste_replace_volume = user_data['waste_replace_volume']
-    waste_replace_count_removed = user_data['waste_replace_count_removed']
-    waste_replace_count_added = user_data['waste_replace_count_added']
+    waste_replace_volume = interface_data['waste_replace_volume']
+    waste_replace_count_removed = interface_data['waste_replace_count_removed']
+    waste_replace_count_added = interface_data['waste_replace_count_added']
 
-    automatic = user_data['automatic']
-    inflow_level = user_data['inflow_level']
+    automatic = interface_data['automatic']
+    inflow_level = interface_data['inflow_level']
 
-    mute_count = user_data['mute_count']
+    mute_count = interface_data['mute_count']
 
-    _ = user_data['setup'] # not necessary
-    _ = user_data['reset'] # not necessary
+    _ = interface_data['setup'] # not necessary
+    _ = interface_data['reset'] # not necessary
     
     # ensure consistency between databases
     supply_volume_total = supply_replace_volume
@@ -155,7 +155,7 @@ def main():
 
         # wait for replaced supply bag
         while True:
-            val = get_data(key='supply_replace_count_removed', file='user')
+            val = get_data(key='supply_replace_count_removed', file='interface')
             if  val > supply_replace_count_removed:
                 supply_replace_count_removed = val
                 supply_weight_sensor.zero(replicates=WEIGHT_SENSOR_REPLICATES) # zero weight sensor
@@ -163,10 +163,10 @@ def main():
             time.sleep(0.01)
         
         while True:
-            val = get_data(key='supply_replace_count_added', file='user')
+            val = get_data(key='supply_replace_count_added', file='interface')
             if val > supply_replace_count_added:
                 supply_replace_count_added = val
-                supply_replace_volume = get_data(key='supply_replace_volume', file='user')
+                supply_replace_volume = get_data(key='supply_replace_volume', file='interface')
                 supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=WEIGHT_SENSOR_REPLICATES) # calibrate weight sensor with known mass
                 supply_volume_total = supply_replace_volume # update
                 supply_replace_count += 1 # update
@@ -175,7 +175,7 @@ def main():
         
         # wait for replaced waste bag
         while True:
-            val = get_data(key='waste_replace_count_removed', file='user')
+            val = get_data(key='waste_replace_count_removed', file='interface')
             if val > waste_replace_count_removed:
                 waste_replace_count_removed = val
                 waste_weight_sensor.zero(replicates=WEIGHT_SENSOR_REPLICATES) # zero weight sensor
@@ -183,10 +183,10 @@ def main():
             time.sleep(0.01)
         
         while True:
-            val = get_data(key='waste_replace_count_added', file='user')
+            val = get_data(key='waste_replace_count_added', file='interface')
             if  val > waste_replace_count_added:
                 waste_replace_count_added = val
-                waste_replace_volume = get_data(key='waste_replace_volume', file='user')
+                waste_replace_volume = get_data(key='waste_replace_volume', file='interface')
                 waste_weight_sensor.calibrate(known_mass=waste_replace_volume, replicates=WEIGHT_SENSOR_REPLICATES) # calibrate weight sensor with known mass
                 waste_volume_total = waste_replace_volume # update
                 waste_replace_count += 1 # update
@@ -196,7 +196,7 @@ def main():
         # wait for replaced tubing (setup)
         linear_actuator.retract(duty_cycle=100, duration=5) # retract actuator
         while True:
-            setup = get_data(key='setup', file='user')
+            setup = get_data(key='setup', file='interface')
             if setup == True:
                 linear_actuator.extend(duty_cycle=100, duration=10) # extend actuator
                 break
@@ -205,7 +205,7 @@ def main():
         reset = False
     
     # get stored patient data from database and assign to variables
-    patient_data = get_data(key='all', file='user')
+    patient_data = get_data(key='all', file='interface')
     
     _ = patient_data['firstname'] # not necessary (add back for alert SMS texting)
     _ = patient_data['lastname'] # not necessary (add back for alert SMS texting)
@@ -221,17 +221,17 @@ def main():
     # begin normal operation
     while True:
     
-        # get and check user data from database
+        # get and check user interface data from database
         # supply_replace_volume, supply_replace_count_removed, supply_replace_count_added
         val = get_data(key='supply_replace_count_removed')
         if  val > supply_replace_count_removed:
             supply_replace_count_removed = val
             supply_weight_sensor.zero(replicates=WEIGHT_SENSOR_REPLICATES) # zero weight sensor
 
-        val = get_data(key='supply_replace_count_added', file='user')
+        val = get_data(key='supply_replace_count_added', file='interface')
         if val > supply_replace_count_added:
             supply_replace_count_added = val
-            supply_replace_volume = get_data(key='supply_replace_volume', file='user')
+            supply_replace_volume = get_data(key='supply_replace_volume', file='interface')
             supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=WEIGHT_SENSOR_REPLICATES) # calibrate weight sensor with known mass
             supply_volume_gross +=  supply_volume_total - supply_volume # update
             supply_volume_total = supply_replace_volume # update
@@ -244,10 +244,10 @@ def main():
             waste_replace_count_removed = val
             waste_weight_sensor.zero(replicates=WEIGHT_SENSOR_REPLICATES) # zero weight sensor'
 
-        val = get_data(key='waste_replace_count_added', file='user')
+        val = get_data(key='waste_replace_count_added', file='interface')
         if val > waste_replace_count_added:
             waste_replace_count_added = val
-            waste_replace_volume = get_data(key='waste_replace_volume', file='user')
+            waste_replace_volume = get_data(key='waste_replace_volume', file='interface')
             waste_weight_sensor.calibrate(known_mass=waste_replace_volume, replicates=WEIGHT_SENSOR_REPLICATES) # calibrate weight sensor with known mass
             waste_volume_gross += waste_volume # update
             supply_volume_total = supply_replace_volume # update
@@ -255,23 +255,23 @@ def main():
             low_waste = False
             
         # automatic, inflow_level
-        automatic = get_data(key='automatic', file='user')
-        val = get_data(key='inflow_level', file='user')
+        automatic = get_data(key='automatic', file='interface')
+        val = get_data(key='inflow_level', file='interface')
         inflow_level_adjust = val - inflow_level
         inflow_level = val
 
         # mute_count
         mute = False
-        val = get_data(key='mute_count', file='user')
+        val = get_data(key='mute_count', file='interface')
         if val > mute_count:
             mute = True
             speaker.stop()
         mute_count = val
 
         # reset
-        reset = get_data(key='reset', file='user')
+        reset = get_data(key='reset', file='interface')
         if reset == True:
-            for file in ['system', 'user', 'patient']:
+            for file in ['system', 'interface', 'patient']:
                 delete_data(file=file)
             break
 

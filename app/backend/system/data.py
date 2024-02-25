@@ -4,7 +4,7 @@ DATA
 Notes
 - Helper functions for creating, updating, and querying databases
 
-- Uses SQLite3 database format for system.db and user.db (see sqlite.org)
+- Uses SQLite3 database format for system.db and interface.db (see sqlite.org)
 - Uses JSON format for patient.json
 
 Documentation
@@ -20,8 +20,8 @@ import json
 def exists_data(file, verbose=False):
     if file == 'system':
         path = 'data/system.db'
-    elif file == 'user':
-        path = 'data/user.db'
+    elif file == 'interface':
+        path = 'data/interface.db'
     elif file == 'patient':
         path = 'data/patient.json'
     else:
@@ -33,8 +33,8 @@ def exists_data(file, verbose=False):
 def delete_data(file, verbose=False):
     if file == 'system':
         path = 'data/system.db'
-    elif file == 'user':
-        path = 'data/user.db'
+    elif file == 'interface':
+        path = 'data/interface.db'
     elif file == 'patient':
         path = 'data/patient.json'
     else:
@@ -78,7 +78,7 @@ def create_data(file, verbose=False):
         'mute': False
         }
 
-    USER_TEMPLATE = {
+    INTERFACE_TEMPLATE = {
         'entry': 0,
         'supply_replace_volume': 0,
         'supply_replace_count_removed': 0,
@@ -147,8 +147,8 @@ def create_data(file, verbose=False):
         if verbose:
             print(f"table 'system' created in {path} successfully with template data")
 
-    elif file == 'user':
-        path = 'data/user.db'
+    elif file == 'interface':
+        path = 'data/interface.db'
         if os.path.exists(path):
             raise Exception(f"path {path} already exists")
             
@@ -156,7 +156,7 @@ def create_data(file, verbose=False):
         if verbose:
             print(f"created {path} successfully")
         
-        db.execute('''CREATE TABLE IF NOT EXISTS user (
+        db.execute('''CREATE TABLE IF NOT EXISTS interface (
             entry                           INTEGER     NOT NULL   PRIMARY KEY,
             supply_replace_volume           INTEGER     NOT NULL,
             supply_replace_count_removed    INTEGER     NOT NULL,
@@ -171,10 +171,10 @@ def create_data(file, verbose=False):
             reset                           INTEGER     NOT NULL);''') # create new table in database
         db.close()
 
-        add_data(data=USER_TEMPLATE, file='user', initialize=True)
+        add_data(data=INTERFACE_TEMPLATE, file='interface', initialize=True)
 
         if verbose:
-            print(f"table 'user' created in {path} successfully with template data")
+            print(f"table 'interface' created in {path} successfully with template data")
 
     elif file == 'patient':
         path = 'data/patient.json'
@@ -191,11 +191,11 @@ def create_data(file, verbose=False):
 
 
 def add_data(data, file, verbose=False, initialize=False):
-    if file in ['system', 'user']: # gets most recent entry from Sqlite database and updates given key-value pairs
+    if file in ['system', 'interface']: # gets most recent entry from Sqlite database and updates given key-value pairs
         if file == 'system':
             path = 'data/system.db'
-        elif file == 'user':
-            path = 'data/user.db'
+        elif file == 'interface':
+            path = 'data/interface.db'
     
         db = sqlite3.connect(path)
         if verbose:
@@ -242,7 +242,7 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
         'supply_replace_count', 'waste_volume_total', 'waste_volume_gross', 'waste_replace_count', 'automatic', 
         'inflow_level', 'mute'
         ]
-    USER_KEYS = [
+    INTERFACE_KEYS = [
         'entry',
         'supply_replace_volume', 'supply_replace_count_removed', 'supply_replace_count_added',
         'waste_replace_volume', 'waste_replace_count_removed', 'waste_replace_count_added',
@@ -258,8 +258,8 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
     if key == 'all': # allow keys input to be 'all'
         if file == 'system':
             key = SYSTEM_KEYS
-        elif file == 'user':
-            key = USER_KEYS
+        elif file == 'interface':
+            key = INTERFACE_KEYS
         elif file == 'patient':
             key = PATIENT_KEYS
     
@@ -270,18 +270,18 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
         if file == 'system':
             if k not in SYSTEM_KEYS:
                 raise Exception(f"key [{k}] not valid for file [{file}]")
-        if file == 'user':
-            if k not in USER_KEYS:
+        if file == 'interface':
+            if k not in INTERFACE_KEYS:
                 raise Exception(f"key [{k}] not valid for file [{file}]")
         if file == 'patient':
             if k not in PATIENT_KEYS:
                 raise Exception(f"key [{k}] not valid for file [{file}]")
             
-    if file in ['system', 'user']: # get entry from Sqlite database file
+    if file in ['system', 'interface']: # get entry from Sqlite database file
         if file == 'system':
             path = 'data/system.db'
-        elif file == 'user':
-            path = 'data/user.db'
+        elif file == 'interface':
+            path = 'data/interface.db'
 
         key_formatted = ', '.join(map(str, key))
 
@@ -344,11 +344,11 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
 
 
 def remove_data(file, n=1, order='ASC', verbose=False):
-    if file in ['system', 'user']: # remove oldest entry from Sqlite database file
+    if file in ['system', 'interface']: # remove oldest entry from Sqlite database file
         if file == 'system':
             path = 'data/system.db'
-        elif file == 'user':
-            path = 'data/user.db'
+        elif file == 'interface':
+            path = 'data/interface.db'
 
         db = sqlite3.connect(path)
         if verbose:
@@ -377,12 +377,12 @@ def remove_data(file, n=1, order='ASC', verbose=False):
 if __name__ == '__main__':
     # test delete_data
     delete_data(file='system', verbose=True)
-    delete_data(file='user', verbose=True)
+    delete_data(file='interface', verbose=True)
     delete_data(file='patient', verbose=True)
 
     # test create_data
     create_data(file='system', verbose=True)
-    create_data(file='user', verbose=True)
+    create_data(file='interface', verbose=True)
     create_data(file='patient', verbose=True)
 
     # test add_data
