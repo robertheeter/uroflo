@@ -2,9 +2,9 @@
 DATA
 
 Notes
-- Helper functions for creating, deleting, updating, and querying databases
+- Wrapper functions for creating, deleting, updating, and querying databases
 
-- Uses SQLite3 database format for system.db and interface.db (see sqlite.org)
+- Uses SQLite3 database format for system.db and interface.db
 - Uses JSON format for patient.json, hematuria.json, and mass.json
 
 Documentation

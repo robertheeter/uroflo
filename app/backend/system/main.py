@@ -3,7 +3,8 @@ MAIN
 
 Notes
 - Automatically controls irrigation with PID feedback
-- Monitors all sensors/peripherals and user interface via the interface.db database
+- Checks all sensors/peripherals via the hematuria.json and mass.json databases
+- Monitors the user interface via the interface.db database
 - Initiates alerts
 - Updates system.db database
 
