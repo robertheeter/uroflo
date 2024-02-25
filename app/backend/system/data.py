@@ -5,7 +5,7 @@ Notes
 - Wrapper functions for creating, deleting, updating, and querying databases
 
 - Uses SQLite3 database format for system.db and interface.db
-- Uses JSON format for patient.json, hematuria.json, and mass.json
+- Uses JSON format for patient.json and hematuria.json
 
 Documentation
 - SQLite3 data types: https://www.sqlite.org/datatype3.html
@@ -26,8 +26,6 @@ def exists_data(file, verbose=False):
         path = 'data/patient.json'
     elif file == 'hematuria':
         path = 'data/hematuria.json'
-    elif file == 'mass':
-        path = 'data/mass.json'
     else:
         raise Exception(f"file [{file}] not valid")
     
@@ -43,8 +41,6 @@ def delete_data(file, verbose=False):
         path = 'data/patient.json'
     elif file == 'hematuria':
         path = 'data/hematuria.json'
-    elif file == 'mass':
-        path = 'data/mass.json'
     else:
         raise Exception(f"file [{file}] not valid")
 
@@ -123,13 +119,6 @@ def create_data(file, verbose=False):
         'hematuria_orange': 0,
         'hematuria_red': 0
         }
-    
-    MASS_TEMPLATE = {
-        'supply_mass': 0,
-        'supply_rate': 0,
-        'waste_mass': 0,
-        'waste_rate': 0
-    }
 
     if file == 'system':
         path = 'data/system.db'
@@ -221,16 +210,6 @@ def create_data(file, verbose=False):
 
         if verbose:
             print(f"created {path} successfully with template data")
-    
-    elif file == 'mass':
-        path = 'data/mass.json'
-        if os.path.exists(path):
-            raise Exception(f"path {path} already exists")
-        
-        add_data(data=MASS_TEMPLATE, file='mass', initialize=True)
-
-        if verbose:
-            print(f"created {path} successfully with template data")
 
     else:
         raise Exception(f"file [{file}] not valid")
@@ -283,15 +262,6 @@ def add_data(data, file, verbose=False, initialize=False):
         if verbose:
             print(f"data added to {path} successfully")
 
-    elif file == 'mass': # overwrites existing JSON data
-        path = 'data/mass.json'
-        js = json.dumps(data, indent=4)
-        with open(path, "w") as outfile:
-            outfile.write(js)
-
-        if verbose:
-            print(f"data added to {path} successfully")
-
     else:
         raise Exception(f"file [{file}] not valid")
 
@@ -325,11 +295,6 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
         'hematuria_percent', 'hematuria_level',
         'hematuria_violet', 'hematuria_blue', 'hematuria_green', 'hematuria_yellow', 'hematuria_orange', 'hematuria_red'
         ]
-
-    MASS_KEYS = [
-        'supply_mass', 'supply_rate',
-        'waste_mass', 'waste_rate'
-        ]
     
     if key == 'all': # allow keys input to be 'all'
         if file == 'system':
@@ -340,8 +305,6 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
             key = PATIENT_KEYS
         elif file == 'hematuria':
             key = HEMATURIA_KEYS
-        elif file == 'mass':
-            key = MASS_KEYS
     
     if type(key) is str or type(key) is not list: # ensure keys input is a list
         key = [key]
@@ -358,9 +321,6 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
                 raise Exception(f"key [{k}] not valid for file [{file}]")
         if file == 'hematuria':
             if k not in HEMATURIA_KEYS:
-                raise Exception(f"key [{k}] not valid for file [{file}]")
-        if file == 'mass':
-            if k not in MASS_KEYS:
                 raise Exception(f"key [{k}] not valid for file [{file}]")
             
     if file in ['system', 'interface']: # get entry from Sqlite database file
@@ -436,19 +396,6 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
         if verbose:
             print(f"data retrieved from {path} successfully")
 
-    elif file == 'mass': # get data from JSON data
-        path = 'data/mass.json'
-        with open(path, 'r') as infile:
-            data = json.load(infile)
-
-        if len(key) == 1:
-            data = data[key]
-        else:
-            data = {k: data[k] for k in key} # format data before returning
-
-        if verbose:
-            print(f"data retrieved from {path} successfully")
-
     else:
         raise Exception(f"file [{file}] not valid")
     
@@ -490,14 +437,6 @@ def remove_data(file, n=1, order='ASC', verbose=False):
         if verbose:
             print(f"data removed from {path} successfully")
     
-    elif file == 'mass':
-        path = 'data/mass.json'
-        delete_data('mass')
-        create_data('mass')
-
-        if verbose:
-            print(f"data removed from {path} successfully")
-    
     else:
         raise Exception(f"file [{file}] not valid")
 
@@ -509,14 +448,12 @@ if __name__ == '__main__':
     delete_data(file='interface', verbose=True)
     delete_data(file='patient', verbose=True)
     delete_data(file='hematuria', verbose=True)
-    delete_data(file='mass', verbose=True)
 
     # test create_data
     create_data(file='system', verbose=True)
     create_data(file='interface', verbose=True)
     create_data(file='patient', verbose=True)
     create_data(file='hematuria', verbose=True)
-    create_data(file='mass', verbose=True)
 
     # test add_data
     # entry 1
