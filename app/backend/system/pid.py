@@ -29,7 +29,7 @@ linear_actuator = LinearActuator(en_pin=13, in1_pin=19, in2_pin=26)
 spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000)
 
 pid = PID(Kp, Ki, Kd, setpoint=HEMATURIA_SETPOINT, output_limits=(-1*INFLOW_LEVEL_ADJUST_LIMIT, INFLOW_LEVEL_ADJUST_LIMIT))
-pid.sample_time = 1 # sample every 1 second
+pid.sample_time = 1 # sample every 10 seconds
 
 violet = ['violet']
 blue = ['blue']    
@@ -40,7 +40,7 @@ red = ['red']
 percent = ['percent']
 adjustment = ['adjustment']
 
-for i in range(3):
+for i in range(15):
 
     intensities = spectral_sensor.read(replicates=20)
 
