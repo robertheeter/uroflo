@@ -30,7 +30,6 @@ from components.weight_sensor import WeightSensor
 
 # system parameters
 INFLOW_ADJUSTMENT_SIZE = 0.005
-
 SPECTRAL_SENSOR_REPLICATES = 10
 WEIGHT_SENSOR_REPLICATES = 15
 

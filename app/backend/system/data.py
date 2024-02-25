@@ -24,6 +24,8 @@ def exists_data(file, verbose=False):
         path = 'data/interface.db'
     elif file == 'patient':
         path = 'data/patient.json'
+    elif file == 'sensor':
+        path = 'data/sensor.json'
     else:
         raise Exception(f"file [{file}] not valid")
     
@@ -37,6 +39,8 @@ def delete_data(file, verbose=False):
         path = 'data/interface.db'
     elif file == 'patient':
         path = 'data/patient.json'
+    elif file == 'sensor':
+        path = 'data/sensor.json'
     else:
         raise Exception(f"file [{file}] not valid")
 
@@ -105,6 +109,17 @@ def create_data(file, verbose=False):
         'start_time': '00:00:00'
         }
     
+    SENSOR_TEMPLATE = {
+        'hematuria_violet': 0,
+        'hematuria_blue': 0,
+        'hematuria_green': 0,
+        'hematuria_yellow': 0,
+        'hematuria_orange': 0,
+        'hematuria_red': 0,
+        'supply_mass': 0,
+        'waste_mass': 0
+        }
+
     if file == 'system':
         path = 'data/system.db'
         if os.path.exists(path):
@@ -186,6 +201,16 @@ def create_data(file, verbose=False):
         if verbose:
             print(f"created {path} successfully with template data")
 
+    elif file == 'sensor':
+        path = 'data/sensor.json'
+        if os.path.exists(path):
+            raise Exception(f"path {path} already exists")
+        
+        add_data(data=SENSOR_TEMPLATE, file='sensor', initialize=True)
+
+        if verbose:
+            print(f"created {path} successfully with template data")
+
     else:
         raise Exception(f"file [{file}] not valid")
 
@@ -228,6 +253,15 @@ def add_data(data, file, verbose=False, initialize=False):
         if verbose:
             print(f"data added to {path} successfully")
 
+    elif file == 'sensor': # overwrites existing JSON data
+        path = 'data/sensor.json'
+        js = json.dumps(data, indent=4)
+        with open(path, "w") as outfile:
+            outfile.write(js)
+
+        if verbose:
+            print(f"data added to {path} successfully")
+
     else:
         raise Exception(f"file [{file}] not valid")
 
@@ -242,6 +276,7 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
         'supply_replace_count', 'waste_volume_total', 'waste_volume_gross', 'waste_replace_count', 'automatic', 
         'inflow_level', 'mute'
         ]
+    
     INTERFACE_KEYS = [
         'entry',
         'supply_replace_volume', 'supply_replace_count_removed', 'supply_replace_count_added',
@@ -249,10 +284,16 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
         'automatic', 'inflow_level',
         'mute_count', 'setup', 'reset'
         ]
+    
     PATIENT_KEYS = [
         'firstname', 'lastname', 'MRN', 'DOB', 'sex',
         'contact_A', 'contact_B',
         'start_date', 'start_time'
+        ]
+    
+    SENSOR_KEYS = [
+        'hematuria_violet', 'hematuria_blue', 'hematuria_green', 'hematuria_yellow', 'hematuria_orange', 'hematuria_red',
+        'supply_mass', 'waste_mass'
         ]
     
     if key == 'all': # allow keys input to be 'all'
@@ -262,6 +303,8 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
             key = INTERFACE_KEYS
         elif file == 'patient':
             key = PATIENT_KEYS
+        elif file == 'sensor':
+            key = SENSOR_KEYS
     
     if type(key) is str or type(key) is not list: # ensure keys input is a list
         key = [key]
@@ -275,6 +318,9 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
                 raise Exception(f"key [{k}] not valid for file [{file}]")
         if file == 'patient':
             if k not in PATIENT_KEYS:
+                raise Exception(f"key [{k}] not valid for file [{file}]")
+        if file == 'sensor':
+            if k not in SENSOR_KEYS:
                 raise Exception(f"key [{k}] not valid for file [{file}]")
             
     if file in ['system', 'interface']: # get entry from Sqlite database file
@@ -336,6 +382,19 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
 
         if verbose:
             print(f"data retrieved from {path} successfully")
+    
+    elif file == 'sensor': # get data from JSON data
+        path = 'data/sensor.json'
+        with open(path, 'r') as infile:
+            data = json.load(infile)
+
+        if len(key) == 1:
+            data = data[key]
+        else:
+            data = {k: data[k] for k in key} # format data before returning
+
+        if verbose:
+            print(f"data retrieved from {path} successfully")
 
     else:
         raise Exception(f"file [{file}] not valid")
@@ -365,6 +424,15 @@ def remove_data(file, n=1, order='ASC', verbose=False):
     elif file == 'patient':
         path = 'data/patient.json'
         delete_data('patient')
+        create_data('patient')
+
+        if verbose:
+            print(f"data removed from {path} successfully")
+    
+    elif file == 'sensor':
+        path = 'data/sensor.json'
+        delete_data('sensor')
+        create_data('sensor')
 
         if verbose:
             print(f"data removed from {path} successfully")
@@ -379,11 +447,13 @@ if __name__ == '__main__':
     delete_data(file='system', verbose=True)
     delete_data(file='interface', verbose=True)
     delete_data(file='patient', verbose=True)
+    delete_data(file='sensor', verbose=True)
 
     # test create_data
     create_data(file='system', verbose=True)
     create_data(file='interface', verbose=True)
     create_data(file='patient', verbose=True)
+    create_data(file='sensor', verbose=True)
 
     # test add_data
     # entry 1
