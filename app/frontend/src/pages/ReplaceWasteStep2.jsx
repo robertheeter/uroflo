@@ -13,7 +13,7 @@ const ReplaceWasteStep2 = () => {
   };
 
   const next = () => {
-    const url = "http://localhost:8000/user/waste_replace_added";
+    const url = "http://localhost:8000/interface/waste_replace_added";
     const data = {
       waste_replace_count_added: "TRUE",
     };

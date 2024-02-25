@@ -6,7 +6,7 @@ import { TbTriangleInvertedFilled } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 
 const increaseFlow = () => {
-  const url = "http://localhost:8000/user/inflow_level_increase";
+  const url = "http://localhost:8000/interface/inflow_level_increase";
   const data = {
     inflow_level_increase: "TRUE",
   };
@@ -21,7 +21,7 @@ const increaseFlow = () => {
 };
 
 const decreaseFlow = () => {
-  const url = "http://localhost:8000/user/inflow_level_decrease";
+  const url = "http://localhost:8000/interface/inflow_level_decrease";
   const data = {
     inflow_level_decrease: "TRUE",
   };
@@ -36,7 +36,7 @@ const decreaseFlow = () => {
 };
 
 const mute = () => {
-  const url = "http://localhost:8000/user/mute";
+  const url = "http://localhost:8000/interface/mute";
   const data = {
     mute_count: "TRUE",
   };
@@ -94,7 +94,7 @@ const ControlPanel = () => {
   const handleSwitch = () => {
     setAuto(!auto);
     const data = {};
-    const url = "http://localhost:8000/user/automatic";
+    const url = "http://localhost:8000/interface/automatic";
     if (!auto) {
       data["automatic"] = "TRUE";
     } else {
@@ -112,7 +112,7 @@ const ControlPanel = () => {
 
   const reset = () => {
     resetInitiated = true;
-    const url = "http://localhost:8000/user/reset";
+    const url = "http://localhost:8000/interface/reset";
     const data = {
       reset_count: "TRUE",
     };

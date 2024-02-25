@@ -17,7 +17,7 @@ const ReplaceSupplyStep1 = () => {
   };
 
   const next = () => {
-    const url = "http://localhost:8000/user/supply_replace_removed";
+    const url = "http://localhost:8000/interface/supply_replace_removed";
     const data = {
       supply_replace_count_removed: "TRUE",
     };

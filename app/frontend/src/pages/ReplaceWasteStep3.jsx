@@ -15,7 +15,7 @@ const ReplaceWasteStep3 = () => {
   };
 
   const done = () => {
-    const url = "http://localhost:8000/user/waste_replace_volume";
+    const url = "http://localhost:8000/interface/waste_replace_volume";
     const data = {
       waste_replace_volume: volume,
     };

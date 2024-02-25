@@ -12,7 +12,7 @@ const ReplaceTubing = () => {
   };
 
   const done = () => {
-    const url = "http://localhost:8000/user/setup";
+    const url = "http://localhost:8000/interface/setup";
     const data = {
       setup: "TRUE",
     };
