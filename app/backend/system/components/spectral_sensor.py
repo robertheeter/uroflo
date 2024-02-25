@@ -80,7 +80,6 @@ class SpectralSensor():
     def scan(self):
         if self.use_led == True:
             GPIO.output(self.led_pin, GPIO.LOW) # turn on LED
-        
         else:
             GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
         
@@ -104,7 +103,8 @@ class SpectralSensor():
             intensities.append(self.scan())
             time.sleep(0.1)
         
-        intensities = np.average(np.array(intensities), axis=0) # get median intensities across replicates
+        if replicates > 1:
+            intensities = np.average(np.array(intensities), axis=0) # get average intensities across replicates
 
         if self.sensor_type in ['VIS', 'AS7262']:
             wavelengths = [450, 500, 550, 570, 600, 650] # visible channel wavelengths (AS7262)
@@ -128,7 +128,7 @@ class SpectralSensor():
 if __name__ == '__main__':
     os.chdir('..') # change current directory
     
-    spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000, verbose=True) # use pin numbering (BCM) (NOT GPIO numbering)
+    spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000, verbose=True) # use GPIO numbering (BCM) (NOT pin numbering)
     time.sleep(2) # wait for setup
 
     n = 20
