@@ -2,10 +2,10 @@
 DATA
 
 Notes
-- Helper functions for creating, updating, and querying databases
+- Helper functions for creating, deleting, updating, and querying databases
 
 - Uses SQLite3 database format for system.db and interface.db (see sqlite.org)
-- Uses JSON format for patient.json
+- Uses JSON format for patient.json, hematuria.json, and mass.json
 
 Documentation
 - SQLite3 data types: https://www.sqlite.org/datatype3.html
@@ -24,8 +24,10 @@ def exists_data(file, verbose=False):
         path = 'data/interface.db'
     elif file == 'patient':
         path = 'data/patient.json'
-    elif file == 'sensor':
-        path = 'data/sensor.json'
+    elif file == 'hematuria':
+        path = 'data/hematuria.json'
+    elif file == 'mass':
+        path = 'data/mass.json'
     else:
         raise Exception(f"file [{file}] not valid")
     
@@ -39,8 +41,10 @@ def delete_data(file, verbose=False):
         path = 'data/interface.db'
     elif file == 'patient':
         path = 'data/patient.json'
-    elif file == 'sensor':
-        path = 'data/sensor.json'
+    elif file == 'hematuria':
+        path = 'data/hematuria.json'
+    elif file == 'mass':
+        path = 'data/mass.json'
     else:
         raise Exception(f"file [{file}] not valid")
 
@@ -109,16 +113,23 @@ def create_data(file, verbose=False):
         'start_time': '00:00:00'
         }
     
-    SENSOR_TEMPLATE = {
+    HEMATURIA_TEMPLATE = {
+        'hematuria_percent': 0,
+        'hematuria_level': 0,
         'hematuria_violet': 0,
         'hematuria_blue': 0,
         'hematuria_green': 0,
         'hematuria_yellow': 0,
         'hematuria_orange': 0,
-        'hematuria_red': 0,
-        'supply_mass': 0,
-        'waste_mass': 0
+        'hematuria_red': 0
         }
+    
+    MASS_TEMPLATE = {
+        'supply_mass': 0,
+        'supply_rate': 0,
+        'waste_mass': 0,
+        'waste_rate': 0
+    }
 
     if file == 'system':
         path = 'data/system.db'
@@ -201,12 +212,22 @@ def create_data(file, verbose=False):
         if verbose:
             print(f"created {path} successfully with template data")
 
-    elif file == 'sensor':
-        path = 'data/sensor.json'
+    elif file == 'hematuria':
+        path = 'data/hematuria.json'
         if os.path.exists(path):
             raise Exception(f"path {path} already exists")
         
-        add_data(data=SENSOR_TEMPLATE, file='sensor', initialize=True)
+        add_data(data=HEMATURIA_TEMPLATE, file='hematuria', initialize=True)
+
+        if verbose:
+            print(f"created {path} successfully with template data")
+    
+    elif file == 'mass':
+        path = 'data/mass.json'
+        if os.path.exists(path):
+            raise Exception(f"path {path} already exists")
+        
+        add_data(data=MASS_TEMPLATE, file='mass', initialize=True)
 
         if verbose:
             print(f"created {path} successfully with template data")
@@ -253,8 +274,17 @@ def add_data(data, file, verbose=False, initialize=False):
         if verbose:
             print(f"data added to {path} successfully")
 
-    elif file == 'sensor': # overwrites existing JSON data
-        path = 'data/sensor.json'
+    elif file == 'hematuria': # overwrites existing JSON data
+        path = 'data/hematuria.json'
+        js = json.dumps(data, indent=4)
+        with open(path, "w") as outfile:
+            outfile.write(js)
+
+        if verbose:
+            print(f"data added to {path} successfully")
+
+    elif file == 'mass': # overwrites existing JSON data
+        path = 'data/mass.json'
         js = json.dumps(data, indent=4)
         with open(path, "w") as outfile:
             outfile.write(js)
@@ -291,9 +321,14 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
         'start_date', 'start_time'
         ]
     
-    SENSOR_KEYS = [
-        'hematuria_violet', 'hematuria_blue', 'hematuria_green', 'hematuria_yellow', 'hematuria_orange', 'hematuria_red',
-        'supply_mass', 'waste_mass'
+    HEMATURIA_KEYS = [
+        'hematuria_percent', 'hematuria_level',
+        'hematuria_violet', 'hematuria_blue', 'hematuria_green', 'hematuria_yellow', 'hematuria_orange', 'hematuria_red'
+        ]
+
+    MASS_KEYS = [
+        'supply_mass', 'supply_rate',
+        'waste_mass', 'waste_rate'
         ]
     
     if key == 'all': # allow keys input to be 'all'
@@ -303,8 +338,10 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
             key = INTERFACE_KEYS
         elif file == 'patient':
             key = PATIENT_KEYS
-        elif file == 'sensor':
-            key = SENSOR_KEYS
+        elif file == 'hematuria':
+            key = HEMATURIA_KEYS
+        elif file == 'mass':
+            key = MASS_KEYS
     
     if type(key) is str or type(key) is not list: # ensure keys input is a list
         key = [key]
@@ -319,8 +356,11 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
         if file == 'patient':
             if k not in PATIENT_KEYS:
                 raise Exception(f"key [{k}] not valid for file [{file}]")
-        if file == 'sensor':
-            if k not in SENSOR_KEYS:
+        if file == 'hematuria':
+            if k not in HEMATURIA_KEYS:
+                raise Exception(f"key [{k}] not valid for file [{file}]")
+        if file == 'mass':
+            if k not in MASS_KEYS:
                 raise Exception(f"key [{k}] not valid for file [{file}]")
             
     if file in ['system', 'interface']: # get entry from Sqlite database file
@@ -383,8 +423,21 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
         if verbose:
             print(f"data retrieved from {path} successfully")
     
-    elif file == 'sensor': # get data from JSON data
-        path = 'data/sensor.json'
+    elif file == 'hematuria': # get data from JSON data
+        path = 'data/hematuria.json'
+        with open(path, 'r') as infile:
+            data = json.load(infile)
+
+        if len(key) == 1:
+            data = data[key]
+        else:
+            data = {k: data[k] for k in key} # format data before returning
+
+        if verbose:
+            print(f"data retrieved from {path} successfully")
+
+    elif file == 'mass': # get data from JSON data
+        path = 'data/mass.json'
         with open(path, 'r') as infile:
             data = json.load(infile)
 
@@ -429,10 +482,18 @@ def remove_data(file, n=1, order='ASC', verbose=False):
         if verbose:
             print(f"data removed from {path} successfully")
     
-    elif file == 'sensor':
-        path = 'data/sensor.json'
-        delete_data('sensor')
-        create_data('sensor')
+    elif file == 'hematuria':
+        path = 'data/hematuria.json'
+        delete_data('hematuria')
+        create_data('hematuria')
+
+        if verbose:
+            print(f"data removed from {path} successfully")
+    
+    elif file == 'mass':
+        path = 'data/mass.json'
+        delete_data('mass')
+        create_data('mass')
 
         if verbose:
             print(f"data removed from {path} successfully")
@@ -447,13 +508,15 @@ if __name__ == '__main__':
     delete_data(file='system', verbose=True)
     delete_data(file='interface', verbose=True)
     delete_data(file='patient', verbose=True)
-    delete_data(file='sensor', verbose=True)
+    delete_data(file='hematuria', verbose=True)
+    delete_data(file='mass', verbose=True)
 
     # test create_data
     create_data(file='system', verbose=True)
     create_data(file='interface', verbose=True)
     create_data(file='patient', verbose=True)
-    create_data(file='sensor', verbose=True)
+    create_data(file='hematuria', verbose=True)
+    create_data(file='mass', verbose=True)
 
     # test add_data
     # entry 1

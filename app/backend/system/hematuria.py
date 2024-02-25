@@ -1,11 +1,11 @@
 '''
-SENSOR
+HEMATURIA
 
 Notes
-- Repeatedly runs all device sensors
+- Measures blood concentration and hematuria severity using a spectral sensor
 
 Documentation
-- 
+- See components/spectral_sensor.py
 
 '''
 

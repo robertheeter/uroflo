@@ -1,11 +1,11 @@
 '''
-SENSOR
+MASS
 
 Notes
-- Repeatedly runs all device sensors
+- Measures supply and waste bag masses and rate of mass change using weight sensors
 
 Documentation
-- 
+- See components/weight_sensor.py
 
 '''
 
