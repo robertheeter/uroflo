@@ -1,7 +1,7 @@
 import time
 import sys
 import RPi.GPIO as GPIO
-from .hx711 import HX711
+from hx711_OLD import HX711
 from statistics import mean
 
 class Scale:

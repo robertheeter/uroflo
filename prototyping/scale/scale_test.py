@@ -1,5 +1,5 @@
 import time
-from .scale_class import Scale
+from scale_class_OLD import Scale
 
 
 if __name__ == '__main__':
