@@ -67,7 +67,7 @@ def create_data(file, verbose=False):
         'waste_time': 0,
         'waste_rate': 0,
         'status_level': 'NORMAL',
-        'status_message': 'System normal',
+        'status_message': 'System and patient normal.',
         'active_time': 0,
         'date': '00/00/0000',
         'time': '00:00:00',
