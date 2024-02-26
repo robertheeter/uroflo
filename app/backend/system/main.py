@@ -205,6 +205,9 @@ def main():
 
     alert_hematuria = False
     alert_hematuria_timer = Timer()
+    
+    # other additional variables
+    system_data_filled = False
 
     # perform reset if reset
     if reset == True:
@@ -283,7 +286,8 @@ def main():
     start_time = patient_data['start_time']
 
     # begin normal operation
-    i = 0
+    i = 0 # index for calculating flow rates
+    system_entries = 1 # number of entries added to system database
     while True:
         
         # get and check user interface data from database
@@ -646,14 +650,23 @@ def main():
             'mute': bool(mute)
             }
         
-        add_data(data=data, file='system')
 
-        # remove old system data from database
-        # remove_data(...)
+        # remove outdated system data and interface data
+        add_data(data=data, file='system')
+        system_entries += 1
+        
+        if system_entries > 5000:
+            remove_data(file='system', n=1)
+        
+        interface_entries = get_data(key='entry', file='interface', n=1)
+        if interface_entries >= 5000:
+            remove_data(file='interface', n=interface_entries-5000)
+
 
         # repeat
 
-    # shutdown
+
+    # shutdown if reset
     light.shutdown()
     linear_actuator.shutdown()
     speaker.shutdown()
@@ -665,4 +678,4 @@ def main():
 if __name__ == '__main__':
     while True:
         main() # run main loop
-        time.sleep(1)
+        time.sleep(2)
