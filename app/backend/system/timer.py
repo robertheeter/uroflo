@@ -59,3 +59,4 @@ if __name__ == '__main__':
     print(timer.duration(unit='sec'))
     timer.reset()
     print(timer.duration())
+    
