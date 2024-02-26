@@ -98,7 +98,7 @@ def main():
 
     # instantiate components, PID, and linear regression
     light = Light(red_pin=board.D8, green_pin=board.D7, blue_pin=board.D1)
-    linear_actuator = LinearActuator(en_pin=10, in1_pin=9, in2_pin=11, freq=1000)
+    linear_actuator = LinearActuator(en_pin=13, in1_pin=19, in2_pin=26, freq=1000)
     speaker = Speaker()
     # spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000) # not directly used for measurements
     supply_weight_sensor = WeightSensor(pdsck_pin=18, dout_pin=23, offset=1, scale=1)
