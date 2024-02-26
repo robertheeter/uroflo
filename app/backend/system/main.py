@@ -24,6 +24,7 @@ from sklearn.linear_model import LinearRegression
 from .data import *
 from .timer import Timer
 
+from components.button import Button
 from components.light import Light
 from components.linear_actuator import LinearActuator
 from components.speaker import Speaker
@@ -88,6 +89,9 @@ ALERT_HEMATURIA_TIME = 10 # min
 ALERT_HEMATURIA_LEVEL = 'CRITICAL' # if changing, adjust order of alert conditions below
 ALERT_HEMATURIA_MESSAGE = f'Severe hematuria measured for >{ALERT_HEMATURIA_TIME} min.'
 
+ALERT_EMERGENCY_BUTTON_LEVEL = 'CRITICAL' # if changing, adjust order of alert conditions below
+ALERT_EMERGENCY_BUTTON_MESSAGE = 'Emergency button pressed; inflow stopped.'
+
 
 # main loop
 def main():
@@ -99,7 +103,8 @@ def main():
     spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000) # not directly used for measurements
     supply_weight_sensor = WeightSensor(pdsck_pin=18, dout_pin=23, offset=1, scale=1) # not directly used for measurements
     waste_weight_sensor = WeightSensor(pdsck_pin=14, dout_pin=15, offset=1, scale=1) # not directly used for measurements
-    
+    emergency_button = Button(pin=10)
+
     pid = PID(1, 0.1, 0.05, setpoint=1)
     regression = LinearRegression()
 
@@ -182,6 +187,9 @@ def main():
     waste_times = []
 
     # additional variables for checking alert conditions
+    supply_flow_started = False # prevent alert when device is starting up
+    waste_flow_started = False # prevent alert when device is starting up
+
     alert_supply_low = False
     alert_supply_empty = False
 
@@ -205,9 +213,8 @@ def main():
 
     alert_hematuria = False
     alert_hematuria_timer = Timer()
-    
-    # other additional variables
-    system_data_filled = False
+
+    alert_emergency_button = False
 
     # perform reset if reset
     if reset == True:
@@ -265,7 +272,7 @@ def main():
         while True:
             setup = get_data(key='setup', file='interface')
             if setup == True:
-                linear_actuator.extend(duty_cycle=100, duration=10) # extend actuator
+                linear_actuator.extend(duty_cycle=100, duration=10) # fully extend actuator
                 break
             time.sleep(0.01)
     
@@ -290,6 +297,15 @@ def main():
     system_entries = 1 # number of entries added to system database
     while True:
         
+        # check emergency button
+        if emergency_button.pressed() == True: # button pressed
+            while True:
+                if emergency_button.pressed() == False: # button released
+                    alert_emergency_button = not alert_emergency_button
+                    break
+                time.sleep(0.01)
+    
+
         # get and check user interface data from database
         # supply_replace_volume, supply_replace_count_removed, supply_replace_count_added
         val = get_data(key='supply_replace_count_removed')
@@ -412,6 +428,10 @@ def main():
             regression.fit(np.array(waste_times).reshape(-1, 1), np.array(waste_volumes).reshape(-1, 1))
             waste_rate = regression.coef_[0][0] * 60 # convert mL/s to mL/min
 
+            if supply_rate > 5: # mL/min
+                supply_flow_started = True
+            if waste_rate > 5: # mL/min
+                waste_flow_started = True
         else:
             supply_rate = 0
             waste_rate = 0
@@ -453,16 +473,21 @@ def main():
 
 
         # adjust inflow rate
-        if automatic == True:
-            output = round(pid(hematuria_percent)) # UPDATE THIS
-            # finish this (needs to move actuator)
-        
-        elif automatic == False:
-            if inflow_level_adjust > 0:
-                linear_actuator.retract(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME)
-            elif inflow_level_adjust < 0:
-                linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME)
+        if alert_emergency_button == False:
+            if automatic == True:
+                output = round(pid(hematuria_percent)) # UPDATE THIS
+                # finish this (needs to move actuator)
+            
+            elif automatic == False:
+                if inflow_level_adjust > 0:
+                    linear_actuator.retract(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME)
+                elif inflow_level_adjust < 0:
+                    linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME)
+                else:
+                    time.sleep(INFLOW_ADJUSTMENT_TIME)
 
+        elif alert_emergency_button == True:
+            linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME) # extend actuator
 
         # check alert conditions
         status_level = 'NORMAL'
@@ -544,7 +569,7 @@ def main():
 
         # CRITICAL
         # alert_supply_flow_low
-        if supply_rate < ALERT_SUPPLY_FLOW_LOW_RATE:
+        if supply_flow_started == True and supply_rate < ALERT_SUPPLY_FLOW_LOW_RATE:
             alert_supply_flow_low_timer.start()
         else:
             alert_supply_flow_low_timer.reset()
@@ -559,7 +584,7 @@ def main():
             status_message = ALERT_SUPPLY_FLOW_LOW_MESSAGE
 
         # alert_waste_flow_low
-        if waste_rate < ALERT_WASTE_FLOW_LOW_RATE:
+        if waste_flow_started == True and waste_rate < ALERT_WASTE_FLOW_LOW_RATE:
             alert_waste_flow_low_timer.start()
         else:
             alert_waste_flow_low_timer.reset()
@@ -574,7 +599,7 @@ def main():
             status_message = ALERT_WASTE_FLOW_LOW_MESSAGE
 
         # alert_flow_discrepancy
-        if supply_rate - waste_rate > ALERT_FLOW_DISCREPANCY_RATE:
+        if supply_flow_started == True and waste_flow_started == True and supply_rate - waste_rate > ALERT_FLOW_DISCREPANCY_RATE:
             alert_flow_discrepancy_timer.start()
         else:
             alert_flow_discrepancy_timer.reset()
@@ -603,6 +628,10 @@ def main():
             status_level = ALERT_HEMATURIA_LEVEL
             status_message = ALERT_HEMATURIA_MESSAGE
 
+        # alert_emergency_button
+        if alert_emergency_button == True:
+            status_level = ALERT_EMERGENCY_BUTTON_LEVEL
+            status_message = ALERT_EMERGENCY_BUTTON_MESSAGE
 
         # update light color and speaker sound according to status_level and new_alert
         if status_level == 'NORMAL':
@@ -667,6 +696,7 @@ def main():
 
 
     # shutdown if reset
+    emergency_button.shutdown()
     light.shutdown()
     linear_actuator.shutdown()
     speaker.shutdown()
