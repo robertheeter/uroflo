@@ -21,7 +21,7 @@ from simple_pid import PID
 import board
 from sklearn.linear_model import LinearRegression
 
-from .data import *
+from data import *
 from .timer import Timer
 
 from components.button import Button

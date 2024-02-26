@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# add execute permission: chmod +x run.sh
+
 # activate environment
 # cd Documents/uroflo
 source venv/bin/activate
@@ -27,8 +29,8 @@ wait 1
 
 # run firefox-esr
 firefox-esr -private --kiosk http://localhost:5173/
-  # quit firefox-esr kiosk mode via ALT+F4
-  # move forward or back page in firefox-esr kiosk mode via ALT+[left arrow/right arrow]
-  # install firefox-esr via 'sudo apt install firefox-esr'
+  # quit firefox-esr kiosk mode: ALT+F4
+  # move forward or back page in firefox-esr kiosk mode: ALT+[left arrow/right arrow]
+  # install firefox-esr: sudo apt install firefox-esr
 
 wait
