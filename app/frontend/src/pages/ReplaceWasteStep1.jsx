@@ -15,7 +15,7 @@ const ReplaceWasteStep1 = () => {
   const next = () => {
     const url = "http://localhost:8000/interface/waste_replace_removed";
     const data = {
-      waste_replace_count_removed: "TRUE",
+      waste_replace_removed: "TRUE",
     };
     axios
       .post(url, data)

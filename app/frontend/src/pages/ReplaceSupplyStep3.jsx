@@ -17,7 +17,7 @@ const ReplaceSupplyStep3 = () => {
   const done = () => {
     const url_added = "http://localhost:8000/interface/supply_replace_added";
     const data_added = {
-      supply_replace_count_added: "TRUE",
+      supply_replace_added: "TRUE",
     };
     axios
       .post(url_added, data_added)
