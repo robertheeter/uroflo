@@ -22,7 +22,7 @@ import board
 from sklearn.linear_model import LinearRegression
 
 from data import *
-from .timer import Timer
+from timer import Timer
 
 from components.button import Button
 from components.light import Light
