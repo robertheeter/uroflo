@@ -231,6 +231,7 @@ def main():
         # wait for replaced supply bag
         while True:
             val = get_data(key='supply_replace_count_removed', file='interface')
+            print(val)
             if  val > supply_replace_count_removed:
                 supply_replace_count_removed = val
                 supply_weight_sensor.zero(replicates=SUPPLY_WEIGHT_SENSOR_REPLICATES) # zero weight sensor
