@@ -10,57 +10,74 @@ For tuning:
 https://www.thorlabs.com/newgrouppage9.cfm?objectgroup_id=9013
 
 '''
+import csv
 import time
 from simple_pid import PID
+from matplotlib import pyplot as plt
+import random
 
-import csv
+class BladderSimulation:
+    def __init__(self, initial_hematuria=10, max_variation=0.65):
+        self.hematuria = initial_hematuria
+        self.max_variation = max_variation
 
-INFLOW_LEVEL_ADJUST_LIMIT = 5
+    def update_hematuria(self, saline_flow_rate):
+        # Simulate random variations in hematuria level
+        variation = random.uniform(-self.max_variation, self.max_variation)
+        self.hematuria += variation
+
+        # Adjust hematuria based on saline inflow rate
+        self.hematuria -= 0.4 * saline_flow_rate  # Adjust this formula as needed
+
+        # Ensure hematuria stays within the valid range of 0 to 15%
+        self.hematuria = max(0, min(15, self.hematuria))
+
+    def get_hematuria(self):
+        return self.hematuria
+
+#    def adjust_saline_inflow(self):
+        # Adjust saline inflow based on hematuria level
+#        saline_flow_rate = 2 * self.hematuria  # Adjust this formula as needed
+#        return saline_flow_rate
+
+
+INFLOW_LEVEL_ADJUST_LIMIT = 2
 INFLOW_ADJUSTMENT_SIZE = 0.005
-HEMATURIA_SETPOINT = 0.4
+HEMATURIA_SETPOINT = 0.5
 
 Kp = -1
 Ki = -0.01
-Kd = -0.05
+Kd = -0.1
 
+simulation = BladderSimulation()
 
 pid = PID(Kp, Ki, Kd, setpoint=HEMATURIA_SETPOINT, output_limits=(-1*INFLOW_LEVEL_ADJUST_LIMIT, INFLOW_LEVEL_ADJUST_LIMIT))
-#pid.sample_time = 5 # sample every 10 seconds
+#pid.sample_time = 5 # sample every 10 seconds 
 
-percent = ['percent']
-adjustment = ['adjustment']
-hematuria_readings = [6.2, 5.5, 5.1, 3.4, 2.3, 0.9, 0.1, 0.1, 0.1, 0.1, 0.9, 1.6, 3.6, 4.9]
+percent = []
 
-for hematuria_percent in hematuria_readings:
+start = time.time()
+while True:
+    hematuria_percent = simulation.get_hematuria()
+    inflow_level_adjust = pid(hematuria_percent)
+    simulation.update_hematuria(inflow_level_adjust)
     
-    percent.append(hematuria_percent)
-
-    print(f"hematuria percent: {hematuria_percent}%")
-
-    inflow_level_adjust = round(pid(hematuria_percent))
-    
-    print(f"inflow level adjust: {inflow_level_adjust}")
-
-    adjustment.append(inflow_level_adjust)
-
     p, i, d = pid.components
-    
+    print(f"hematuria percent: {hematuria_percent:.2f}%")
+    print(f"inflow level adjust: {inflow_level_adjust:.2f}")
     print(f"p: {p:.2f}, i: {i:.2f}, d: {d:.2f}\n")
 
-    time.sleep(5)
+    percent.append(hematuria_percent)
 
+    time.sleep(1)
 
-data_set = [percent, adjustment]
+    if time.time() - start > 30:
+        break
 
-# Transpose the data to convert columns to rows
-data_rows = zip(*data_set)
+x = list(range(len(percent)))
+y = percent
+plt.plot(x, y)
+plt.xlabel('Time (s)')
+plt.ylabel('Hematuria (%)')
+plt.show()
 
-# Specify the file name
-file_name = "PID_TESTING_2.csv"
-
-# Writing the transposed data to a CSV file
-with open(file_name, mode='w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerows(data_rows)
-
-print("CSV file has been created successfully:", file_name)
