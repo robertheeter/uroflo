@@ -28,7 +28,7 @@ from components.button import Button
 from components.light import Light
 from components.linear_actuator import LinearActuator
 from components.speaker import Speaker
-from components.spectral_sensor import SpectralSensor
+# from components.spectral_sensor import SpectralSensor # run separately
 from components.weight_sensor import WeightSensor
 
 
@@ -100,9 +100,9 @@ def main():
     light = Light(red_pin=board.D8, green_pin=board.D7, blue_pin=board.D1)
     linear_actuator = LinearActuator(en_pin=10, in1_pin=9, in2_pin=11, freq=1000)
     speaker = Speaker()
-    spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000) # not directly used for measurements
-    supply_weight_sensor = WeightSensor(pdsck_pin=18, dout_pin=23, offset=1, scale=1) # not directly used for measurements
-    waste_weight_sensor = WeightSensor(pdsck_pin=14, dout_pin=15, offset=1, scale=1) # not directly used for measurements
+    # spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000) # not directly used for measurements
+    supply_weight_sensor = WeightSensor(pdsck_pin=18, dout_pin=23, offset=1, scale=1)
+    waste_weight_sensor = WeightSensor(pdsck_pin=14, dout_pin=15, offset=1, scale=1)
     emergency_button = Button(pin=10)
 
     pid = PID(1, 0.1, 0.05, setpoint=1)
@@ -700,7 +700,7 @@ def main():
     light.shutdown()
     linear_actuator.shutdown()
     speaker.shutdown()
-    spectral_sensor.shutdown()
+    # spectral_sensor.shutdown() # run separately
     supply_weight_sensor.shutdown()
     waste_weight_sensor.shutdown()
 
