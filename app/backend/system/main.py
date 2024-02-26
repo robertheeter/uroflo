@@ -218,6 +218,7 @@ def main():
 
     # perform reset if reset
     if reset == True:
+        print('reset')
 
         # wait for patient info update (NOT NECESSARY?)
         while True:
@@ -296,7 +297,8 @@ def main():
     i = 0 # index for calculating flow rates
     system_entries = 1 # number of entries added to system database
     while True:
-        
+        print(f'loop # {system_entries}')
+
         # check emergency button
         if emergency_button.pressed() == True: # button pressed
             while True:
