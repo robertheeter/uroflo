@@ -61,15 +61,15 @@ def system(request):
         return JsonResponse({'status': 'error', 'message': 'invalid request method'})
 
 
-# USER DATA (user.db)
+# INTERFACE DATA (interface.db)
 @csrf_exempt
-def user_supply_replace_volume(request):
+def interface_supply_replace_volume(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body.decode('utf-8'))
             supply_replace_volume = int(data.get('supply_replace_volume', None))
             
-            add_data(data={'supply_replace_volume': supply_replace_volume}, file='user')
+            add_data(data={'supply_replace_volume': supply_replace_volume}, file='interface')
             if VERBOSE:
                 print(f"supply_replace_volume = {supply_replace_volume}")
 
@@ -81,18 +81,18 @@ def user_supply_replace_volume(request):
         return JsonResponse({'status': 'error', 'message': 'invalid request method'})
 
 @csrf_exempt
-def user_supply_replace_removed(request):
+def interface_supply_replace_removed(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body.decode('utf-8'))
             value = data.get('supply_replace_removed', None)
             
             if value == 'TRUE':
-                supply_replace_removed = get_data(key=['supply_replace_removed'], file='user', n=1)
-                supply_replace_removed += 1
-                add_data(data={'supply_replace_removed': supply_replace_removed}, file='user')
+                supply_replace_count_removed = get_data(key=['supply_replace_count_removed'], file='interface', n=1)
+                supply_replace_count_removed += 1
+                add_data(data={'supply_replace_count_removed': supply_replace_count_removed}, file='interface')
                 if VERBOSE:
-                    print(f"supply_replace_removed = {supply_replace_removed}")
+                    print(f"supply_replace_count_removed = {supply_replace_count_removed}")
 
             return JsonResponse({'status': 'success', 'message': 'request processed'})
         except json.JSONDecodeError:
@@ -102,18 +102,18 @@ def user_supply_replace_removed(request):
         return JsonResponse({'status': 'error', 'message': 'invalid request method'})
 
 @csrf_exempt
-def user_supply_replace_added(request):
+def interface_supply_replace_added(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body.decode('utf-8'))
             value = data.get('supply_replace_added', None)
             
             if value == 'TRUE':
-                supply_replace_added = get_data(key=['supply_replace_added'], file='user', n=1)
-                supply_replace_added += 1
-                add_data(data={'supply_replace_added': supply_replace_added}, file='user')
+                supply_replace_count_added = get_data(key=['supply_replace_count_added'], file='interface', n=1)
+                supply_replace_count_added += 1
+                add_data(data={'supply_replace_count_added': supply_replace_count_added}, file='interface')
                 if VERBOSE:
-                    print(f"supply_replace_added = {supply_replace_added}")
+                    print(f"supply_replace_count_added = {supply_replace_count_added}")
 
             return JsonResponse({'status': 'success', 'message': 'request processed'})
         except json.JSONDecodeError:
@@ -123,13 +123,13 @@ def user_supply_replace_added(request):
         return JsonResponse({'status': 'error', 'message': 'invalid request method'})
 
 @csrf_exempt
-def user_waste_replace_volume(request):
+def interface_waste_replace_volume(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body.decode('utf-8'))
             waste_replace_volume = int(data.get('waste_replace_volume', None))
             
-            add_data(data={'waste_replace_volume': waste_replace_volume}, file='user')
+            add_data(data={'waste_replace_volume': waste_replace_volume}, file='interface')
             if VERBOSE:
                 print(f"waste_replace_volume = {waste_replace_volume}")
 
@@ -141,18 +141,18 @@ def user_waste_replace_volume(request):
         return JsonResponse({'status': 'error', 'message': 'invalid request method'})
 
 @csrf_exempt
-def user_waste_replace_removed(request):
+def interface_waste_replace_removed(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body.decode('utf-8'))
             value = data.get('waste_replace_removed', None)
             
             if value == 'TRUE':
-                waste_replace_removed = get_data(key='waste_replace_removed', file='user', n=1)
-                waste_replace_removed += 1
-                add_data(data={'waste_replace_removed': waste_replace_removed}, file='user')
+                waste_replace_count_removed = get_data(key='waste_replace_count_removed', file='interface', n=1)
+                waste_replace_count_removed += 1
+                add_data(data={'waste_replace_count_removed': waste_replace_count_removed}, file='interface')
                 if VERBOSE:
-                    print(f"waste_replace_removed = {waste_replace_removed}")
+                    print(f"waste_replace_count_removed = {waste_replace_count_removed}")
 
             return JsonResponse({'status': 'success', 'message': 'request processed'})
         except json.JSONDecodeError:
@@ -162,18 +162,18 @@ def user_waste_replace_removed(request):
         return JsonResponse({'status': 'error', 'message': 'invalid request method'})
 
 @csrf_exempt
-def user_waste_replace_added(request):
+def interface_waste_replace_added(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body.decode('utf-8'))
             value = data.get('waste_replace_added', None)
             
             if value == 'TRUE':
-                waste_replace_added = get_data(key='waste_replace_added', file='user', n=1)
-                waste_replace_added += 1
-                add_data(data={'waste_replace_added': waste_replace_added}, file='user')
+                waste_replace_count_added = get_data(key='waste_replace_count_added', file='interface', n=1)
+                waste_replace_count_added += 1
+                add_data(data={'waste_replace_count_added': waste_replace_count_added}, file='interface')
                 if VERBOSE:
-                    print(f"waste_replace_added = {waste_replace_added}")
+                    print(f"waste_replace_count_added = {waste_replace_count_added}")
 
             return JsonResponse({'status': 'success', 'message': 'request processed'})
         except json.JSONDecodeError:
@@ -183,7 +183,7 @@ def user_waste_replace_added(request):
         return JsonResponse({'status': 'error', 'message': 'invalid request method'})
 
 @csrf_exempt
-def user_automatic(request):
+def interface_automatic(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body.decode('utf-8'))
@@ -194,7 +194,7 @@ def user_automatic(request):
             elif value == 'FALSE':
                 automatic = False
             
-            add_data(data={'automatic': automatic}, file='user')
+            add_data(data={'automatic': automatic}, file='interface')
             if VERBOSE:
                 print(f"automatic = {automatic}")
 
@@ -206,16 +206,16 @@ def user_automatic(request):
         return JsonResponse({'status': 'error', 'message': 'invalid request method'})
 
 @csrf_exempt
-def user_inflow_level_increase(request):
+def interface_inflow_level_increase(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body.decode('utf-8'))
             value = data.get('inflow_level_increase', None)
             
             if value == 'TRUE':
-                inflow_level = get_data(key='inflow_level', file='user', n=1)
+                inflow_level = get_data(key='inflow_level', file='interface', n=1)
                 inflow_level += 1
-                add_data(data={'inflow_level': inflow_level}, file='user')
+                add_data(data={'inflow_level': inflow_level}, file='interface')
                 if VERBOSE:
                     print(f"inflow_level = {inflow_level}")
 
@@ -227,16 +227,16 @@ def user_inflow_level_increase(request):
         return JsonResponse({'status': 'error', 'message': 'invalid request method'})
 
 @csrf_exempt
-def user_inflow_level_decrease(request):
+def interface_inflow_level_decrease(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body.decode('utf-8'))
             value = data.get('inflow_level_decrease', None)
             
             if value == 'TRUE':
-                inflow_level = get_data(key='inflow_level', file='user', n=1)
+                inflow_level = get_data(key='inflow_level', file='interface', n=1)
                 inflow_level -= 1
-                add_data(data={'inflow_level': inflow_level}, file='user')
+                add_data(data={'inflow_level': inflow_level}, file='interface')
                 if VERBOSE:
                     print(f"inflow_level = {inflow_level}")
 
@@ -248,16 +248,16 @@ def user_inflow_level_decrease(request):
         return JsonResponse({'status': 'error', 'message': 'invalid request method'})
 
 @csrf_exempt
-def user_mute(request):
+def interface_mute(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body.decode('utf-8'))
             value = data.get('mute', None)
             
             if value == 'TRUE':
-                mute_count = get_data(key='mute_count', file='user', n=1)
+                mute_count = get_data(key='mute_count', file='interface', n=1)
                 mute_count += 1
-                add_data(data={'mute_count': mute_count}, file='user')
+                add_data(data={'mute_count': mute_count}, file='interface')
                 if VERBOSE:
                     print(f"mute_count = {mute_count}")
 
@@ -269,14 +269,14 @@ def user_mute(request):
         return JsonResponse({'status': 'error', 'message': 'invalid request method'})
 
 @csrf_exempt
-def user_setup(request):
+def interface_setup(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body.decode('utf-8'))
             value = data.get('setup', None)
             
             if value == 'TRUE':
-                add_data(data={'setup': True}, file='user')
+                add_data(data={'setup': True}, file='interface')
                 if VERBOSE:
                     print(f"setup = {True}")
 
@@ -288,14 +288,14 @@ def user_setup(request):
         return JsonResponse({'status': 'error', 'message': 'invalid request method'})
     
 @csrf_exempt
-def user_reset(request):
+def interface_reset(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body.decode('utf-8'))
             value = data.get('reset', None)
             
             if value == 'TRUE':
-                add_data(data={'reset': True}, file='user')
+                add_data(data={'reset': True}, file='interface')
                 if VERBOSE:
                     print(f"reset = {True}")
 
