@@ -69,8 +69,8 @@ def create_data(file, verbose=False):
         'status_level': 'STARTUP',
         'status_message': 'System starting.',
         'active_time': 0,
-        'date': '00/00/0000',
-        'time': '00:00:00',
+        'current_date': '00/00/0000',
+        'current_time': '00:00:00',
         'supply_volume_total': 0,
         'supply_volume_gross': 0,
         'supply_replace_count': 0,
@@ -144,8 +144,8 @@ def create_data(file, verbose=False):
             status_level            TEXT        NOT NULL,
             status_message          TEXT        NOT NULL,
             active_time             TEXT        NOT NULL,
-            date                    TEXT        NOT NULL,
-            time                    TEXT        NOT NULL,
+            current_date            TEXT        NOT NULL,
+            current_time            TEXT        NOT NULL,
             supply_volume_total     INTEGER     NOT NULL,
             supply_volume_gross     INTEGER     NOT NULL,
             supply_replace_count    INTEGER     NOT NULL,
@@ -272,7 +272,7 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
         'entry',
         'hematuria_level', 'hematuria_percent', 'supply_percent', 
         'supply_volume', 'supply_time', 'supply_rate', 'waste_percent', 'waste_volume', 'waste_time', 'waste_rate', 
-        'status_level', 'status_message', 'active_time', 'date', 'time', 'supply_volume_total', 'supply_volume_gross', 
+        'status_level', 'status_message', 'active_time', 'current_date', 'current_time', 'supply_volume_total', 'supply_volume_gross', 
         'supply_replace_count', 'waste_volume_total', 'waste_volume_gross', 'waste_replace_count', 'automatic', 
         'inflow_level', 'mute'
         ]
@@ -471,8 +471,8 @@ if __name__ == '__main__':
         'status_level': 'NORMAL',
         'status_message': 'SYSTEM NORMAL',
         'active_time': 4201,
-        'date': '02/17/2024',
-        'time': '04:10:12',
+        'current_date': '02/17/2024',
+        'current_time': '04:10:12',
         'supply_volume_total': 6000,
         'supply_volume_gross': 12000,
         'supply_replace_count': 2,
@@ -500,8 +500,8 @@ if __name__ == '__main__':
         'status_level': 'CAUTION',
         'status_message': 'Waste bag almost full',
         'active_time': 4901,
-        'date': '02/18/2024',
-        'time': '04:10:13',
+        'current_date': '02/18/2024',
+        'current_time': '04:10:13',
         'supply_volume_total': 6000,
         'supply_volume_gross': 12000,
         'supply_replace_count': 2,
@@ -515,12 +515,12 @@ if __name__ == '__main__':
     add_data(data=data_in_2, file='system', verbose=True)
 
     # entry 3
-    data_in_3 = {'time': '04:10:59'}
+    data_in_3 = {'current_time': '04:10:59'}
     add_data(data=data_in_3, file='system', verbose=True)
 
     # test get_data
     # n > 1, len(key) > 1 condition
-    data_out = get_data(key=['entry', 'time', 'supply_volume'], file='system', n=3, order='DESC', verbose=True)
+    data_out = get_data(key=['entry', 'current_time', 'supply_volume'], file='system', n=3, order='DESC', verbose=True)
     print(data_out)
     
     # n > 1, len(key) = 1 condition
@@ -528,7 +528,7 @@ if __name__ == '__main__':
     print(data_out)
 
     # n = 1, len(key) > 1 condition
-    data_out = get_data(key=['entry', 'time', 'supply_volume'], file='system', n=1, order='DESC', verbose=True)
+    data_out = get_data(key=['entry', 'current_time', 'supply_volume'], file='system', n=1, order='DESC', verbose=True)
     print(data_out)
     
     # n = 1, len(key) = 1 condition

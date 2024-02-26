@@ -141,8 +141,8 @@ def main():
     _ = system_data['status_message'] # not necessary
 
     _ = system_data['active_time'] # not necessary
-    _ = system_data['date'] # not necessary
-    _ = system_data['time'] # not necessary
+    _ = system_data['current_date'] # not necessary
+    _ = system_data['current_time'] # not necessary
 
     supply_volume_total = system_data['supply_volume_total']
     supply_volume_gross = system_data['supply_volume_gross']
@@ -458,12 +458,12 @@ def main():
             waste_time = 5999 # 99 h 59 m
 
         # date, time
-        date = datetime.now().strftime("%m/%d/%Y")
-        time = datetime.now().strftime("%H:%M:%S")
+        current_date = datetime.now().strftime("%m/%d/%Y")
+        current_time = datetime.now().strftime("%H:%M:%S")
 
         # active_time
         datetime_1 = f"{start_date} {start_time}"
-        datetime_2 = f"{date} {time}"
+        datetime_2 = f"{current_date} {current_time}"
         format = "%m/%d/%Y %H:%M:%S"
         dt1 = datetime.strptime(datetime_1, format)
         dt2 = datetime.strptime(datetime_2, format)
@@ -666,8 +666,8 @@ def main():
             'status_level': status_level,
             'status_message': status_message,
             'active_time': round(active_time),
-            'date': date,
-            'time': time,
+            'current_date': current_date,
+            'current_time': current_time,
             'supply_volume_total': round(supply_volume_total),
             'supply_volume_gross': round(supply_volume_gross + (supply_volume_total - supply_volume)),
             'supply_replace_count': int(supply_replace_count),
