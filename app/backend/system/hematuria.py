@@ -18,7 +18,7 @@ from components.spectral_sensor import SpectralSensor
 
 # sensor/script parameters
 SPECTRAL_SENSOR_REPLICATES = 20
-DELAY = 1 # delay between iterations
+DELAY = 1 # delay between iterations (seconds)
 
 # regression parameters
 w_violet = -721.729
@@ -38,7 +38,7 @@ b_red = -9016.87
 MAX_CLEAR = 1.0
 MAX_MILD = 2.0
 MAX_MODERATE = 4.0
-MAX_SEVERE = 8.0
+MAX_SEVERE = 8.0 # do not set to 100.0
 
 def hematuria():
 
@@ -69,9 +69,9 @@ def hematuria():
         elif hematuria_percent < MAX_MILD:
             hematuria_level = (((49-24)/(MAX_MILD-MAX_CLEAR)) * (hematuria_percent - MAX_CLEAR)) + 24
         elif hematuria_percent < MAX_MODERATE:
-            hematuria_level = (((74-49)/(MAX_MILD-MAX_CLEAR)) * (hematuria_percent - MAX_CLEAR)) + 49
+            hematuria_level = (((74-49)/(MAX_MODERATE-MAX_MILD)) * (hematuria_percent - MAX_MILD)) + 49
         elif hematuria_percent < MAX_SEVERE:
-            hematuria_level = (((99-74)/(MAX_MILD-MAX_CLEAR)) * (hematuria_percent - MAX_CLEAR)) + 74
+            hematuria_level = (((99-74)/(MAX_SEVERE-MAX_MODERATE)) * (hematuria_percent - MAX_MODERATE)) + 74
         else:
             hematuria_level = 99
         

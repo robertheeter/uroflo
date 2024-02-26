@@ -4,7 +4,7 @@ MAIN
 Notes
 - Automatically controls irrigation with PID feedback
 - Checks all sensors/peripherals via the hematuria.json and mass.json databases
-- Monitors the user interface via the interface.db database
+- Monitors and reacts to the user interface via the interface.db database
 - Initiates alerts
 - Updates system.db database
 
@@ -34,60 +34,59 @@ from components.weight_sensor import WeightSensor
 # system parameters
 INFLOW_ADJUSTMENT_TIME = 0.005 # sec
 
-SPECTRAL_SENSOR_REPLICATES = 10
-SUPPLY_WEIGHT_SENSOR_REPLICATES = 20
-WASTE_WEIGHT_SENSOR_REPLICATES = 20
-FLOW_RATE_REPLICATES = 4 # number of weight measurements to use for each rate calculation
+SUPPLY_WEIGHT_SENSOR_REPLICATES = 15
+WASTE_WEIGHT_SENSOR_REPLICATES = 15
+FLOW_RATE_REPLICATES = 5 # number of weight measurements to use for each rate calculation
 
 SUPPLY_DENSITY = 1.0 # g/mL
 WASTE_DENSITY = 1.0 # g/mL
 
 # alert parameters
 ALERT_SUPPLY_LOW_PERCENT = 10
-ALERT_SUPPLY_LOW_LEVEL = 'ALERT'
-ALERT_SUPPLY_LOW_MESSAGE = ''
+ALERT_SUPPLY_LOW_LEVEL = 'ALERT' # if changing, adjust order of alert conditions below
+ALERT_SUPPLY_LOW_MESSAGE = f'Supply bag volume <{ALERT_SUPPLY_LOW_PERCENT}%.'
 
 ALERT_SUPPLY_EMPTY_PERCENT = 5
-ALERT_SUPPLY_EMPTY_LEVEL = 'CAUTION'
-ALERT_SUPPLY_EMPTY_MESSAGE = ''
+ALERT_SUPPLY_EMPTY_LEVEL = 'CAUTION' # if changing, adjust order of alert conditions below
+ALERT_SUPPLY_EMPTY_MESSAGE = f'Supply bag volume <{ALERT_SUPPLY_EMPTY_PERCENT}%.'
 
 ALERT_WASTE_HIGH_PERCENT = 90
-ALERT_WASTE_HIGH_LEVEL = 'ALERT'
-ALERT_WASTE_HIGH_MESSAGE = ''
+ALERT_WASTE_HIGH_LEVEL = 'ALERT' # if changing, adjust order of alert conditions below
+ALERT_WASTE_HIGH_MESSAGE = f'Waste bag volume >{ALERT_WASTE_HIGH_PERCENT}%.'
 
 ALERT_WASTE_FULL_PERCENT = 95
-ALERT_WASTE_FULL_LEVEL = 'CAUTION'
-ALERT_WASTE_FULL_MESSAGE = ''
+ALERT_WASTE_FULL_LEVEL = 'CAUTION' # if changing, adjust order of alert conditions below
+ALERT_WASTE_FULL_MESSAGE = f'Waste bag volume >{ALERT_WASTE_FULL_PERCENT}%.'
 
 ALERT_SUPPLY_FLOW_LOW_RATE = 1 # mL/min
 ALERT_SUPPLY_FLOW_LOW_TIME = 5 # min
-ALERT_SUPPLY_FLOW_LOW_LEVEL = 'CRITICAL'
-ALERT_SUPPLY_FLOW_LOW_MESSAGE = ''
+ALERT_SUPPLY_FLOW_LOW_LEVEL = 'CRITICAL' # if changing, adjust order of alert conditions below
+ALERT_SUPPLY_FLOW_LOW_MESSAGE = f'Supply inflow rate <{ALERT_SUPPLY_FLOW_LOW_RATE} mL/min for >{ALERT_SUPPLY_FLOW_LOW_TIME} min.'
 
 ALERT_SUPPLY_FLOW_HIGH_RATE = 200 # mL/min
 ALERT_SUPPLY_FLOW_HIGH_TIME = 2 # min
-ALERT_SUPPLY_FLOW_HIGH_LEVEL = 'CAUTION'
-ALERT_SUPPLY_FLOW_HIGH_MESSAGE = ''
+ALERT_SUPPLY_FLOW_HIGH_LEVEL = 'CAUTION' # if changing, adjust order of alert conditions below
+ALERT_SUPPLY_FLOW_HIGH_MESSAGE = f'Supply inflow rate >{ALERT_SUPPLY_FLOW_HIGH_RATE} mL/min for >{ALERT_SUPPLY_FLOW_HIGH_TIME} min.'
 
 ALERT_WASTE_FLOW_LOW_RATE = 1 # mL/min
 ALERT_WASTE_FLOW_LOW_TIME = 5 # min
-ALERT_WASTE_FLOW_LOW_LEVEL = 'CRITICAL'
-ALERT_WASTE_FLOW_LOW_MESSAGE = ''
+ALERT_WASTE_FLOW_LOW_LEVEL = 'CRITICAL' # if changing, adjust order of alert conditions below
+ALERT_WASTE_FLOW_LOW_MESSAGE = f'Waste outflow rate <{ALERT_WASTE_FLOW_LOW_RATE} mL/min for >{ALERT_WASTE_FLOW_LOW_TIME} min.'
 
 ALERT_WASTE_FLOW_HIGH_RATE = 200 # mL/min
 ALERT_WASTE_FLOW_HIGH_TIME = 2 # min
-ALERT_WASTE_FLOW_HIGH_LEVEL = 'ALERT'
-ALERT_WASTE_FLOW_HIGH_MESSAGE = ''
+ALERT_WASTE_FLOW_HIGH_LEVEL = 'ALERT' # if changing, adjust order of alert conditions below
+ALERT_WASTE_FLOW_HIGH_MESSAGE = f'Waste outflow rate >{ALERT_WASTE_FLOW_HIGH_RATE} mL/min for >{ALERT_WASTE_FLOW_HIGH_TIME} min.'
 
 ALERT_FLOW_DISCREPANCY_RATE = 20 # mL/min
 ALERT_FLOW_DISCREPANCY_TIME = 10 # min
-ALERT_FLOW_DISCREPANCY_LEVEL = 'CRITICAL'
-ALERT_FLOW_DISCREPANCY_MESSAGE = ''
+ALERT_FLOW_DISCREPANCY_LEVEL = 'CRITICAL' # if changing, adjust order of alert conditions below
+ALERT_FLOW_DISCREPANCY_MESSAGE = f'Inflow rate greater than outflow rate by >{ALERT_FLOW_DISCREPANCY_RATE} mL/min for >{ALERT_FLOW_DISCREPANCY_TIME} min.'
 
 ALERT_HEMATURIA_SEVERITY = 75 # hematuria severity level: clear (0-24), mild (25-49), moderate (50-74), severe (75-99)
 ALERT_HEMATURIA_TIME = 10 # min
-ALERT_HEMATURIA_LEVEL = 'CRITICAL'
-ALERT_HEMATURIA_MESSAGE = ''
+ALERT_HEMATURIA_LEVEL = 'CRITICAL' # if changing, adjust order of alert conditions below
+ALERT_HEMATURIA_MESSAGE = f'Severe hematuria measured for >{ALERT_HEMATURIA_TIME} min.'
 
 
 # main loop
@@ -133,7 +132,7 @@ def main():
     _ = system_data['waste_time'] # not necessary
     _ = system_data['waste_rate'] # not necessary
 
-    status_level = system_data['status_level']
+    _ = system_data['status_level']
     _ = system_data['status_message'] # not necessary
 
     _ = system_data['active_time'] # not necessary
@@ -176,12 +175,13 @@ def main():
     supply_volume_total = supply_replace_volume
     waste_volume_total = waste_replace_volume
 
-    # define additional variables
+    # lists for calculating flow rates
     supply_volumes = []
     supply_times = []
     waste_volumes = []
     waste_times = []
 
+    # additional variables for checking alert conditions
     alert_supply_low = False
     alert_supply_empty = False
 
@@ -192,19 +192,19 @@ def main():
     alert_supply_flow_low_timer = Timer()
 
     alert_supply_flow_high = False
-    alert_supply_flow_high_start = Timer()
+    alert_supply_flow_high_timer = Timer()
 
     alert_waste_flow_low = False
-    alert_waste_flow_low_start = Timer()
+    alert_waste_flow_low_timer = Timer()
 
     alert_waste_flow_high = False
-    alert_waste_flow_high_start = Timer()
+    alert_waste_flow_high_timer = Timer()
 
     alert_flow_discrepancy = False
-    alert_flow_discrepancy_start = Timer()
+    alert_flow_discrepancy_timer = Timer()
 
     alert_hematuria = False
-    alert_hematuria_start = Timer()
+    alert_hematuria_timer = Timer()
 
     # perform reset if reset
     if reset == True:
@@ -285,7 +285,7 @@ def main():
     # begin normal operation
     i = 0
     while True:
-    
+        
         # get and check user interface data from database
         # supply_replace_volume, supply_replace_count_removed, supply_replace_count_added
         val = get_data(key='supply_replace_count_removed')
@@ -324,35 +324,40 @@ def main():
         # automatic, inflow_level
         automatic = get_data(key='automatic', file='interface')
         val = get_data(key='inflow_level', file='interface')
-        inflow_level_adjust = val - inflow_level
-        inflow_level = val
+        if val > inflow_level:
+            inflow_level_adjust = 1
+            inflow_level += 1
+        elif val < inflow_level:
+            inflow_level_adjust = -1
+            inflow_level -= 1
 
         # mute_count
         mute = False
         val = get_data(key='mute_count', file='interface')
         if val > mute_count:
             mute = True
-            speaker.stop()
         mute_count = val
 
         if mute == True:
+            speaker.stop()
+
             alert_supply_flow_low = False
-            alert_supply_flow_low_timer.reset() # CHANGE THIS; THIS SHOULD RESET THE TIMER BUT IT SHOULD NOT KEEP RUNNING AFTER THIS?
+            alert_supply_flow_low_timer.reset()
 
             alert_supply_flow_high = False
-            alert_supply_flow_high_start.reset()
+            alert_supply_flow_high_timer.reset()
 
             alert_waste_flow_low = False
-            alert_waste_flow_low_start.reset()
+            alert_waste_flow_low_timer.reset()
 
             alert_waste_flow_high = False
-            alert_waste_flow_high_start.reset()
+            alert_waste_flow_high_timer.reset()
 
             alert_flow_discrepancy = False
-            alert_flow_discrepancy_start.reset()
+            alert_flow_discrepancy_timer.reset()
 
             alert_hematuria = False
-            alert_hematuria_start.reset()
+            alert_hematuria_timer.reset()
 
         # reset
         reset = get_data(key='reset', file='interface')
@@ -360,15 +365,15 @@ def main():
             for file in ['system', 'interface', 'patient']:
                 delete_data(file=file)
             break
-
+        
+        
         # run weight sensors
         supply_mass = supply_weight_sensor.read(replicates=SUPPLY_WEIGHT_SENSOR_REPLICATES)
         supply_time = time.time()
-        supply_volume = supply_mass / SUPPLY_DENSITY # convert g to mL
 
         waste_mass = waste_weight_sensor.read(replicates=WASTE_WEIGHT_SENSOR_REPLICATES)
         waste_time = time.time()
-        waste_volume = waste_mass / WASTE_DENSITY # convert g to mL
+
 
         # calculate, format, and update system data
         # hematuria_percent, hematuria_level
@@ -376,6 +381,9 @@ def main():
         hematuria_level = get_data(key='hematuria_level', file='hematuria')
 
         # supply_volume, waste_volume
+        supply_volume = supply_mass / SUPPLY_DENSITY # convert g to mL
+        waste_volume = waste_mass / WASTE_DENSITY # convert g to mL
+
         supply_volumes.insert(0, supply_volume)
         supply_times.insert(0, supply_time)
         waste_volumes.insert(0, waste_volume)
@@ -395,10 +403,10 @@ def main():
             waste_times.pop()
 
             regression.fit(np.array(supply_times).reshape(-1, 1), np.array(supply_volumes).reshape(-1, 1))
-            supply_rate = regression.coef_ * 60 # convert mL/s to mL/min
+            supply_rate = regression.coef_[0][0] * 60 # convert mL/s to mL/min
 
             regression.fit(np.array(waste_times).reshape(-1, 1), np.array(waste_volumes).reshape(-1, 1))
-            waste_rate = regression.coef_ * 60 # convert mL/s to mL/min
+            waste_rate = regression.coef_[0][0] * 60 # convert mL/s to mL/min
 
         else:
             supply_rate = 0
@@ -410,16 +418,20 @@ def main():
 
         if supply_rate > 1:
             supply_time = supply_volume / supply_rate
+            if supply_time > 5999:
+                supply_time = 5999 # 99 h 59 m
         else:
-            supply_time = supply_volume / 1
+            supply_time = 5999 # 99 h 59 m
         
         # waste_percent, waste_time
         waste_percent = (waste_volume / waste_volume_total) * 100.0
         
-        if waste_rate > 1:
+        if waste_rate > 0.001:
             waste_time = waste_volume / waste_rate
+            if waste_time > 5999:
+                waste_time = 5999 # 99 h 59 m
         else:
-            waste_time = supply_volume / 1
+            waste_time = 5999 # 99 h 59 m
 
         # date, time
         date = datetime.now().strftime("%m/%d/%Y")
@@ -435,16 +447,18 @@ def main():
 
         active_time = diff.total_seconds() / 60
 
-        # adjust inflow rate FINISH THIS WITH PID
+
+        # adjust inflow rate
         if automatic == True:
-            inflow_level_adjust = round(pid(hematuria_percent))
+            output = round(pid(hematuria_percent)) # UPDATE THIS
+            # finish this (needs to move actuator)
         
-        if inflow_level_adjust > 0:
-            for _ in range(inflow_level_adjust):
+        elif automatic == False:
+            if inflow_level_adjust > 0:
                 linear_actuator.retract(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME)
-        elif inflow_level_adjust < 0:
-            for _ in range(abs(inflow_level_adjust)):
+            elif inflow_level_adjust < 0:
                 linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME)
+
 
         # check alert conditions
         status_level = 'NORMAL'
@@ -474,8 +488,20 @@ def main():
             alert_waste_high = False
 
         # alert_waste_flow_high
-
+        if waste_rate > ALERT_WASTE_FLOW_HIGH_RATE:
+            alert_waste_flow_high_timer.start()
+        else:
+            alert_waste_flow_high_timer.reset()
+            alert_waste_flow_high = False
         
+        duration = alert_waste_flow_high_timer.duration(units='min')
+        if duration and duration > ALERT_WASTE_FLOW_HIGH_TIME:
+            if alert_waste_flow_high == False:
+                new_alert = True
+            alert_waste_flow_high = True
+            status_level = ALERT_WASTE_FLOW_HIGH_LEVEL
+            status_message = ALERT_WASTE_FLOW_HIGH_MESSAGE
+
         # CAUTION
         # alert_supply_empty
         if supply_percent < ALERT_SUPPLY_EMPTY_PERCENT:
@@ -498,20 +524,81 @@ def main():
             alert_waste_full = False
 
         # alert_supply_flow_high
-
+        if supply_rate > ALERT_SUPPLY_FLOW_HIGH_RATE:
+            alert_supply_flow_high_timer.start()
+        else:
+            alert_supply_flow_high_timer.reset()
+            alert_supply_flow_high = False
+        
+        duration = alert_supply_flow_high_timer.duration(units='min')
+        if duration and duration > ALERT_SUPPLY_FLOW_HIGH_TIME:
+            if alert_supply_flow_high == False:
+                new_alert = True
+            alert_supply_flow_high = True
+            status_level = ALERT_SUPPLY_FLOW_HIGH_LEVEL
+            status_message = ALERT_SUPPLY_FLOW_HIGH_MESSAGE
 
         # CRITICAL
         # alert_supply_flow_low
+        if supply_rate < ALERT_SUPPLY_FLOW_LOW_RATE:
+            alert_supply_flow_low_timer.start()
+        else:
+            alert_supply_flow_low_timer.reset()
+            alert_supply_flow_low = False
         
+        duration = alert_supply_flow_low_timer.duration(units='min')
+        if duration and duration > ALERT_SUPPLY_FLOW_LOW_TIME:
+            if alert_supply_flow_low == False:
+                new_alert = True
+            alert_supply_flow_low = True
+            status_level = ALERT_SUPPLY_FLOW_LOW_LEVEL
+            status_message = ALERT_SUPPLY_FLOW_LOW_MESSAGE
 
         # alert_waste_flow_low
+        if waste_rate < ALERT_WASTE_FLOW_LOW_RATE:
+            alert_waste_flow_low_timer.start()
+        else:
+            alert_waste_flow_low_timer.reset()
+            alert_waste_flow_low = False
         
+        duration = alert_waste_flow_low_timer.duration(units='min')
+        if duration and duration > ALERT_WASTE_FLOW_LOW_TIME:
+            if alert_waste_flow_low == False:
+                new_alert = True
+            alert_waste_flow_low = True
+            status_level = ALERT_WASTE_FLOW_LOW_LEVEL
+            status_message = ALERT_WASTE_FLOW_LOW_MESSAGE
 
         # alert_flow_discrepancy
+        if supply_rate - waste_rate > ALERT_FLOW_DISCREPANCY_RATE:
+            alert_flow_discrepancy_timer.start()
+        else:
+            alert_flow_discrepancy_timer.reset()
+            alert_flow_discrepancy = False
         
+        duration = alert_flow_discrepancy_timer.duration(units='min')
+        if duration and duration > ALERT_FLOW_DISCREPANCY_TIME:
+            if alert_flow_discrepancy == False:
+                new_alert = True
+            alert_flow_discrepancy = True
+            status_level = ALERT_FLOW_DISCREPANCY_LEVEL
+            status_message = ALERT_FLOW_DISCREPANCY_MESSAGE
 
         # alert_hematuria
+        if hematuria_level > ALERT_HEMATURIA_SEVERITY:
+            alert_hematuria_timer.start()
+        else:
+            alert_hematuria_timer.reset()
+            alert_hematuria = False
         
+        duration = alert_hematuria_timer.duration(units='min')
+        if duration and duration > ALERT_HEMATURIA_TIME:
+            if alert_hematuria == False:
+                new_alert = True
+            alert_hematuria = True
+            status_level = ALERT_HEMATURIA_LEVEL
+            status_message = ALERT_HEMATURIA_MESSAGE
+
 
         # update light color and speaker sound according to status_level and new_alert
         if status_level == 'NORMAL':
@@ -523,7 +610,9 @@ def main():
         elif status_level == 'CRITICAL':
             light.color(color='red')
         
-        if status_level == 'CAUTION' and new_alert == True:
+        if status_level == 'ALERT' and new_alert == True:
+            speaker.play(file='sound/chime.mp3')
+        elif status_level == 'CAUTION' and new_alert == True:
             speaker.play(file='sound/chime.mp3')
         elif status_level == 'CRITICAL' and new_alert == True:
             speaker.play(file='sound/alarm.mp3')
@@ -547,10 +636,10 @@ def main():
             'date': date,
             'time': time,
             'supply_volume_total': round(supply_volume_total),
-            'supply_volume_gross': round(supply_volume_gross),
+            'supply_volume_gross': round(supply_volume_gross + (supply_volume_total - supply_volume)),
             'supply_replace_count': int(supply_replace_count),
             'waste_volume_total': round(waste_volume_total),
-            'waste_volume_gross': round(waste_volume_gross),
+            'waste_volume_gross': round(waste_volume_gross + waste_volume),
             'waste_replace_count': int(waste_replace_count),
             'automatic': bool(automatic),
             'inflow_level': round(inflow_level),
@@ -571,62 +660,6 @@ def main():
     spectral_sensor.shutdown()
     supply_weight_sensor.shutdown()
     waste_weight_sensor.shutdown()
-
-
-
-
-
-# FROM WEIGTH SENSOR
-# def rate(self, interval=60):
-#     start_time = time.time()
-#     duration = 0
-
-#     start_mass = 0
-#     end_mass = 0
-#     masses = []
-#     calculate_start_mass = True
-
-#     while duration <= interval:
-#         duration = time.time() - start_time
-#         mass = self.mass()
-
-#         if duration <= 1:
-#             masses.append(mass)
-            
-#         elif duration > 1 and calculate_start_mass:
-#             start_mass = np.mean(masses)
-#             masses = []
-#             calculate_start_mass = False
-
-#         elif duration >= interval - 1:
-#             masses.append(mass)
-
-#         elif duration >= interval:
-#             end_mass = np.mean(masses)
-#             rate = ((start_mass - end_mass)/duration)*60
-#             if self.verbose:
-#                 print(f"WeightSensor: rate = {rate} mg/min")
-#             return rate
-
-
-
-
-
-# FROM SPECTRAL SENSOR
-# def level(self, weights, bias, max_level, replicates=10, range=[0, 100]):
-#     reading = self.read(replicates)
-#     intensities = list(reading.values())
-
-#     level = sum([w*i for w, i in zip(weights, intensities[0:4])]) + bias # apply least squares regression weights and bias to predict level
-#     level = max(level, range[0])
-#     level = min(level, range[1])
-
-#     rescaled_level = int((level/max_level * (range[1]-range[0])) + range[0])
-    
-#     if self.verbose:
-#         print(f"SpectralSensor: level = {rescaled_level} in range [{range[0]}-{range[1]}]")
-
-#     return rescaled_level # return rescaled level
 
 
 if __name__ == '__main__':
