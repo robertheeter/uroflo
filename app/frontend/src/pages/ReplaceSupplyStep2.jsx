@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { FaArrowLeftLong } from "react-icons/fa6";
@@ -13,19 +12,6 @@ const ReplaceSupplyStep2 = () => {
   };
 
   const next = () => {
-    const url = "http://localhost:8000/interface/supply_replace_added";
-    const data = {
-      supply_replace_count_added: "TRUE",
-    };
-    axios
-      .post(url, data)
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-    console.log(resetInitiated);
     navigate("/replace/supply/step3", { state: { resetInitiated } });
   };
 

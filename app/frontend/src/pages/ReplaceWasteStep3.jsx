@@ -15,12 +15,25 @@ const ReplaceWasteStep3 = () => {
   };
 
   const done = () => {
-    const url = "http://localhost:8000/interface/waste_replace_volume";
-    const data = {
+    const url_added = "http://localhost:8000/interface/waste_replace_added";
+    const data_added = {
+      waste_replace_count_added: "TRUE",
+    };
+    axios
+      .post(url_added, data_added)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+
+    const url_volume = "http://localhost:8000/interface/waste_replace_volume";
+    const data_volume = {
       waste_replace_volume: volume,
     };
     axios
-      .post(url, data)
+      .post(url_volume, data_volume)
       .then((response) => {
         console.log(response.data);
       })

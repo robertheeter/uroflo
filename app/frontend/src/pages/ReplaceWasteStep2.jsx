@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { FaArrowLeftLong } from "react-icons/fa6";
@@ -13,18 +12,6 @@ const ReplaceWasteStep2 = () => {
   };
 
   const next = () => {
-    const url = "http://localhost:8000/interface/waste_replace_added";
-    const data = {
-      waste_replace_count_added: "TRUE",
-    };
-    axios
-      .post(url, data)
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
     navigate("/replace/waste/step3", { state: { resetInitiated } });
   };
 
