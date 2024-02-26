@@ -279,7 +279,7 @@ def main():
         reset = False
     
     # get stored patient data from database and assign to variables
-    patient_data = get_data(key='all', file='interface')
+    patient_data = get_data(key='all', file='patient')
     
     _ = patient_data['firstname'] # not necessary (add back for alert SMS texting)
     _ = patient_data['lastname'] # not necessary (add back for alert SMS texting)
