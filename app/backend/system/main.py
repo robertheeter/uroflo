@@ -308,7 +308,7 @@ def main():
 
         # get and check user interface data from database
         # supply_replace_volume, supply_replace_count_removed, supply_replace_count_added
-        val = get_data(key='supply_replace_count_removed')
+        val = get_data(key='supply_replace_count_removed', file='interface')
         if  val > supply_replace_count_removed:
             supply_replace_count_removed = val
             supply_weight_sensor.zero(replicates=SUPPLY_WEIGHT_SENSOR_REPLICATES) # zero weight sensor
@@ -325,7 +325,7 @@ def main():
             alert_supply_empty = False
 
         # waste_replace_volume, waste_replace_count_removed, waste_replace_count_added
-        val = get_data(key='waste_replace_count_removed')
+        val = get_data(key='waste_replace_count_removed', file='interface')
         if  val > waste_replace_count_removed:
             waste_replace_count_removed = val
             waste_weight_sensor.zero(replicates=WASTE_WEIGHT_SENSOR_REPLICATES) # zero weight sensor'
