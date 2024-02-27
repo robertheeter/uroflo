@@ -388,6 +388,7 @@ def main():
 
         # reset
         reset = get_data(key='reset', file='interface')
+        print(reset)
         if reset == True:
             for file in ['system', 'interface', 'patient']:
                 delete_data(file=file)
