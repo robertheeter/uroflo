@@ -223,9 +223,8 @@ def main():
 
         # wait for patient info update (NOT NECESSARY?)
         while True:
-            lastname = get_data(key='lastname', file='patient')
             sex = get_data(key='sex', file='patient')
-            if lastname != '' and sex in ['M', 'F']:
+            if sex in ['M', 'F']:
                 break
             time.sleep(0.01)
 
@@ -388,7 +387,6 @@ def main():
 
         # reset
         reset = get_data(key='reset', file='interface')
-        print(reset)
         if reset == True:
             for file in ['system', 'interface', 'patient']:
                 delete_data(file=file)
@@ -476,7 +474,7 @@ def main():
         # active_time
         datetime_1 = f"{start_date} {start_time}"
         datetime_2 = f"{current_date} {current_time}"
-        
+
         format = "%m/%d/%Y %H:%M:%S"
         dt1 = datetime.strptime(datetime_1, format)
         dt2 = datetime.strptime(datetime_2, format)

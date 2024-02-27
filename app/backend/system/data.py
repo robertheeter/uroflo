@@ -102,7 +102,7 @@ def create_data(file, verbose=False):
         'lastname': '',
         'MRN': 0,
         'DOB': '00/00/0000',
-        'sex': '',
+        'sex': 'N',
         'contact_A': 0,
         'contact_B': 0,
         'start_date': '00/00/0000',
