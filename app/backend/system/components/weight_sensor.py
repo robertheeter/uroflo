@@ -464,12 +464,12 @@ if __name__ == '__main__':
     
     time.sleep(2) # wait for setup
 
-    # basic test (uncomment for testing)
+    # TESTING A (BASIC)
     # while True:
     #     weight_sensor.read(replicates=1)
     #     time.sleep(1)
 
-    # zeroing, calibration, and reading test (uncomment for testing)
+    # TESTING B (WITH ZEROING & CALIBRATION)
     input("\nZERO: remove all weight from sensor, then press ENTER")
     weight_sensor.zero(replicates=15)
 
