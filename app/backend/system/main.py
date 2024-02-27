@@ -17,6 +17,7 @@ import os
 import time
 import numpy as np
 from datetime import datetime
+import pytz
 from simple_pid import PID
 import board
 from sklearn.linear_model import LinearRegression
@@ -467,14 +468,13 @@ def main():
             waste_time = 5999 # 99 h 59 m
 
         # date, time
-        current_date = datetime.now().strftime("%m/%d/%Y")
-        current_time = datetime.now().strftime("%H:%M:%S")
+        current_date = datetime.now(pytz.utc).strftime("%m/%d/%Y")
+        current_time = datetime.now(pytz.utc).strftime("%H:%M:%S")
 
         # active_time
         datetime_1 = f"{start_date} {start_time}"
         datetime_2 = f"{current_date} {current_time}"
-        print(datetime_1)
-        print(datetime_2)
+        
         format = "%m/%d/%Y %H:%M:%S"
         dt1 = datetime.strptime(datetime_1, format)
         dt2 = datetime.strptime(datetime_2, format)
