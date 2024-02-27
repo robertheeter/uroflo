@@ -711,13 +711,13 @@ def main():
 
 
     # shutdown if reset
-    emergency_button.shutdown()
-    light.shutdown()
-    linear_actuator.shutdown()
-    speaker.shutdown()
+    # emergency_button.shutdown()
+    # light.shutdown()
+    # linear_actuator.shutdown()
+    # speaker.shutdown()
     # spectral_sensor.shutdown() # run separately
-    supply_weight_sensor.shutdown()
-    waste_weight_sensor.shutdown()
+    # supply_weight_sensor.shutdown()
+    # waste_weight_sensor.shutdown()
 
 
 if __name__ == '__main__':

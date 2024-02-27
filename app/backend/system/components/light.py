@@ -76,6 +76,9 @@ class Light():
     def shutdown(self):
         print("Light: shutdown")
         self.color(color='off')
+        self.red.deinit()
+        self.green.deinit()
+        self.blue.deinit()
 
 
 # example implementation

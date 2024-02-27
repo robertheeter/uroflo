@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import random
 from datetime import datetime
+import pytz
 
 import sys
 sys.path.append('../backend')
@@ -336,8 +337,8 @@ def patient(request):
         try:
             patient = json.loads(request.body.decode('utf-8'))
             
-            start_date = datetime.now().strftime("%m/%d/%Y")
-            start_time = datetime.now().strftime("%H:%M:%S")
+            start_date = datetime.now(pytz.utc).strftime("%m/%d/%Y")
+            start_time = datetime.now(pytz.utc).strftime("%H:%M:%S")
             patient.update({'start_date': start_date, 'start_time': start_time})
 
             add_data(data=patient, file='patient')
