@@ -34,8 +34,7 @@ from components.weight_sensor import WeightSensor
 
 
 # system parameters
-# INFLOW_ADJUSTMENT_TIME = 0.005 # sec
-INFLOW_ADJUSTMENT_TIME = 0.005 # sec
+INFLOW_ADJUSTMENT_TIME = 0.01 # sec
 
 SUPPLY_WEIGHT_SENSOR_REPLICATES = 15
 WASTE_WEIGHT_SENSOR_REPLICATES = 15
@@ -474,7 +473,7 @@ def main():
         # active_time
         datetime_1 = f"{start_date} {start_time}"
         datetime_2 = f"{current_date} {current_time}"
-        
+
         format = "%m/%d/%Y %H:%M:%S"
         dt1 = datetime.strptime(datetime_1, format)
         dt2 = datetime.strptime(datetime_2, format)
@@ -496,8 +495,8 @@ def main():
                 elif inflow_level_adjust == -1:
                     linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME)
                     inflow_level_adjust = 0
-                else:
-                    time.sleep(INFLOW_ADJUSTMENT_TIME)
+                # else:
+                #     time.sleep(INFLOW_ADJUSTMENT_TIME)
 
         elif alert_emergency_button == True:
             linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME) # extend actuator
