@@ -470,7 +470,7 @@ def remove_data(file, n=1, order='ASC', verbose=False):
 
 
 # example implementation
-if __name__ == '__main__':
+def example():
     # test delete_data
     delete_data(file='system', verbose=True)
     delete_data(file='interface', verbose=True)
@@ -568,3 +568,15 @@ if __name__ == '__main__':
 
     data_out = get_data(key='entry', file='system', n=3, order='DESC', verbose=True)
     print(data_out)
+
+
+if __name__ == '__main__':
+    # run example implementation
+    # example()
+
+    # remove any existing data
+    delete_data(file='system', verbose=True)
+    delete_data(file='interface', verbose=True)
+    delete_data(file='patient', verbose=True)
+    delete_data(file='hematuria', verbose=True)
+    
