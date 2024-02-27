@@ -116,7 +116,7 @@ const ControlPanel = () => {
     resetInitiated = true;
     const url = "http://localhost:8000/interface/reset";
     const data = {
-      reset_count: "TRUE",
+      reset: "TRUE",
     };
     axios
       .post(url, data)
