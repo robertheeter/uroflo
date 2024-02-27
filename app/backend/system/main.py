@@ -34,7 +34,7 @@ from components.weight_sensor import WeightSensor
 
 # system parameters
 # INFLOW_ADJUSTMENT_TIME = 0.005 # sec
-INFLOW_ADJUSTMENT_TIME = 0.5 # sec
+INFLOW_ADJUSTMENT_TIME = 0.005 # sec
 
 SUPPLY_WEIGHT_SENSOR_REPLICATES = 15
 WASTE_WEIGHT_SENSOR_REPLICATES = 15
@@ -355,6 +355,8 @@ def main():
         elif val < inflow_level:
             inflow_level_adjust = -1
             inflow_level -= 1
+        else:
+            inflow_level_adjust = 0
 
         # mute_count
         mute = False
@@ -428,10 +430,12 @@ def main():
             waste_times.pop()
 
             regression.fit(np.array(supply_times).reshape(-1, 1), np.array(supply_volumes).reshape(-1, 1))
-            supply_rate = regression.coef_[0][0] * 60 # convert mL/s to mL/min
+            supply_rate = regression.coef_[0][0] * -60 # convert mL/s to mL/min
+            supply_rate = max(0, supply_rate)
 
             regression.fit(np.array(waste_times).reshape(-1, 1), np.array(waste_volumes).reshape(-1, 1))
             waste_rate = regression.coef_[0][0] * 60 # convert mL/s to mL/min
+            waste_rate = max(0, waste_rate)
 
             if supply_rate > 5: # mL/min
                 supply_flow_started = True
@@ -469,10 +473,12 @@ def main():
         # active_time
         datetime_1 = f"{start_date} {start_time}"
         datetime_2 = f"{current_date} {current_time}"
+        print(datetime_1)
+        print(datetime_2)
         format = "%m/%d/%Y %H:%M:%S"
         dt1 = datetime.strptime(datetime_1, format)
         dt2 = datetime.strptime(datetime_2, format)
-        diff = dt2 - dt1
+        diff = dt1 - dt2
 
         active_time = diff.total_seconds() / 60
 
@@ -484,10 +490,12 @@ def main():
                 # finish this (needs to move actuator)
                 pass
             elif automatic == False:
-                if inflow_level_adjust > 0:
+                if inflow_level_adjust == 1:
                     linear_actuator.retract(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME)
-                elif inflow_level_adjust < 0:
+                    inflow_level_adjust = 0
+                elif inflow_level_adjust == -1:
                     linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME)
+                    inflow_level_adjust = 0
                 else:
                     time.sleep(INFLOW_ADJUSTMENT_TIME)
 
