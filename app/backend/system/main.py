@@ -238,14 +238,8 @@ def main():
             time.sleep(0.01)
         
         while True:
-            val = get_data(key='supply_replace_count_added', file='interface')
-            print(val)
-            val2 = get_data(key='supply_replace_volume', file='interface')
-            print(val2)
             if val > supply_replace_count_added:
                 time.sleep(0.1)
-                val2 = get_data(key='supply_replace_volume', file='interface')
-                print(val2)
                 supply_replace_count_added = val
                 supply_replace_volume = get_data(key='supply_replace_volume', file='interface')
                 supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=SUPPLY_WEIGHT_SENSOR_REPLICATES) # calibrate weight sensor with known mass
@@ -532,7 +526,7 @@ def main():
             alert_waste_flow_high_timer.reset()
             alert_waste_flow_high = False
         
-        duration = alert_waste_flow_high_timer.duration(units='min')
+        duration = alert_waste_flow_high_timer.duration(unit='min')
         if duration and duration > ALERT_WASTE_FLOW_HIGH_TIME:
             if alert_waste_flow_high == False:
                 new_alert = True
@@ -568,7 +562,7 @@ def main():
             alert_supply_flow_high_timer.reset()
             alert_supply_flow_high = False
         
-        duration = alert_supply_flow_high_timer.duration(units='min')
+        duration = alert_supply_flow_high_timer.duration(unit='min')
         if duration and duration > ALERT_SUPPLY_FLOW_HIGH_TIME:
             if alert_supply_flow_high == False:
                 new_alert = True
@@ -584,7 +578,7 @@ def main():
             alert_supply_flow_low_timer.reset()
             alert_supply_flow_low = False
         
-        duration = alert_supply_flow_low_timer.duration(units='min')
+        duration = alert_supply_flow_low_timer.duration(unit='min')
         if duration and duration > ALERT_SUPPLY_FLOW_LOW_TIME:
             if alert_supply_flow_low == False:
                 new_alert = True
@@ -599,7 +593,7 @@ def main():
             alert_waste_flow_low_timer.reset()
             alert_waste_flow_low = False
         
-        duration = alert_waste_flow_low_timer.duration(units='min')
+        duration = alert_waste_flow_low_timer.duration(unit='min')
         if duration and duration > ALERT_WASTE_FLOW_LOW_TIME:
             if alert_waste_flow_low == False:
                 new_alert = True
@@ -614,7 +608,7 @@ def main():
             alert_flow_discrepancy_timer.reset()
             alert_flow_discrepancy = False
         
-        duration = alert_flow_discrepancy_timer.duration(units='min')
+        duration = alert_flow_discrepancy_timer.duration(unit='min')
         if duration and duration > ALERT_FLOW_DISCREPANCY_TIME:
             if alert_flow_discrepancy == False:
                 new_alert = True
@@ -629,7 +623,7 @@ def main():
             alert_hematuria_timer.reset()
             alert_hematuria = False
         
-        duration = alert_hematuria_timer.duration(units='min')
+        duration = alert_hematuria_timer.duration(unit='min')
         if duration and duration > ALERT_HEMATURIA_TIME:
             if alert_hematuria == False:
                 new_alert = True
