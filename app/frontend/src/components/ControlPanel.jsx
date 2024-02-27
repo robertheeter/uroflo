@@ -38,7 +38,7 @@ const decreaseFlow = () => {
 const mute = () => {
   const url = "http://localhost:8000/interface/mute";
   const data = {
-    mute_count: "TRUE",
+    mute: "TRUE",
   };
   axios
     .post(url, data)
