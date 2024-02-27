@@ -478,9 +478,9 @@ def main():
         # adjust inflow rate
         if alert_emergency_button == False:
             if automatic == True:
-                output = round(pid(hematuria_percent)) # UPDATE THIS
+                # output = round(pid(hematuria_percent)) # UPDATE THIS
                 # finish this (needs to move actuator)
-            
+                pass
             elif automatic == False:
                 if inflow_level_adjust > 0:
                     linear_actuator.retract(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME)
