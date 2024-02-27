@@ -17,6 +17,103 @@ import sqlite3
 import json
 
 
+# template entries for each file
+SYSTEM_TEMPLATE = {
+    'entry': 0,
+    'hematuria_level': 0,
+    'hematuria_percent': 0.0,
+    'supply_percent': 0,
+    'supply_volume': 0,
+    'supply_time': 0,
+    'supply_rate': 0,
+    'waste_percent': 0,
+    'waste_volume': 0,
+    'waste_time': 0,
+    'waste_rate': 0,
+    'status_level': 'STARTUP',
+    'status_message': 'System starting.',
+    'active_time': 0,
+    'current_date': '00/00/0000',
+    'current_time': '00:00:00',
+    'supply_volume_total': 0,
+    'supply_volume_gross': 0,
+    'supply_replace_count': 0,
+    'waste_volume_total': 0,
+    'waste_volume_gross': 0,
+    'waste_replace_count': 0,
+    'automatic': True,
+    'inflow_level': 0,
+    'mute': False
+    }
+
+INTERFACE_TEMPLATE = {
+    'entry': 0,
+    'supply_replace_volume': 0,
+    'supply_replace_count_removed': 0,
+    'supply_replace_count_added': 0,
+    'waste_replace_volume': 0,
+    'waste_replace_count_removed': 0,
+    'waste_replace_count_added': 0,
+    'automatic': True,
+    'inflow_level': 0,
+    'mute_count': 0,
+    'setup': False,
+    'reset': False
+    }
+
+PATIENT_TEMPLATE = {
+    'firstname': '',
+    'lastname': '',
+    'MRN': 0,
+    'DOB': '00/00/0000',
+    'sex': 'N',
+    'contact_A': 0,
+    'contact_B': 0,
+    'start_date': '00/00/0000',
+    'start_time': '00:00:00'
+    }
+
+HEMATURIA_TEMPLATE = {
+    'hematuria_percent': 0,
+    'hematuria_level': 0,
+    'hematuria_violet': 0,
+    'hematuria_blue': 0,
+    'hematuria_green': 0,
+    'hematuria_yellow': 0,
+    'hematuria_orange': 0,
+    'hematuria_red': 0
+    }
+
+# all keys available for each file
+SYSTEM_KEYS = [
+    'entry',
+    'hematuria_level', 'hematuria_percent', 'supply_percent', 
+    'supply_volume', 'supply_time', 'supply_rate', 'waste_percent', 'waste_volume', 'waste_time', 'waste_rate', 
+    'status_level', 'status_message', 'active_time', 'current_date', 'current_time', 'supply_volume_total', 'supply_volume_gross', 
+    'supply_replace_count', 'waste_volume_total', 'waste_volume_gross', 'waste_replace_count', 'automatic', 
+    'inflow_level', 'mute'
+    ]
+
+INTERFACE_KEYS = [
+    'entry',
+    'supply_replace_volume', 'supply_replace_count_removed', 'supply_replace_count_added',
+    'waste_replace_volume', 'waste_replace_count_removed', 'waste_replace_count_added',
+    'automatic', 'inflow_level',
+    'mute_count', 'setup', 'reset'
+    ]
+
+PATIENT_KEYS = [
+    'firstname', 'lastname', 'MRN', 'DOB', 'sex',
+    'contact_A', 'contact_B',
+    'start_date', 'start_time'
+    ]
+
+HEMATURIA_KEYS = [
+    'hematuria_percent', 'hematuria_level',
+    'hematuria_violet', 'hematuria_blue', 'hematuria_green', 'hematuria_yellow', 'hematuria_orange', 'hematuria_red'
+    ]
+    
+
 def exists_data(file, verbose=False):
     if file == 'system':
         path = 'data/system.db'
@@ -44,7 +141,7 @@ def delete_data(file, verbose=False):
     else:
         raise Exception(f"file [{file}] not valid")
 
-    if os.path.exists(path): # remove database if it exists
+    if exists_data(file=file): # remove database if it exists
         os.remove(path)
         if verbose:
             print(f"removed {path} successfully")
@@ -54,77 +151,23 @@ def delete_data(file, verbose=False):
 
 
 def create_data(file, verbose=False):
-    SYSTEM_TEMPLATE = {
-        'entry': 0,
-        'hematuria_level': 0,
-        'hematuria_percent': 0.0,
-        'supply_percent': 0,
-        'supply_volume': 0,
-        'supply_time': 0,
-        'supply_rate': 0,
-        'waste_percent': 0,
-        'waste_volume': 0,
-        'waste_time': 0,
-        'waste_rate': 0,
-        'status_level': 'STARTUP',
-        'status_message': 'System starting.',
-        'active_time': 0,
-        'current_date': '00/00/0000',
-        'current_time': '00:00:00',
-        'supply_volume_total': 0,
-        'supply_volume_gross': 0,
-        'supply_replace_count': 0,
-        'waste_volume_total': 0,
-        'waste_volume_gross': 0,
-        'waste_replace_count': 0,
-        'automatic': True,
-        'inflow_level': 0,
-        'mute': False
-        }
-
-    INTERFACE_TEMPLATE = {
-        'entry': 0,
-        'supply_replace_volume': 0,
-        'supply_replace_count_removed': 0,
-        'supply_replace_count_added': 0,
-        'waste_replace_volume': 0,
-        'waste_replace_count_removed': 0,
-        'waste_replace_count_added': 0,
-        'automatic': True,
-        'inflow_level': 0,
-        'mute_count': 0,
-        'setup': False,
-        'reset': False
-        }
-
-    PATIENT_TEMPLATE = {
-        'firstname': '',
-        'lastname': '',
-        'MRN': 0,
-        'DOB': '00/00/0000',
-        'sex': 'N',
-        'contact_A': 0,
-        'contact_B': 0,
-        'start_date': '00/00/0000',
-        'start_time': '00:00:00'
-        }
-    
-    HEMATURIA_TEMPLATE = {
-        'hematuria_percent': 0,
-        'hematuria_level': 0,
-        'hematuria_violet': 0,
-        'hematuria_blue': 0,
-        'hematuria_green': 0,
-        'hematuria_yellow': 0,
-        'hematuria_orange': 0,
-        'hematuria_red': 0
-        }
-
     if file == 'system':
         path = 'data/system.db'
-        if os.path.exists(path):
-            raise Exception(f"path {path} already exists")
-
+    elif file == 'interface':
+        path = 'data/interface.db'
+    elif file == 'patient':
+        path = 'data/patient.json'
+    elif file == 'hematuria':
+        path = 'data/hematuria.json'
+    else:
+        raise Exception(f"file [{file}] not valid")
+    
+    if exists_data(file=file):
+        if verbose:
+            print(f"path {path} already exists")
+        return
+    
+    if file == 'system':
         db = sqlite3.connect(path)
         if verbose:
             print(f"created {path} successfully")
@@ -163,10 +206,6 @@ def create_data(file, verbose=False):
             print(f"table 'system' created in {path} successfully with template data")
 
     elif file == 'interface':
-        path = 'data/interface.db'
-        if os.path.exists(path):
-            raise Exception(f"path {path} already exists")
-            
         db = sqlite3.connect(path)
         if verbose:
             print(f"created {path} successfully")
@@ -192,36 +231,36 @@ def create_data(file, verbose=False):
             print(f"table 'interface' created in {path} successfully with template data")
 
     elif file == 'patient':
-        path = 'data/patient.json'
-        if os.path.exists(path):
-            raise Exception(f"path {path} already exists")
-        
         add_data(data=PATIENT_TEMPLATE, file='patient', initialize=True)
 
         if verbose:
             print(f"created {path} successfully with template data")
 
     elif file == 'hematuria':
-        path = 'data/hematuria.json'
-        if os.path.exists(path):
-            raise Exception(f"path {path} already exists")
-        
         add_data(data=HEMATURIA_TEMPLATE, file='hematuria', initialize=True)
 
         if verbose:
             print(f"created {path} successfully with template data")
 
-    else:
-        raise Exception(f"file [{file}] not valid")
-
 
 def add_data(data, file, verbose=False, initialize=False):
-    if file in ['system', 'interface']: # gets most recent entry from Sqlite database and updates given key-value pairs
-        if file == 'system':
-            path = 'data/system.db'
-        elif file == 'interface':
-            path = 'data/interface.db'
+    if file == 'system':
+        path = 'data/system.db'
+    elif file == 'interface':
+        path = 'data/interface.db'
+    elif file == 'patient':
+        path = 'data/patient.json'
+    elif file == 'hematuria':
+        path = 'data/hematuria.json'
+    else:
+        raise Exception(f"file [{file}] not valid")
     
+    if not exists_data(file=file):
+        if verbose:
+            print(f"path {path} does not exist")
+        return
+    
+    if file in ['system', 'interface']: # gets most recent entry from Sqlite database and updates given key-value pairs
         db = sqlite3.connect(path)
         if verbose:
             print(f"opened {path} successfully")
@@ -245,7 +284,6 @@ def add_data(data, file, verbose=False, initialize=False):
             print(f"data added to '{file}' in {path} successfully")
 
     elif file == 'patient': # overwrites existing JSON data
-        path = 'data/patient.json'
         js = json.dumps(data, indent=4)
         with open(path, "w") as outfile:
             outfile.write(js)
@@ -254,7 +292,6 @@ def add_data(data, file, verbose=False, initialize=False):
             print(f"data added to {path} successfully")
 
     elif file == 'hematuria': # overwrites existing JSON data
-        path = 'data/hematuria.json'
         js = json.dumps(data, indent=4)
         with open(path, "w") as outfile:
             outfile.write(js)
@@ -262,40 +299,19 @@ def add_data(data, file, verbose=False, initialize=False):
         if verbose:
             print(f"data added to {path} successfully")
 
+
+def get_data(key, file, n=1, order='DESC', verbose=False):
+    if file == 'system':
+        path = 'data/system.db'
+    elif file == 'interface':
+        path = 'data/interface.db'
+    elif file == 'patient':
+        path = 'data/patient.json'
+    elif file == 'hematuria':
+        path = 'data/hematuria.json'
     else:
         raise Exception(f"file [{file}] not valid")
 
-
-def get_data(key, file, n=1, order='DESC', verbose=False):
-    # lists of all keys available for each file
-    SYSTEM_KEYS = [
-        'entry',
-        'hematuria_level', 'hematuria_percent', 'supply_percent', 
-        'supply_volume', 'supply_time', 'supply_rate', 'waste_percent', 'waste_volume', 'waste_time', 'waste_rate', 
-        'status_level', 'status_message', 'active_time', 'current_date', 'current_time', 'supply_volume_total', 'supply_volume_gross', 
-        'supply_replace_count', 'waste_volume_total', 'waste_volume_gross', 'waste_replace_count', 'automatic', 
-        'inflow_level', 'mute'
-        ]
-    
-    INTERFACE_KEYS = [
-        'entry',
-        'supply_replace_volume', 'supply_replace_count_removed', 'supply_replace_count_added',
-        'waste_replace_volume', 'waste_replace_count_removed', 'waste_replace_count_added',
-        'automatic', 'inflow_level',
-        'mute_count', 'setup', 'reset'
-        ]
-    
-    PATIENT_KEYS = [
-        'firstname', 'lastname', 'MRN', 'DOB', 'sex',
-        'contact_A', 'contact_B',
-        'start_date', 'start_time'
-        ]
-    
-    HEMATURIA_KEYS = [
-        'hematuria_percent', 'hematuria_level',
-        'hematuria_violet', 'hematuria_blue', 'hematuria_green', 'hematuria_yellow', 'hematuria_orange', 'hematuria_red'
-        ]
-    
     if key == 'all': # allow keys input to be 'all'
         if file == 'system':
             key = SYSTEM_KEYS
@@ -308,7 +324,7 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
     
     if type(key) is str or type(key) is not list: # ensure keys input is a list
         key = [key]
-
+    
     for k in key: # check that all key inputs are valid keys for given file
         if file == 'system':
             if k not in SYSTEM_KEYS:
@@ -322,13 +338,21 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
         if file == 'hematuria':
             if k not in HEMATURIA_KEYS:
                 raise Exception(f"key [{k}] not valid for file [{file}]")
-            
-    if file in ['system', 'interface']: # get entry from Sqlite database file
+    
+    if not exists_data(file=file):
+        if verbose:
+            print(f"path {path} does not exist")
         if file == 'system':
-            path = 'data/system.db'
+            template = SYSTEM_TEMPLATE
         elif file == 'interface':
-            path = 'data/interface.db'
-
+            template = INTERFACE_TEMPLATE
+        elif file == 'patient':
+            template = PATIENT_TEMPLATE
+        elif file == 'hematuria':
+            template = HEMATURIA_TEMPLATE
+        return {k: template[k] for k in key}
+    
+    if file in ['system', 'interface']: # get entry from Sqlite database file
         key_formatted = ', '.join(map(str, key))
 
         db = sqlite3.connect(path)
@@ -371,7 +395,6 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
             print(f"data retrieved from {path} successfully")
             
     elif file == 'patient': # get data from JSON data
-        path = 'data/patient.json'
         with open(path, 'r') as infile:
             data = json.load(infile)
 
@@ -384,7 +407,6 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
             print(f"data retrieved from {path} successfully")
     
     elif file == 'hematuria': # get data from JSON data
-        path = 'data/hematuria.json'
         with open(path, 'r') as infile:
             data = json.load(infile)
 
@@ -395,20 +417,28 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
 
         if verbose:
             print(f"data retrieved from {path} successfully")
-
-    else:
-        raise Exception(f"file [{file}] not valid")
     
     return data
 
 
 def remove_data(file, n=1, order='ASC', verbose=False):
+    if file == 'system':
+        path = 'data/system.db'
+    elif file == 'interface':
+        path = 'data/interface.db'
+    elif file == 'patient':
+        path = 'data/patient.json'
+    elif file == 'hematuria':
+        path = 'data/hematuria.json'
+    else:
+        raise Exception(f"file [{file}] not valid")
+    
+    if not exists_data(file=file):
+        if verbose:
+            print(f"path {path} does not exist")
+        return
+    
     if file in ['system', 'interface']: # remove oldest entry from Sqlite database file
-        if file == 'system':
-            path = 'data/system.db'
-        elif file == 'interface':
-            path = 'data/interface.db'
-
         db = sqlite3.connect(path)
         if verbose:
             print(f"opened {path} successfully")
@@ -422,7 +452,6 @@ def remove_data(file, n=1, order='ASC', verbose=False):
             print(f"data removed from {path} successfully")
 
     elif file == 'patient':
-        path = 'data/patient.json'
         delete_data('patient')
         create_data('patient')
 
@@ -430,7 +459,6 @@ def remove_data(file, n=1, order='ASC', verbose=False):
             print(f"data removed from {path} successfully")
     
     elif file == 'hematuria':
-        path = 'data/hematuria.json'
         delete_data('hematuria')
         create_data('hematuria')
 
