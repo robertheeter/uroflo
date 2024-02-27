@@ -8,7 +8,7 @@ Notes
 - HX711 weight sensor using GPIO
 
 - Recommend initial offset = 1
-- Recommend initial scale = -242.22
+- Recommend initial scale = 1
 - Recommend replicates = 15
 
 - Pin allocation:

@@ -9,7 +9,7 @@ For
 
 Notes
 - Recommend max = 48000 (VIS) or 16000 (NIR)
-- Recommend replicates = 10
+- Recommend replicates = 20
 - Pin allocation:
   PIN 1 (3.3 V) [RED], PIN 3 (I2C SDA) [BLUE], PIN 5 (I2C SCL) [YELLOW], PIN 7 (GPIO 4) [GREEN],
   PIN 9 (Ground) [BLACK]

@@ -2,11 +2,13 @@
 MAIN
 
 Notes
-- Automatically controls irrigation with PID feedback
-- Checks all sensors/peripherals via the hematuria.json and mass.json databases
 - Monitors and reacts to the user interface via the interface.db database
-- Initiates alerts
+- Checks spectral sensor via the hematuria.json database
+- Checks supply and waste weight sensors
+- Controls irrigation manually (user input) or automatically (PID feedback)
+- Checks and initiates alerts
 - Updates system.db database
+- Resets device
 
 Documentation
 - PID feedback guide: https://simple-pid.readthedocs.io/en/latest/index.html
