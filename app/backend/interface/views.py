@@ -10,6 +10,7 @@ import sys
 sys.path.append('../backend')
 
 from system.data import *
+from system.components.speaker import Speaker
 
 import os
 os.chdir('system')
@@ -17,6 +18,8 @@ os.chdir('system')
 TESTING = False
 VERBOSE = True
 
+speaker = Speaker()
+CLICK_SOUND = 'sound/click.mp3'
 
 # SYSTEM DATA (system.db)
 @csrf_exempt
@@ -210,6 +213,7 @@ def interface_automatic(request):
 def interface_inflow_level_increase(request):
     if request.method == 'POST':
         try:
+            speaker.play(file=CLICK_SOUND)
             data = json.loads(request.body.decode('utf-8'))
             value = data.get('inflow_level_increase', None)
             
@@ -231,6 +235,7 @@ def interface_inflow_level_increase(request):
 def interface_inflow_level_decrease(request):
     if request.method == 'POST':
         try:
+            speaker.play(file=CLICK_SOUND)
             data = json.loads(request.body.decode('utf-8'))
             value = data.get('inflow_level_decrease', None)
             
@@ -252,6 +257,7 @@ def interface_inflow_level_decrease(request):
 def interface_mute(request):
     if request.method == 'POST':
         try:
+            speaker.play(file=CLICK_SOUND)
             data = json.loads(request.body.decode('utf-8'))
             value = data.get('mute', None)
             
@@ -292,6 +298,7 @@ def interface_setup(request):
 def interface_reset(request):
     if request.method == 'POST':
         try:
+            speaker.play(file=CLICK_SOUND)
             data = json.loads(request.body.decode('utf-8'))
             value = data.get('reset', None)
             

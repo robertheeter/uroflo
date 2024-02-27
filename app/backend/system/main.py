@@ -46,6 +46,10 @@ SUPPLY_DENSITY = 1.0 # g/mL
 WASTE_DENSITY = 1.0 # g/mL
 
 # alert parameters
+ALERT_ALERT_SOUND = 'sound/sonar.mp3'
+ALERT_CAUTION_SOUND = 'sound/sonar.mp3'
+ALERT_CRITICAL_SOUND = 'sound/alarm.mp3'
+
 ALERT_SUPPLY_LOW_PERCENT = 10
 ALERT_SUPPLY_LOW_LEVEL = 'ALERT' # if changing, adjust order of alert conditions below
 ALERT_SUPPLY_LOW_MESSAGE = f'Supply bag volume <{ALERT_SUPPLY_LOW_PERCENT}%.'
@@ -658,11 +662,11 @@ def main():
             light.color(color='red')
         
         if status_level == 'ALERT' and new_alert == True:
-            speaker.play(file='sound/chime.mp3')
+            speaker.play(file=ALERT_ALERT_SOUND)
         elif status_level == 'CAUTION' and new_alert == True:
-            speaker.play(file='sound/chime.mp3')
+            speaker.play(file=ALERT_CAUTION_SOUND)
         elif status_level == 'CRITICAL' and new_alert == True:
-            speaker.play(file='sound/alarm.mp3')
+            speaker.play(file=ALERT_CRITICAL_SOUND)
 
 
         # add updated system data to database
