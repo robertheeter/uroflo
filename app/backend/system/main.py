@@ -396,10 +396,12 @@ def main():
         
         
         # run weight sensors
-        supply_mass = supply_weight_sensor.read(replicates=SUPPLY_WEIGHT_SENSOR_REPLICATES)
+        # supply_mass = supply_weight_sensor.read(replicates=SUPPLY_WEIGHT_SENSOR_REPLICATES)
+        supply_mass = 100
         supply_time = time.time()
 
-        waste_mass = waste_weight_sensor.read(replicates=WASTE_WEIGHT_SENSOR_REPLICATES)
+        # waste_mass = waste_weight_sensor.read(replicates=WASTE_WEIGHT_SENSOR_REPLICATES)
+        waste_mass = 100
         waste_time = time.time()
 
 
