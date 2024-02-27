@@ -476,15 +476,13 @@ def main():
         # active_time
         datetime_1 = f"{start_date} {start_time}"
         datetime_2 = f"{current_date} {current_time}"
-
-        print(datetime_2)
+        
         format = "%m/%d/%Y %H:%M:%S"
         dt1 = datetime.strptime(datetime_1, format)
         dt2 = datetime.strptime(datetime_2, format)
-        diff = dt1 - dt2
+        diff = dt2 - dt1
         
         active_time = diff.total_seconds() / 60
-        print(active_time)
 
         # adjust inflow rate
         if alert_emergency_button == False:
