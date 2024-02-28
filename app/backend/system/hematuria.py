@@ -18,7 +18,7 @@ from components.spectral_sensor import SpectralSensor
 
 # sensor/script parameters
 SPECTRAL_SENSOR_REPLICATES = 20
-DELAY = 1 # delay between iterations (seconds)
+DELAY = 0 # delay between iterations (seconds)
 
 # regression parameters
 w_violet = -721.729

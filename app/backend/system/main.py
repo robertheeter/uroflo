@@ -12,6 +12,7 @@ Notes
 
 Documentation
 - PID feedback guide: https://simple-pid.readthedocs.io/en/latest/index.html
+- PID tuning guide: https://www.thorlabs.com/newgrouppage9.cfm?objectgroup_id=9013
 
 '''
 
@@ -40,10 +41,17 @@ INFLOW_ADJUSTMENT_TIME = 0.01 # sec
 
 SUPPLY_WEIGHT_SENSOR_REPLICATES = 15
 WASTE_WEIGHT_SENSOR_REPLICATES = 15
-FLOW_RATE_REPLICATES = 5 # number of weight measurements to use for each rate calculation
+FLOW_RATE_REPLICATES = 10 # number of weight measurements to use for each rate calculation
 
 SUPPLY_DENSITY = 1.0 # g/mL
 WASTE_DENSITY = 1.0 # g/mL
+
+# PID parameters
+Kp = 1
+Ki = 1
+Kd = 1
+HEMATURIA_SETPOINT = 0.5 # percent blood concentration
+INFLOW_ADJUSTMENT_TIME_LIMIT = 0.01 # +/- maximum adjustment time (seconds) in extension and retraction
 
 # alert parameters
 ALERT_ALERT_SOUND = 'sound/sonar.mp3'
@@ -107,12 +115,12 @@ def main():
     light = Light(red_pin=board.D8, green_pin=board.D7, blue_pin=board.D1)
     linear_actuator = LinearActuator(en_pin=13, in1_pin=19, in2_pin=26, freq=1000)
     speaker = Speaker()
-    # spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000) # not directly used for measurements
+    # spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000) # not directly used for measurements in main script
     supply_weight_sensor = WeightSensor(pdsck_pin=18, dout_pin=23, offset=1, scale=1)
     waste_weight_sensor = WeightSensor(pdsck_pin=14, dout_pin=15, offset=1, scale=1)
     emergency_button = Button(pin=10)
 
-    pid = PID(1, 0.1, 0.05, setpoint=1)
+    pid = PID(Kp, Ki, Kd, setpoint=HEMATURIA_SETPOINT, output_limits=(-1*INFLOW_ADJUSTMENT_TIME_LIMIT, INFLOW_ADJUSTMENT_TIME_LIMIT))
     regression = LinearRegression()
 
     # check if reset
@@ -144,7 +152,7 @@ def main():
     _ = system_data['waste_time'] # not necessary
     _ = system_data['waste_rate'] # not necessary
 
-    _ = system_data['status_level']
+    _ = system_data['status_level'] # not necessary
     _ = system_data['status_message'] # not necessary
 
     _ = system_data['active_time'] # not necessary
@@ -227,7 +235,7 @@ def main():
     if reset == True:
         print('reset')
 
-        # wait for patient info update (NOT NECESSARY?)
+        # wait for patient info update (NOT NECESSARY, can be removed)
         while True:
             sex = get_data(key='sex', file='patient')
             if sex in ['M', 'F']:
@@ -270,18 +278,28 @@ def main():
                 time.sleep(0.1)
                 waste_replace_count_added = val
                 waste_replace_volume = get_data(key='waste_replace_volume', file='interface')
-                waste_weight_sensor.calibrate(known_mass=waste_replace_volume, replicates=WASTE_WEIGHT_SENSOR_REPLICATES) # calibrate weight sensor with known mass
+                if waste_replace_volume == 1000:
+                    known_mass = 10
+                elif waste_replace_volume == 2000:
+                    known_mass = 20
+                elif waste_replace_volume == 3000:
+                    known_mass = 30
+                elif waste_replace_volume == 4000:
+                    known_mass = 40
+                elif waste_replace_volume == 5000:
+                    known_mass = 50
+                waste_weight_sensor.calibrate(known_mass=known_mass, replicates=WASTE_WEIGHT_SENSOR_REPLICATES) # calibrate weight sensor with known mass
                 waste_volume_total = waste_replace_volume # update
                 waste_replace_count += 1 # update
                 break
             time.sleep(0.01)
 
         # wait for replaced tubing (setup)
-        linear_actuator.retract(duty_cycle=100, duration=5) # retract actuator
+        linear_actuator.retract(duty_cycle=100, duration=3) # retract actuator
         while True:
             setup = get_data(key='setup', file='interface')
             if setup == True:
-                linear_actuator.extend(duty_cycle=100, duration=10) # fully extend actuator
+                linear_actuator.extend(duty_cycle=100, duration=6) # fully extend actuator
                 break
             time.sleep(0.01)
     
@@ -326,6 +344,7 @@ def main():
         val = get_data(key='supply_replace_count_added', file='interface')
         if val > supply_replace_count_added:
             supply_replace_count_added = val
+            time.sleep(0.1)
             supply_replace_volume = get_data(key='supply_replace_volume', file='interface')
             supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=SUPPLY_WEIGHT_SENSOR_REPLICATES) # calibrate weight sensor with known mass
             supply_volume_gross +=  supply_volume_total - supply_volume # update
@@ -343,11 +362,22 @@ def main():
         val = get_data(key='waste_replace_count_added', file='interface')
         if val > waste_replace_count_added:
             waste_replace_count_added = val
+            time.sleep(0.1)
             waste_replace_volume = get_data(key='waste_replace_volume', file='interface')
-            waste_weight_sensor.calibrate(known_mass=waste_replace_volume, replicates=WASTE_WEIGHT_SENSOR_REPLICATES) # calibrate weight sensor with known mass
+            if waste_replace_volume == 1000:
+                known_mass = 10
+            elif waste_replace_volume == 2000:
+                known_mass = 20
+            elif waste_replace_volume == 3000:
+                known_mass = 30
+            elif waste_replace_volume == 4000:
+                known_mass = 40
+            elif waste_replace_volume == 5000:
+                known_mass = 50
+            waste_weight_sensor.calibrate(known_mass=known_mass, replicates=WASTE_WEIGHT_SENSOR_REPLICATES) # calibrate weight sensor with known mass
             waste_volume_gross += waste_volume # update
-            supply_volume_total = supply_replace_volume # update
-            supply_replace_count += 1 # update
+            waste_volume_total = waste_replace_volume # update
+            waste_replace_count += 1 # update
             alert_waste_high = False
             alert_waste_full = False
             
@@ -714,13 +744,13 @@ def main():
 
 
     # shutdown if reset
-    # emergency_button.shutdown()
-    # light.shutdown()
-    # linear_actuator.shutdown()
-    # speaker.shutdown()
+    emergency_button.shutdown()
+    light.shutdown()
+    linear_actuator.shutdown()
+    speaker.shutdown()
     # spectral_sensor.shutdown() # run separately
-    # supply_weight_sensor.shutdown()
-    # waste_weight_sensor.shutdown()
+    supply_weight_sensor.shutdown()
+    waste_weight_sensor.shutdown()
 
 
 if __name__ == '__main__':
