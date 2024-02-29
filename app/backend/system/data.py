@@ -255,7 +255,7 @@ def add_data(data, file, verbose=False, initialize=False):
     else:
         raise Exception(f"file [{file}] not valid")
     
-    if not exists_data(file=file):
+    if not exists_data(file=file) and file in ['system', 'interface']:
         if verbose:
             print(f"path {path} does not exist")
         return
