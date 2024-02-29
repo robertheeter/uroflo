@@ -7,8 +7,8 @@ const SupplyRate = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       axios
-        .get("http://localhost:8000/system") // replace with your API endpoint
-        .then((response) => setRate(response.data.supply_rate)) // replace 'rate' with the actual key in the response
+        .get("http://localhost:8000/system")
+        .then((response) => setRate(response.data.supply_rate))
         .catch((error) => console.error(error));
     }, 1000); // fetch every 1 second
 
@@ -29,7 +29,7 @@ const SupplyRate = () => {
           <div className="w-full h-6 rounded-2xl bg-slate-200">
             <div
               className="h-full bg-blue-500 rounded-2xl transition-all duration-500"
-              style={{ width: `${rate}%` }}
+              style={{ width: `${Math.min(rate, 100)}%` }}
             ></div>
             <div className="flex flex-row justify-between items-center">
               <div className="text-xl text-slate-200">0</div>

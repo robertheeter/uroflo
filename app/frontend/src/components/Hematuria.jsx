@@ -51,7 +51,7 @@ const Hematuria = () => {
       <div className="w-full flex justify-between">
         <div className="text-3xl text-slate-200">HEMATURIA SEVERITY</div>
         <div className="text-3xl text-slate-200">
-          {percent.toFixed(1)}% BLOOD
+          {Math.min(Math.max(percent, 0), 100).toFixed(1)}% BLOOD
         </div>
       </div>
       <div className="w-full flex justify-between items-center">
@@ -94,7 +94,7 @@ const Hematuria = () => {
 
           <div
             className="w-10 h-5/6 absolute transition-all duration-500 -translate-x-1/2 flex flex-col justify-between items-center"
-            style={{ left: `${level}%` }}
+            style={{ left: `${Math.min(level, 100)}%` }}
           >
             <TbTriangleInvertedFilled className="text-4xl text-slate-200" />
             {/* <IoTriangle className="text-3xl text-slate-200" /> */}

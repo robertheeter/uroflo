@@ -30,6 +30,7 @@ const SupplyVolume = () => {
   volume = volume / 1000;
   totalVolume = totalVolume / 1000;
   let percent = Math.round((volume / totalVolume) * 100);
+  percent = isNaN(percent) ? 0 : percent;
 
   const [time, setTime] = useState(0);
 
@@ -59,10 +60,10 @@ const SupplyVolume = () => {
             className={`font-bold bg-slate-200 flex flex-row justify-left 
         items-center rounded-lg text-3xl text-slate-950 px-3 py-1`}
           >
-            {percent}% FULL
+            {Math.min(Math.max(percent, 0), 100)}% FULL
           </div>
           <div className="text-3xl text-slate-200 relative -right-3">
-            {volume.toFixed(1)}/{totalVolume.toFixed(1)} L
+            {Math.max(volume, 0).toFixed(1)}/{totalVolume.toFixed(1)} L
           </div>
         </div>
         <div className="text-xl text-slate-200">
@@ -73,7 +74,7 @@ const SupplyVolume = () => {
         <div className="relative w-6 h-28 mr-2 bg-slate-200 rounded-2xl">
           <div
             className="absolute w-full bottom-0 bg-blue-500 transition-all duration-500 rounded-2xl"
-            style={{ height: `${percent}%` }}
+            style={{ height: `${Math.min(percent, 100)}%` }}
           ></div>
         </div>
       </div>
