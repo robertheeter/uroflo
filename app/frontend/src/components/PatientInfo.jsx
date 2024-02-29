@@ -30,8 +30,8 @@ const PatientInfo = () => {
       age--;
     }
 
-    age = isNaN(age) ? 0 : age;
-    return age;
+    age = isNaN(age) ? "" : age;
+    return age.toString();
   }
 
   let age = calculateAge(dob);
