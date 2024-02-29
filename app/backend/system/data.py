@@ -399,7 +399,7 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
             data = json.load(infile)
 
         if len(key) == 1:
-            data = data[key[0]]
+            data = data[key]
         else:
             data = {k: data[k] for k in key} # format data before returning
 
@@ -411,7 +411,7 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
             data = json.load(infile)
 
         if len(key) == 1:
-            data = data[key[0]]
+            data = data[key]
         else:
             data = {k: data[k] for k in key} # format data before returning
         print(data)
