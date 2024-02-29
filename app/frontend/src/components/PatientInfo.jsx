@@ -6,7 +6,8 @@ const PatientInfo = () => {
   const [lastName, setLastName] = useState("");
   const [mrn, setMRN] = useState("");
   let [dob, setDOB] = useState("");
-  const [sex, setSex] = useState("asdf");
+  let [age, setAge] = useState("");
+  const [sex, setSex] = useState("");
   const [contactA, setContactA] = useState("");
   const [contactB, setContactB] = useState("");
   const [activeTime, setActiveTime] = useState(0);
@@ -33,7 +34,7 @@ const PatientInfo = () => {
     return age;
   }
 
-  let age = calculateAge(dob);
+  age = setAge(calculateAge(dob).toString());
   let { days, hours, minutes } = convertMinutes(activeTime);
 
   useEffect(() => {
