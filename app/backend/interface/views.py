@@ -38,8 +38,8 @@ def system(request):
                 'waste_time': random.randint(0, 1000),
                 'waste_rate': random.randint(0, 100),
                 
-                'status_level': 'normal',
-                'status_message': 'This is a test message.',
+                'status_level': 'CAUTION',
+                'status_message': 'Supply bag volume <10%.',
                 
                 'active_time': random.randint(0, 2000),
 
