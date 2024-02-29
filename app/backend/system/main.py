@@ -680,8 +680,6 @@ def main():
             status_message = ALERT_FLOW_DISCREPANCY_MESSAGE
 
         # alert_hematuria
-        print(hematuria_level)
-        print(ALERT_HEMATURIA_SEVERITY)
         if hematuria_level > ALERT_HEMATURIA_SEVERITY:
             alert_hematuria_timer.start()
         else:
