@@ -440,21 +440,21 @@ def main():
         waste_scans.append(scan)
 
         if system_entry > SUPPLY_WEIGHT_REPLICATES:
-            supply_mass = 100
+            supply_mass = 2
         else:
             supply_mass = 0
         
         if system_entry > WASTE_WEIGHT_REPLICATES:
-            waste_mass = 100 # FINISH THIS
+            waste_mass = 2 # FINISH THIS
         else:
             waste_mass = 0
 
         # supply_mass = supply_weight_sensor.read(replicates=SUPPLY_WEIGHT_SENSOR_REPLICATES)
-        supply_mass = 100
+        supply_mass = 2
         supply_time = time.time()
 
         # waste_mass = waste_weight_sensor.read(replicates=WASTE_WEIGHT_SENSOR_REPLICATES)
-        waste_mass = 100
+        waste_mass = 2
         waste_time = time.time()
 
 
