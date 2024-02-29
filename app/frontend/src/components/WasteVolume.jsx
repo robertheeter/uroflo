@@ -29,7 +29,9 @@ const WasteVolume = () => {
 
   volume = volume / 1000;
   totalVolume = totalVolume / 1000;
+
   let percent = Math.round((volume / totalVolume) * 100);
+  percent = isNaN(percent) ? 0 : percent;
 
   const [time, setTime] = useState(0);
 
