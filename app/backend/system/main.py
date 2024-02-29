@@ -462,7 +462,7 @@ def main():
         # hematuria_percent, hematuria_level
         hematuria_percent = get_data(key='hematuria_percent', file='hematuria')
         hematuria_level = get_data(key='hematuria_level', file='hematuria')
-
+        print(hematuria_level)
         # supply_volume, waste_volume
         supply_volume = supply_mass / SUPPLY_DENSITY # convert g to mL
         waste_volume = waste_mass / WASTE_DENSITY # convert g to mL
