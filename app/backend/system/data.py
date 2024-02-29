@@ -414,7 +414,7 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
             data = data[key[0]]
         else:
             data = {k: data[k] for k in key} # format data before returning
-
+        print(data)
         if verbose:
             print(f"data retrieved from {path} successfully")
     
