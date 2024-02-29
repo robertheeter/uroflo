@@ -39,8 +39,8 @@ from components.weight_sensor import WeightSensor
 # system parameters
 INFLOW_ADJUSTMENT_TIME = 0.01 # sec
 
-SUPPLY_WEIGHT_SENSOR_REPLICATES = 15
-WASTE_WEIGHT_SENSOR_REPLICATES = 15
+SUPPLY_WEIGHT_REPLICATES = 15
+WASTE_WEIGHT_REPLICATES = 15
 FLOW_RATE_REPLICATES = 10 # number of weight measurements to use for each rate calculation
 
 SUPPLY_DENSITY = 1.0 # g/mL
@@ -195,6 +195,10 @@ def main():
     supply_volume_total = supply_replace_volume
     waste_volume_total = waste_replace_volume
 
+    # lists for averaging volumes
+    supply_scans = []
+    waste_scans = []
+
     # lists for calculating flow rates
     supply_volumes = []
     supply_times = []
@@ -247,7 +251,7 @@ def main():
             val = get_data(key='supply_replace_count_removed', file='interface')
             if  val > supply_replace_count_removed:
                 supply_replace_count_removed = val
-                supply_weight_sensor.zero(replicates=SUPPLY_WEIGHT_SENSOR_REPLICATES) # zero weight sensor
+                supply_weight_sensor.zero(replicates=SUPPLY_WEIGHT_REPLICATES) # zero weight sensor
                 break
             time.sleep(0.01)
         
@@ -257,7 +261,7 @@ def main():
                 time.sleep(0.1)
                 supply_replace_count_added = val
                 supply_replace_volume = get_data(key='supply_replace_volume', file='interface')
-                supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=SUPPLY_WEIGHT_SENSOR_REPLICATES) # calibrate weight sensor with known mass
+                supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=SUPPLY_WEIGHT_REPLICATES) # calibrate weight sensor with known mass
                 supply_volume_total = supply_replace_volume # update
                 supply_replace_count += 1 # update
                 break
@@ -268,7 +272,7 @@ def main():
             val = get_data(key='waste_replace_count_removed', file='interface')
             if val > waste_replace_count_removed:
                 waste_replace_count_removed = val
-                waste_weight_sensor.zero(replicates=WASTE_WEIGHT_SENSOR_REPLICATES) # zero weight sensor
+                waste_weight_sensor.zero(replicates=WASTE_WEIGHT_REPLICATES) # zero weight sensor
                 break
             time.sleep(0.01)
         
@@ -288,7 +292,7 @@ def main():
                     known_mass = 40
                 elif waste_replace_volume == 5000:
                     known_mass = 50
-                waste_weight_sensor.calibrate(known_mass=known_mass, replicates=WASTE_WEIGHT_SENSOR_REPLICATES) # calibrate weight sensor with known mass
+                waste_weight_sensor.calibrate(known_mass=known_mass, replicates=WASTE_WEIGHT_REPLICATES) # calibrate weight sensor with known mass
                 waste_volume_total = waste_replace_volume # update
                 waste_replace_count += 1 # update
                 break
@@ -320,10 +324,9 @@ def main():
     start_time = patient_data['start_time']
 
     # begin normal operation
-    i = 0 # index for calculating flow rates
-    system_entries = 1 # number of entries added to system database
+    system_entry = 1 # number of entries added to system database
     while True:
-        print(f'loop # {system_entries}')
+        print(f'iteration #{system_entry}')
 
         # check emergency button
         if emergency_button.pressed() == True: # button pressed
@@ -339,14 +342,14 @@ def main():
         val = get_data(key='supply_replace_count_removed', file='interface')
         if  val > supply_replace_count_removed:
             supply_replace_count_removed = val
-            supply_weight_sensor.zero(replicates=SUPPLY_WEIGHT_SENSOR_REPLICATES) # zero weight sensor
+            supply_weight_sensor.zero(replicates=SUPPLY_WEIGHT_REPLICATES) # zero weight sensor
 
         val = get_data(key='supply_replace_count_added', file='interface')
         if val > supply_replace_count_added:
             supply_replace_count_added = val
             time.sleep(0.1)
             supply_replace_volume = get_data(key='supply_replace_volume', file='interface')
-            supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=SUPPLY_WEIGHT_SENSOR_REPLICATES) # calibrate weight sensor with known mass
+            supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=SUPPLY_WEIGHT_REPLICATES) # calibrate weight sensor with known mass
             supply_volume_gross +=  supply_volume_total - supply_volume # update
             supply_volume_total = supply_replace_volume # update
             supply_replace_count += 1 # update
@@ -357,7 +360,7 @@ def main():
         val = get_data(key='waste_replace_count_removed', file='interface')
         if  val > waste_replace_count_removed:
             waste_replace_count_removed = val
-            waste_weight_sensor.zero(replicates=WASTE_WEIGHT_SENSOR_REPLICATES) # zero weight sensor'
+            waste_weight_sensor.zero(replicates=WASTE_WEIGHT_REPLICATES) # zero weight sensor'
 
         val = get_data(key='waste_replace_count_added', file='interface')
         if val > waste_replace_count_added:
@@ -374,7 +377,7 @@ def main():
                 known_mass = 40
             elif waste_replace_volume == 5000:
                 known_mass = 50
-            waste_weight_sensor.calibrate(known_mass=known_mass, replicates=WASTE_WEIGHT_SENSOR_REPLICATES) # calibrate weight sensor with known mass
+            waste_weight_sensor.calibrate(known_mass=known_mass, replicates=WASTE_WEIGHT_REPLICATES) # calibrate weight sensor with known mass
             waste_volume_gross += waste_volume # update
             waste_volume_total = waste_replace_volume # update
             waste_replace_count += 1 # update
@@ -430,6 +433,22 @@ def main():
         
         
         # run weight sensors
+        scan = supply_weight_sensor.read(replicates=1)
+        supply_scans.append(scan)
+
+        scan = waste_weight_sensor.read(replicates=1)
+        waste_scans.append(scan)
+
+        if system_entry > SUPPLY_WEIGHT_REPLICATES:
+            supply_mass = 100
+        else:
+            supply_mass = 0
+        
+        if system_entry > WASTE_WEIGHT_REPLICATES:
+            waste_mass = 100 # FINISH THIS
+        else:
+            waste_mass = 0
+
         # supply_mass = supply_weight_sensor.read(replicates=SUPPLY_WEIGHT_SENSOR_REPLICATES)
         supply_mass = 100
         supply_time = time.time()
@@ -460,7 +479,7 @@ def main():
         waste_volume = max(0, waste_volume)
 
         # supply_rate, waste_rate
-        if i >= FLOW_RATE_REPLICATES:
+        if system_entry > FLOW_RATE_REPLICATES*max(SUPPLY_WEIGHT_REPLICATES, WASTE_WEIGHT_REPLICATES): # fix this
             supply_volumes.pop() # remove old data
             supply_times.pop()
             waste_volumes.pop()
@@ -481,7 +500,6 @@ def main():
         else:
             supply_rate = 0
             waste_rate = 0
-            i += 1
 
         # supply_percent, supply_time
         supply_percent = (supply_volume / supply_volume_total) * 100.0
@@ -730,14 +748,14 @@ def main():
 
         # remove outdated system data and interface data
         add_data(data=data, file='system')
-        system_entries += 1
-        
-        if system_entries > 5000:
+        system_entry += 1
+
+        if system_entry > 5000:
             remove_data(file='system', n=1)
         
-        interface_entries = get_data(key='entry', file='interface', n=1)
-        if interface_entries >= 5000:
-            remove_data(file='interface', n=interface_entries-5000)
+        interface_entry = get_data(key='entry', file='interface', n=1)
+        if interface_entry >= 5000:
+            remove_data(file='interface', n=interface_entry-5000)
 
 
         # repeat

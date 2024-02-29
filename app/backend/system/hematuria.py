@@ -17,7 +17,7 @@ from components.spectral_sensor import SpectralSensor
 
 
 # sensor/script parameters
-SPECTRAL_SENSOR_REPLICATES = 20
+SPECTRAL_REPLICATES = 20
 DELAY = 0 # delay between iterations (seconds)
 
 # regression parameters
@@ -49,7 +49,7 @@ def hematuria():
     while True:
 
         # get intensities
-        hematuria_intensities = spectral_sensor.read(replicates=SPECTRAL_SENSOR_REPLICATES)
+        hematuria_intensities = spectral_sensor.read(replicates=SPECTRAL_REPLICATES)
 
         hematuria_violet = hematuria_intensities[450]
         hematuria_blue = hematuria_intensities[500]
