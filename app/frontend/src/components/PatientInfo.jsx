@@ -6,7 +6,7 @@ const PatientInfo = () => {
   const [lastName, setLastName] = useState("");
   const [mrn, setMRN] = useState("");
   let [dob, setDOB] = useState("");
-  const [sex, setSex] = useState("asdf");
+  const [sex, setSex] = useState("");
   const [contactA, setContactA] = useState("");
   const [contactB, setContactB] = useState("");
   const [activeTime, setActiveTime] = useState(0);
@@ -30,6 +30,7 @@ const PatientInfo = () => {
       age--;
     }
 
+    age = isNaN(age) ? 0 : age;
     return age;
   }
 
