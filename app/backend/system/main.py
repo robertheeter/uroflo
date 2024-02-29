@@ -125,14 +125,14 @@ def main():
 
     # check if reset
     reset = False
-    for file in ['system', 'interface', 'patient']:
+    for file in ['system', 'interface', 'patient', 'hematuria']:
         if not exists_data(file=file):
             reset = True
             break
     
     # initialize new data if reset
     if reset == True:
-        for file in ['system', 'interface', 'patient']:
+        for file in ['system', 'interface', 'patient', 'hematuria']:
             delete_data(file=file)
             create_data(file=file)
     
@@ -427,7 +427,7 @@ def main():
         # reset
         reset = get_data(key='reset', file='interface')
         if reset == True:
-            for file in ['system', 'interface', 'patient']:
+            for file in ['system', 'interface', 'patient', 'hematuria']:
                 delete_data(file=file)
             break
         

@@ -409,12 +409,12 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
     elif file == 'hematuria': # get data from JSON data
         with open(path, 'r') as infile:
             data = json.load(infile)
-        print(key)
+        
         if len(key) == 1:
             data = data[key[0]]
         else:
             data = {k: data[k] for k in key} # format data before returning
-        print(data)
+        
         if verbose:
             print(f"data retrieved from {path} successfully")
     
