@@ -6,7 +6,7 @@ const PatientInfo = () => {
   const [lastName, setLastName] = useState("");
   const [mrn, setMRN] = useState("");
   let [dob, setDOB] = useState("");
-  const [sex, setSex] = useState("");
+  const [sex, setSex] = useState("asdf");
   const [contactA, setContactA] = useState("");
   const [contactB, setContactB] = useState("");
   const [activeTime, setActiveTime] = useState(0);
