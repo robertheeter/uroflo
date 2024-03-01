@@ -309,7 +309,7 @@ def interface_reset(request):
             value = data.get('reset', None)
             
             if value == 'TRUE':
-                setup = get_data(data='setup', file='interface')
+                setup = get_data(key='setup', file='interface')
                 if setup == True:
                     add_data(data={'reset': True}, file='interface')
                     if VERBOSE:
