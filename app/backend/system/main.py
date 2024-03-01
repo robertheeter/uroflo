@@ -134,6 +134,7 @@ def main():
     if reset == True:
         for file in ['system', 'interface', 'patient', 'hematuria']:
             delete_data(file=file)
+            time.sleep(0.1)
             create_data(file=file)
     
     # get stored system data from database and assign to variables
