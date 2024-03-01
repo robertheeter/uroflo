@@ -9,6 +9,7 @@ source venv/bin/activate
 # run system
 (
   cd app/backend/system || exit
+  mkdir data &
   python main.py &
   python hematuria.py &
   sleep 2
