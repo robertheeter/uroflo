@@ -130,11 +130,12 @@ def main():
             reset = True
             break
     
+    print(f'reset = {reset}')
+    print(os.getcwd())
     # initialize new data if reset
     if reset == True:
         for file in ['system', 'interface', 'patient', 'hematuria']:
             delete_data(file=file)
-            time.sleep(0.1)
             create_data(file=file)
     
     # get stored system data from database and assign to variables
