@@ -38,7 +38,7 @@ from components.weight_sensor import WeightSensor
 
 # system parameters
 INFLOW_ADJUSTMENT_TIME = 0.01 # sec
-
+ 
 SUPPLY_WEIGHT_REPLICATES = 30
 WASTE_WEIGHT_REPLICATES = 30
 FLOW_RATE_REPLICATES = 60 # number of weight measurements to use for each rate calculation
