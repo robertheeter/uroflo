@@ -120,9 +120,9 @@ class SpectralSensor():
     
     def shutdown(self):
         print(f"SpectralSensor: shutdown")
-        GPIO.cleanup()
         GPIO.setup(self.led_pin, GPIO.OUT)
         GPIO.output(self.led_pin, GPIO.HIGH) # turn off LED
+        GPIO.cleanup()
 
 
 # example implementation

@@ -88,6 +88,7 @@ def interface_supply_replace_volume(request):
 def interface_supply_replace_removed(request):
     if request.method == 'POST':
         try:
+            speaker.play(file=CLICK_SOUND)
             data = json.loads(request.body.decode('utf-8'))
             value = data.get('supply_replace_removed', None)
             
@@ -109,6 +110,7 @@ def interface_supply_replace_removed(request):
 def interface_supply_replace_added(request):
     if request.method == 'POST':
         try:
+            speaker.play(file=CLICK_SOUND)
             data = json.loads(request.body.decode('utf-8'))
             value = data.get('supply_replace_added', None)
             
@@ -148,6 +150,7 @@ def interface_waste_replace_volume(request):
 def interface_waste_replace_removed(request):
     if request.method == 'POST':
         try:
+            speaker.play(file=CLICK_SOUND)
             data = json.loads(request.body.decode('utf-8'))
             value = data.get('waste_replace_removed', None)
             
@@ -169,6 +172,7 @@ def interface_waste_replace_removed(request):
 def interface_waste_replace_added(request):
     if request.method == 'POST':
         try:
+            speaker.play(file=CLICK_SOUND)
             data = json.loads(request.body.decode('utf-8'))
             value = data.get('waste_replace_added', None)
             
@@ -190,6 +194,7 @@ def interface_waste_replace_added(request):
 def interface_automatic(request):
     if request.method == 'POST':
         try:
+            speaker.play(file=CLICK_SOUND)
             data = json.loads(request.body.decode('utf-8'))
             value = data.get('automatic', None)
             
@@ -279,6 +284,7 @@ def interface_mute(request):
 def interface_setup(request):
     if request.method == 'POST':
         try:
+            speaker.play(file=CLICK_SOUND)
             data = json.loads(request.body.decode('utf-8'))
             value = data.get('setup', None)
             
@@ -342,6 +348,7 @@ def patient(request):
     
     elif request.method == 'POST':
         try:
+            speaker.play(file=CLICK_SOUND)
             patient = json.loads(request.body.decode('utf-8'))
             
             start_date = datetime.now(pytz.utc).strftime("%m/%d/%Y")
