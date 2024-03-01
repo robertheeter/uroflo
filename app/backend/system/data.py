@@ -169,8 +169,7 @@ def create_data(file, verbose=False):
     
     if file == 'system':
         db = sqlite3.connect(path)
-        db = db.cursor()
-        
+
         if verbose:
             print(f"created {path} successfully")
         
@@ -209,7 +208,6 @@ def create_data(file, verbose=False):
 
     elif file == 'interface':
         db = sqlite3.connect(path)
-        db = db.cursor()
 
         if verbose:
             print(f"created {path} successfully")
@@ -266,7 +264,6 @@ def add_data(data, file, verbose=False, initialize=False):
     
     if file in ['system', 'interface']: # gets most recent entry from Sqlite database and updates given key-value pairs
         db = sqlite3.connect(path)
-        db = db.cursor()
 
         if verbose:
             print(f"opened {path} successfully")
@@ -362,7 +359,6 @@ def get_data(key, file, n=1, order='DESC', verbose=False):
         key_formatted = ', '.join(map(str, key))
 
         db = sqlite3.connect(path)
-        db = db.cursor()
 
         if verbose:
             print(f"opened {path} successfully")
@@ -448,7 +444,6 @@ def remove_data(file, n=1, order='ASC', verbose=False):
     
     if file in ['system', 'interface']: # remove oldest entry from Sqlite database file
         db = sqlite3.connect(path)
-        db = db.cursor()
 
         if verbose:
             print(f"opened {path} successfully")
