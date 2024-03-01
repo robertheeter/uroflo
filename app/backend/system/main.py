@@ -205,9 +205,9 @@ def main():
 
     # lists for calculating flow rates
     supply_volumes = []
-    supply_times = []
+    supply_volume_times = []
     waste_volumes = []
-    waste_times = []
+    waste_volume_times = []
 
     # additional variables for checking alert conditions
     alert_supply_low = False
@@ -434,49 +434,46 @@ def main():
             break
         
         
-        # run weight sensors
-        scan = supply_weight_sensor.read(replicates=1)
-        supply_scans.append(scan)
-
-        scan = waste_weight_sensor.read(replicates=1)
-        waste_scans.append(scan)
-
-        if system_entry > SUPPLY_WEIGHT_REPLICATES:
-            supply_scans.pop() # remove old data
-            supply_mass = np.average(supply_scans)
-        else:
-            supply_mass = 0
+        # run sensors and calculate, format, and update system data
+        # hematuria_percent, hematuria_level
+        hematuria_percent = get_data(key='hematuria_percent', file='hematuria')
+        hematuria_level = get_data(key='hematuria_level', file='hematuria')
         
-        supply_time = time.time()
-
-        if system_entry > WASTE_WEIGHT_REPLICATES:
-            waste_scans.pop() # remove old data
-            waste_mass = np.average(waste_scans)
-        else:
-            waste_mass = 0
-
-        waste_time = time.time()
-
+        # supply_volume, waste_volume
         # supply_mass = supply_weight_sensor.read(replicates=SUPPLY_WEIGHT_SENSOR_REPLICATES) # old implementation
         # supply_time = time.time()
 
         # waste_mass = waste_weight_sensor.read(replicates=WASTE_WEIGHT_SENSOR_REPLICATES) # old implementation
         # waste_time = time.time()
 
+        scan = supply_weight_sensor.read(replicates=1)
+        scan = scan / SUPPLY_DENSITY # convert g to mL
+        supply_scans.append(scan)
 
-        # calculate, format, and update system data
-        # hematuria_percent, hematuria_level
-        hematuria_percent = get_data(key='hematuria_percent', file='hematuria')
-        hematuria_level = get_data(key='hematuria_level', file='hematuria')
+        scan = waste_weight_sensor.read(replicates=1)
+        scan = scan / WASTE_DENSITY # convert g to mL
+        waste_scans.append(scan)
+
+        if system_entry > SUPPLY_WEIGHT_REPLICATES:
+            supply_scans.pop() # remove old data
+            supply_volume = np.average(supply_scans)
+        else:
+            supply_volume = 0
         
-        # supply_volume, waste_volume
-        supply_volume = supply_mass / SUPPLY_DENSITY # convert g to mL
-        waste_volume = waste_mass / WASTE_DENSITY # convert g to mL
+        supply_volume_time = time.time()
+
+        if system_entry > WASTE_WEIGHT_REPLICATES:
+            waste_scans.pop() # remove old data
+            waste_volume = np.average(waste_scans)
+        else:
+            waste_volume = 0
+
+        waste_volume_time = time.time()
 
         supply_volumes.insert(0, supply_volume)
-        supply_times.insert(0, supply_time)
+        supply_volume_times.insert(0, supply_volume_time)
         waste_volumes.insert(0, waste_volume)
-        waste_times.insert(0, waste_time)
+        waste_volume_times.insert(0, waste_volume_time)
 
         supply_volume = min(supply_volume_total, supply_volume)
         supply_volume = max(0, supply_volume)
@@ -487,15 +484,15 @@ def main():
         # supply_rate, waste_rate
         if system_entry > FLOW_RATE_REPLICATES + max(SUPPLY_WEIGHT_REPLICATES, WASTE_WEIGHT_REPLICATES):
             supply_volumes.pop() # remove old data
-            supply_times.pop()
+            supply_volume_times.pop()
             waste_volumes.pop()
-            waste_times.pop()
+            waste_volume_times.pop()
 
-            regression.fit(np.array(supply_times).reshape(-1, 1), np.array(supply_volumes).reshape(-1, 1))
+            regression.fit(np.array(supply_volume_times).reshape(-1, 1), np.array(supply_volumes).reshape(-1, 1))
             supply_rate = regression.coef_[0][0] * -60 # convert mL/s to mL/min
             supply_rate = max(0, supply_rate)
 
-            regression.fit(np.array(waste_times).reshape(-1, 1), np.array(waste_volumes).reshape(-1, 1))
+            regression.fit(np.array(waste_volume_times).reshape(-1, 1), np.array(waste_volumes).reshape(-1, 1))
             waste_rate = regression.coef_[0][0] * 60 # convert mL/s to mL/min
             waste_rate = max(0, waste_rate)
 
@@ -503,9 +500,10 @@ def main():
             supply_rate = 0
             waste_rate = 0
 
-        # supply_percent, supply_time
+        # supply_percent
         supply_percent = (supply_volume / supply_volume_total) * 100.0
 
+        # supply_time
         if supply_rate > 1:
             supply_time = supply_volume / supply_rate
             if supply_time > 5999:
@@ -513,9 +511,10 @@ def main():
         else:
             supply_time = 5999 # 99 h 59 m
         
-        # waste_percent, waste_time
+        # waste_percent
         waste_percent = (waste_volume / waste_volume_total) * 100.0
         
+        # waste_time
         if waste_rate > 0.001:
             waste_time = waste_volume / waste_rate
             if waste_time > 5999:
@@ -702,22 +701,26 @@ def main():
             status_message = ALERT_EMERGENCY_BUTTON_MESSAGE
 
         # update light color and speaker sound according to status_level and new_alert
-        if status_level == 'NORMAL':
+        if system_entry > FLOW_RATE_REPLICATES + max(SUPPLY_WEIGHT_REPLICATES, WASTE_WEIGHT_REPLICATES):
+            if status_level == 'NORMAL':
+                light.color(color='default')
+            elif status_level == 'ALERT':
+                light.color(color='yellow')
+            elif status_level == 'CAUTION':
+                light.color(color='orange')
+            elif status_level == 'CRITICAL':
+                light.color(color='red')
+        else:
             light.color(color='default')
-        elif status_level == 'ALERT':
-            light.color(color='yellow')
-        elif status_level == 'CAUTION':
-            light.color(color='orange')
-        elif status_level == 'CRITICAL':
-            light.color(color='red')
         
-        if status_level == 'ALERT' and new_alert == True:
-            speaker.play(file=ALERT_ALERT_SOUND)
-        elif status_level == 'CAUTION' and new_alert == True:
-            speaker.play(file=ALERT_CAUTION_SOUND)
-        elif status_level == 'CRITICAL' and new_alert == True:
-            speaker.play(file=ALERT_CRITICAL_SOUND)
-
+        if system_entry > FLOW_RATE_REPLICATES + max(SUPPLY_WEIGHT_REPLICATES, WASTE_WEIGHT_REPLICATES):
+            if status_level == 'ALERT' and new_alert == True:
+                speaker.play(file=ALERT_ALERT_SOUND)
+            elif status_level == 'CAUTION' and new_alert == True:
+                speaker.play(file=ALERT_CAUTION_SOUND)
+            elif status_level == 'CRITICAL' and new_alert == True:
+                speaker.play(file=ALERT_CRITICAL_SOUND)
+        
 
         # add updated system data to database
         data = {
