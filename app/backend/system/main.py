@@ -206,9 +206,6 @@ def main():
     waste_times = []
 
     # additional variables for checking alert conditions
-    supply_flow_started = False # prevent alert when device is starting up
-    waste_flow_started = False # prevent alert when device is starting up
-
     alert_supply_low = False
     alert_supply_empty = False
 
@@ -441,23 +438,25 @@ def main():
 
         if system_entry > SUPPLY_WEIGHT_REPLICATES:
             supply_scans.pop() # remove old data
-            
-            
+            supply_mass = np.average(supply_scans)
         else:
             supply_mass = 0
         
+        supply_time = time.time()
+
         if system_entry > WASTE_WEIGHT_REPLICATES:
-            waste_mass = 2 # FINISH THIS
+            waste_scans.pop() # remove old data
+            waste_mass = np.average(waste_scans)
         else:
             waste_mass = 0
 
-        # supply_mass = supply_weight_sensor.read(replicates=SUPPLY_WEIGHT_SENSOR_REPLICATES)
-        supply_mass = 2
-        supply_time = time.time()
-
-        # waste_mass = waste_weight_sensor.read(replicates=WASTE_WEIGHT_SENSOR_REPLICATES)
-        waste_mass = 2
         waste_time = time.time()
+
+        # supply_mass = supply_weight_sensor.read(replicates=SUPPLY_WEIGHT_SENSOR_REPLICATES) # old implementation
+        # supply_time = time.time()
+
+        # waste_mass = waste_weight_sensor.read(replicates=WASTE_WEIGHT_SENSOR_REPLICATES) # old implementation
+        # waste_time = time.time()
 
 
         # calculate, format, and update system data
@@ -481,7 +480,7 @@ def main():
         waste_volume = max(0, waste_volume)
 
         # supply_rate, waste_rate
-        if system_entry > FLOW_RATE_REPLICATES*max(SUPPLY_WEIGHT_REPLICATES, WASTE_WEIGHT_REPLICATES): # fix this
+        if system_entry > FLOW_RATE_REPLICATES + max(SUPPLY_WEIGHT_REPLICATES, WASTE_WEIGHT_REPLICATES):
             supply_volumes.pop() # remove old data
             supply_times.pop()
             waste_volumes.pop()
@@ -495,10 +494,6 @@ def main():
             waste_rate = regression.coef_[0][0] * 60 # convert mL/s to mL/min
             waste_rate = max(0, waste_rate)
 
-            if supply_rate > 5: # mL/min
-                supply_flow_started = True
-            if waste_rate > 5: # mL/min
-                waste_flow_started = True
         else:
             supply_rate = 0
             waste_rate = 0
@@ -637,7 +632,7 @@ def main():
 
         # CRITICAL
         # alert_supply_flow_low
-        if supply_flow_started == True and supply_rate < ALERT_SUPPLY_FLOW_LOW_RATE:
+        if supply_rate < ALERT_SUPPLY_FLOW_LOW_RATE:
             alert_supply_flow_low_timer.start()
         else:
             alert_supply_flow_low_timer.reset()
@@ -652,7 +647,7 @@ def main():
             status_message = ALERT_SUPPLY_FLOW_LOW_MESSAGE
 
         # alert_waste_flow_low
-        if waste_flow_started == True and waste_rate < ALERT_WASTE_FLOW_LOW_RATE:
+        if waste_rate < ALERT_WASTE_FLOW_LOW_RATE:
             alert_waste_flow_low_timer.start()
         else:
             alert_waste_flow_low_timer.reset()
@@ -667,7 +662,7 @@ def main():
             status_message = ALERT_WASTE_FLOW_LOW_MESSAGE
 
         # alert_flow_discrepancy
-        if supply_flow_started == True and waste_flow_started == True and supply_rate - waste_rate > ALERT_FLOW_DISCREPANCY_RATE:
+        if supply_rate - waste_rate > ALERT_FLOW_DISCREPANCY_RATE:
             alert_flow_discrepancy_timer.start()
         else:
             alert_flow_discrepancy_timer.reset()
