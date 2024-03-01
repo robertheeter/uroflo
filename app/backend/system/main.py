@@ -39,9 +39,9 @@ from components.weight_sensor import WeightSensor
 # system parameters
 INFLOW_ADJUSTMENT_TIME = 0.01 # sec
 
-SUPPLY_WEIGHT_REPLICATES = 15
-WASTE_WEIGHT_REPLICATES = 15
-FLOW_RATE_REPLICATES = 10 # number of weight measurements to use for each rate calculation
+SUPPLY_WEIGHT_REPLICATES = 30
+WASTE_WEIGHT_REPLICATES = 30
+FLOW_RATE_REPLICATES = 60 # number of weight measurements to use for each rate calculation
 
 SUPPLY_DENSITY = 1.0 # g/mL
 WASTE_DENSITY = 1.0 # g/mL
@@ -516,7 +516,7 @@ def main():
         
         # waste_time
         if waste_rate > 0.001:
-            waste_time = waste_volume / waste_rate
+            waste_time = (waste_volume_total - waste_volume) / waste_rate
             if waste_time > 5999:
                 waste_time = 5999 # 99 h 59 m
         else:
