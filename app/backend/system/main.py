@@ -440,7 +440,9 @@ def main():
         waste_scans.append(scan)
 
         if system_entry > SUPPLY_WEIGHT_REPLICATES:
-            supply_mass = 2
+            supply_scans.pop() # remove old data
+            
+            
         else:
             supply_mass = 0
         

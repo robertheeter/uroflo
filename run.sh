@@ -5,26 +5,27 @@
 # activate environment
 # cd Documents/uroflo
 source venv/bin/activate
-wait 1
-
-# run frontend
-(
-  cd app/frontend || exit
-  npm run dev &
-)
-
-# run backend
-(
-  cd app/backend || exit
-  python manage.py runserver &
-  
-)
 
 # run system
 (
   cd app/backend/system || exit
   python system/main.py &
   python system/hematuria.py &
+  sleep 2
+)
+
+# run backend
+(
+  cd app/backend || exit
+  python manage.py runserver &
+  sleep 2
+)
+
+# run frontend
+(
+  cd app/frontend || exit
+  npm run dev &
+  sleep 2
 )
 
 # run firefox-esr
