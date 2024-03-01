@@ -326,9 +326,9 @@ def main():
     start_time = patient_data['start_time']
 
     # begin normal operation
-    system_entry = 1 # number of entries added to system database
+    iteration = 1 # number of entries added to system database
     while True:
-        print(f'iteration #{system_entry}')
+        print(f'iteration #{iteration}')
 
         # check emergency button
         if emergency_button.pressed() == True: # button pressed
@@ -448,13 +448,13 @@ def main():
 
         scan = supply_weight_sensor.read(replicates=1)
         scan = scan / SUPPLY_DENSITY # convert g to mL
-        supply_scans.append(scan)
+        supply_scans.insert(0, scan)
 
         scan = waste_weight_sensor.read(replicates=1)
         scan = scan / WASTE_DENSITY # convert g to mL
-        waste_scans.append(scan)
+        waste_scans.insert(0, scan)
 
-        if system_entry > SUPPLY_WEIGHT_REPLICATES:
+        if iteration > SUPPLY_WEIGHT_REPLICATES:
             supply_scans.pop() # remove old data
             supply_volume = np.average(supply_scans)
         else:
@@ -462,7 +462,7 @@ def main():
         
         supply_volume_time = time.time()
 
-        if system_entry > WASTE_WEIGHT_REPLICATES:
+        if iteration > WASTE_WEIGHT_REPLICATES:
             waste_scans.pop() # remove old data
             waste_volume = np.average(waste_scans)
         else:
@@ -482,7 +482,7 @@ def main():
         waste_volume = max(0, waste_volume)
 
         # supply_rate, waste_rate
-        if system_entry > FLOW_RATE_REPLICATES + max(SUPPLY_WEIGHT_REPLICATES, WASTE_WEIGHT_REPLICATES):
+        if iteration > FLOW_RATE_REPLICATES + max(SUPPLY_WEIGHT_REPLICATES, WASTE_WEIGHT_REPLICATES):
             supply_volumes.pop() # remove old data
             supply_volume_times.pop()
             waste_volumes.pop()
@@ -701,7 +701,7 @@ def main():
             status_message = ALERT_EMERGENCY_BUTTON_MESSAGE
 
         # update light color and speaker sound according to status_level and new_alert
-        if system_entry > FLOW_RATE_REPLICATES + max(SUPPLY_WEIGHT_REPLICATES, WASTE_WEIGHT_REPLICATES):
+        if iteration > FLOW_RATE_REPLICATES + max(SUPPLY_WEIGHT_REPLICATES, WASTE_WEIGHT_REPLICATES):
             if status_level == 'NORMAL':
                 light.color(color='default')
             elif status_level == 'ALERT':
@@ -713,14 +713,14 @@ def main():
         else:
             light.color(color='default')
         
-        if system_entry > FLOW_RATE_REPLICATES + max(SUPPLY_WEIGHT_REPLICATES, WASTE_WEIGHT_REPLICATES):
+        if iteration > FLOW_RATE_REPLICATES + max(SUPPLY_WEIGHT_REPLICATES, WASTE_WEIGHT_REPLICATES):
             if status_level == 'ALERT' and new_alert == True:
                 speaker.play(file=ALERT_ALERT_SOUND)
             elif status_level == 'CAUTION' and new_alert == True:
                 speaker.play(file=ALERT_CAUTION_SOUND)
             elif status_level == 'CRITICAL' and new_alert == True:
                 speaker.play(file=ALERT_CRITICAL_SOUND)
-        
+
 
         # add updated system data to database
         data = {
@@ -750,17 +750,18 @@ def main():
             'mute': bool(mute)
             }
         
+        add_data(data=data, file='system')
+        iteration += 1
+
 
         # remove outdated system data and interface data
-        add_data(data=data, file='system')
-        system_entry += 1
-
-        if system_entry > 5000:
-            remove_data(file='system', n=1)
+        system_entry = get_data(key='entry', file='system', n=1)
+        if system_entry > 10000:
+            remove_data(file='system', n=system_entry-10000)
         
         interface_entry = get_data(key='entry', file='interface', n=1)
-        if interface_entry >= 5000:
-            remove_data(file='interface', n=interface_entry-5000)
+        if interface_entry > 10000:
+            remove_data(file='interface', n=interface_entry-10000)
 
 
         # repeat

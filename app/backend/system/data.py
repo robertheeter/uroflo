@@ -580,8 +580,10 @@ if __name__ == '__main__':
     # example()
 
     # remove any existing data
-    delete_data(file='system', verbose=True)
-    delete_data(file='interface', verbose=True)
-    delete_data(file='patient', verbose=True)
-    delete_data(file='hematuria', verbose=True)
+    # delete_data(file='system', verbose=True)
+    # delete_data(file='interface', verbose=True)
+    # delete_data(file='patient', verbose=True)
+    # delete_data(file='hematuria', verbose=True)
+
+    add_data(data={'hematuria_level': 99}, file='system')
     
