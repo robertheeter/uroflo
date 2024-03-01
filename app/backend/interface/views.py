@@ -309,9 +309,14 @@ def interface_reset(request):
             value = data.get('reset', None)
             
             if value == 'TRUE':
-                add_data(data={'reset': True}, file='interface')
-                if VERBOSE:
-                    print(f"reset = {True}")
+                setup = get_data(data='setup', file='interface')
+                if setup == True:
+                    add_data(data={'reset': True}, file='interface')
+                    if VERBOSE:
+                        print(f"reset = {True}")
+                else:
+                    if VERBOSE:
+                        print(f"cannot set rest = True until setup == True")
 
             return JsonResponse({'status': 'success', 'message': 'request processed'})
         except json.JSONDecodeError:

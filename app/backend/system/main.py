@@ -123,6 +123,7 @@ def main():
     pid = PID(Kp, Ki, Kd, setpoint=HEMATURIA_SETPOINT, output_limits=(-1*INFLOW_ADJUSTMENT_TIME_LIMIT, INFLOW_ADJUSTMENT_TIME_LIMIT))
     regression = LinearRegression()
 
+
     # check if reset
     reset = False
     for file in ['system', 'interface', 'patient', 'hematuria']:
@@ -130,14 +131,13 @@ def main():
             reset = True
             break
     
-    print(f'reset = {reset}')
-    print(os.getcwd())
     # initialize new data if reset
     if reset == True:
         for file in ['system', 'interface', 'patient', 'hematuria']:
             delete_data(file=file)
             create_data(file=file)
     
+
     # get stored system data from database and assign to variables
     system_data = get_data(key='all', file='system')
 
@@ -174,6 +174,7 @@ def main():
 
     _ = system_data['mute'] # not necessary
 
+
     # get stored user interface data from database and assign to variables
     interface_data = get_data(key='all', file='interface')
 
@@ -196,6 +197,7 @@ def main():
     # ensure consistency between databases
     supply_volume_total = supply_replace_volume
     waste_volume_total = waste_replace_volume
+
 
     # lists for averaging volumes
     supply_scans = []
@@ -305,7 +307,8 @@ def main():
                 linear_actuator.extend(duty_cycle=100, duration=6) # fully extend actuator
                 break
             time.sleep(0.01)
-    
+
+
         reset = False
     
     # get stored patient data from database and assign to variables
