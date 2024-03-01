@@ -39,8 +39,8 @@ from components.weight_sensor import WeightSensor
 # system parameters
 INFLOW_ADJUSTMENT_TIME = 0.01 # sec
 
-SUPPLY_WEIGHT_REPLICATES = 60
-WASTE_WEIGHT_REPLICATES = 60
+SUPPLY_WEIGHT_REPLICATES = 15
+WASTE_WEIGHT_REPLICATES = 15
 FLOW_RATE_REPLICATES = 60 # number of weight measurements to use for each rate calculation
 
 SUPPLY_DENSITY = 1.0 # g/mL
