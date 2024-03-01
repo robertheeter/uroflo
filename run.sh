@@ -28,7 +28,7 @@ wait 1
 )
 
 # run firefox-esr
-firefox-esr -private --kiosk http://localhost:5173/
+firefox-esr -private --kiosk http://localhost:5173/landing
   # quit firefox-esr kiosk mode: ALT+F4
   # move forward or back page in firefox-esr kiosk mode: ALT+[left arrow/right arrow]
   # install firefox-esr: sudo apt install firefox-esr
