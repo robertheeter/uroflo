@@ -504,20 +504,24 @@ def main():
         waste_volume = max(0, waste_volume)
 
         # supply_rate, waste_rate
-        if iteration > FLOW_RATE_REPLICATES + WEIGHT_REPLICATES:
+        if iteration > FLOW_RATE_REPLICATES:
             supply_volumes.pop() # remove old data
             supply_volume_times.pop()
             waste_volumes.pop()
             waste_volume_times.pop()
 
-            regression.fit(np.array(supply_volume_times).reshape(-1, 1), np.array(supply_volumes).reshape(-1, 1))
-            supply_rate = regression.coef_[0][0] * -60 # convert mL/s to mL/min
-            supply_rate = max(0, supply_rate)
+            if iteration > FLOW_RATE_REPLICATES + WEIGHT_REPLICATES:
+                regression.fit(np.array(supply_volume_times).reshape(-1, 1), np.array(supply_volumes).reshape(-1, 1))
+                supply_rate = regression.coef_[0][0] * -60 # convert mL/s to mL/min
+                supply_rate = max(0, supply_rate)
 
-            regression.fit(np.array(waste_volume_times).reshape(-1, 1), np.array(waste_volumes).reshape(-1, 1))
-            waste_rate = regression.coef_[0][0] * 60 # convert mL/s to mL/min
-            waste_rate = max(0, waste_rate)
-
+                regression.fit(np.array(waste_volume_times).reshape(-1, 1), np.array(waste_volumes).reshape(-1, 1))
+                waste_rate = regression.coef_[0][0] * 60 # convert mL/s to mL/min
+                waste_rate = max(0, waste_rate)
+            else:
+                supply_rate = 0
+                waste_rate = 0
+            
         else:
             supply_rate = 0
             waste_rate = 0
