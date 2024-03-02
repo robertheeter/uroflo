@@ -46,6 +46,14 @@ chmod +x run.sh
 ```
 This should run the system scripts (main.py and hematuria.py), Django backend server, React frontend server, and FireFox ESR kiosk browser.
 
+### Quit app
+Use `ALT+F4` to exit the FireFox ESR kiosk browser.
+```
+ps
+kill [process ID]
+```
+Kill the 3 Python processes (main.py, hematuria.py, Django backend server) and Node frontend server processes. A list of processes can be viewed with the `ps` command. Alternatively, reboot the Raspberry Pi.
+
 ## Folders
 - [`app/`](app/): scripts for integrated device software and interface web application
 - [`docs/`](docs/): project-related documents
