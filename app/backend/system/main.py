@@ -117,7 +117,9 @@ def main():
 
     try:
         os.mkdir('data') # make data directory if one does not exist
-
+    except:
+        pass
+    
     # instantiate components, PID, and linear regression
     light = Light(red_pin=board.D8, green_pin=board.D7, blue_pin=board.D1)
     linear_actuator = LinearActuator(en_pin=13, in1_pin=19, in2_pin=26, freq=1000)
