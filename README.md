@@ -40,7 +40,7 @@ cd ../..
 chmod +x run.sh
 ```
 
-### Run app with the /uroflo/run.sh
+### Run app with /uroflo/run.sh
 ```
 ./run.sh
 ```
