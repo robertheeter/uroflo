@@ -17,11 +17,13 @@ This should install Python, the Node Package Manager (NPM), and the Firefox ESR 
 ```
 cd /home/[user]/Documents
 git clone https://github.com/teamuroflo/uroflo
-
+```
+```
 cd uroflo
 python -m venv venv/
 source venv/bin/activate
-
+```
+```
 pip install -r requirements.txt
 pip install django-cors-headers ## ADD THIS TO REQUIREMENTS.TXT, and check if requirements.txt is comprehensive
 ```
