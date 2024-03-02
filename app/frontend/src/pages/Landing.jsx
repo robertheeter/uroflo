@@ -38,7 +38,7 @@ const Landing = () => {
       <img
         src={uroflo_logo}
         alt="uroflo logo"
-        className="w-2/3 h-2/3 animate-moveToLeft"
+        className="w-2/3 h-2/3 animate-fadeInMoveLeft"
       />
       {showText && (
         <ReactTyped
