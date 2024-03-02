@@ -17,7 +17,7 @@ from components.spectral_sensor import SpectralSensor
 
 
 # sensor/script parameters
-SPECTRAL_REPLICATES = 20
+SPECTRAL_REPLICATES = 60
 DELAY = 0 # delay between iterations (seconds)
 
 # regression parameters
@@ -89,7 +89,7 @@ def hematuria():
         add_data(data=data, file='hematuria')
         
         print(f'hematuria_percent = {hematuria_percent}')
-        
+
         time.sleep(DELAY)
 
 if __name__ == '__main__':
