@@ -30,8 +30,8 @@ SYSTEM_TEMPLATE = {
     'waste_volume': 0,
     'waste_time': 0,
     'waste_rate': 0,
-    'status_level': 'STARTUP',
-    'status_message': 'System starting.',
+    'status_level': 'RESET',
+    'status_message': 'System must be reset with new patient.',
     'active_time': 0,
     'current_date': '00/00/0000',
     'current_time': '00:00:00',
@@ -584,4 +584,3 @@ if __name__ == '__main__':
     delete_data(file='interface', verbose=True)
     delete_data(file='patient', verbose=True)
     delete_data(file='hematuria', verbose=True)
-    

@@ -39,8 +39,9 @@ from components.weight_sensor import WeightSensor
 # system parameters
 INFLOW_ADJUSTMENT_TIME = 0.01 # sec
 
-SUPPLY_WEIGHT_REPLICATES = 15
-WASTE_WEIGHT_REPLICATES = 15
+WEIGHT_CALIBRATION_REPLICATES = 15
+WEIGHT_REPLICATES = 60
+WEIGHT_PERCENT_OUTLIERS = 10
 FLOW_RATE_REPLICATES = 60 # number of weight measurements to use for each rate calculation
 
 SUPPLY_DENSITY = 1.0 # g/mL
@@ -57,6 +58,9 @@ INFLOW_ADJUSTMENT_TIME_LIMIT = 0.01 # +/- maximum adjustment time (seconds) in e
 ALERT_ALERT_SOUND = 'sound/sonar.mp3'
 ALERT_CAUTION_SOUND = 'sound/sonar.mp3'
 ALERT_CRITICAL_SOUND = 'sound/alarm.mp3'
+
+ALERT_STARTUP_STATUS = 'SETUP'
+ALERT_STARTUP_MESSAGE = 'System starting.'
 
 ALERT_SUPPLY_LOW_PERCENT = 10
 ALERT_SUPPLY_LOW_LEVEL = 'ALERT' # if changing, adjust order of alert conditions below
@@ -133,9 +137,12 @@ def main():
     
     # initialize new data if reset
     if reset == True:
+        light.color(color = 'yellow')
         for file in ['system', 'interface', 'patient', 'hematuria']:
             delete_data(file=file)
             create_data(file=file)
+    else:
+        light.color(color='default')
     
 
     # get stored system data from database and assign to variables
@@ -236,6 +243,7 @@ def main():
 
     alert_emergency_button = False
 
+
     # perform reset if reset
     if reset == True:
         print('reset')
@@ -252,7 +260,7 @@ def main():
             val = get_data(key='supply_replace_count_removed', file='interface')
             if  val > supply_replace_count_removed:
                 supply_replace_count_removed = val
-                supply_weight_sensor.zero(replicates=SUPPLY_WEIGHT_REPLICATES) # zero weight sensor
+                supply_weight_sensor.zero(replicates=WEIGHT_CALIBRATION_REPLICATES) # zero weight sensor
                 break
             time.sleep(0.01)
         
@@ -262,7 +270,7 @@ def main():
                 time.sleep(0.1)
                 supply_replace_count_added = val
                 supply_replace_volume = get_data(key='supply_replace_volume', file='interface')
-                supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=SUPPLY_WEIGHT_REPLICATES) # calibrate weight sensor with known mass
+                supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=WEIGHT_CALIBRATION_REPLICATES) # calibrate weight sensor with known mass
                 supply_volume_total = supply_replace_volume # update
                 supply_replace_count += 1 # update
                 break
@@ -273,7 +281,7 @@ def main():
             val = get_data(key='waste_replace_count_removed', file='interface')
             if val > waste_replace_count_removed:
                 waste_replace_count_removed = val
-                waste_weight_sensor.zero(replicates=WASTE_WEIGHT_REPLICATES) # zero weight sensor
+                waste_weight_sensor.zero(replicates=WEIGHT_CALIBRATION_REPLICATES) # zero weight sensor
                 break
             time.sleep(0.01)
         
@@ -284,16 +292,16 @@ def main():
                 waste_replace_count_added = val
                 waste_replace_volume = get_data(key='waste_replace_volume', file='interface')
                 if waste_replace_volume == 1000:
-                    known_mass = 10
-                elif waste_replace_volume == 2000:
-                    known_mass = 20
-                elif waste_replace_volume == 3000:
-                    known_mass = 30
-                elif waste_replace_volume == 4000:
-                    known_mass = 40
-                elif waste_replace_volume == 5000:
                     known_mass = 50
-                waste_weight_sensor.calibrate(known_mass=known_mass, replicates=WASTE_WEIGHT_REPLICATES) # calibrate weight sensor with known mass
+                elif waste_replace_volume == 2000:
+                    known_mass = 75
+                elif waste_replace_volume == 3000:
+                    known_mass = 100
+                elif waste_replace_volume == 4000:
+                    known_mass = 125
+                elif waste_replace_volume == 5000:
+                    known_mass = 150
+                waste_weight_sensor.calibrate(known_mass=known_mass, replicates=WEIGHT_CALIBRATION_REPLICATES) # calibrate weight sensor with known mass
                 waste_volume_total = waste_replace_volume # update
                 waste_replace_count += 1 # update
                 break
@@ -308,8 +316,8 @@ def main():
                 break
             time.sleep(0.01)
 
-
         reset = False
+    
     
     # get stored patient data from database and assign to variables
     patient_data = get_data(key='all', file='patient')
@@ -325,10 +333,12 @@ def main():
     start_date = patient_data['start_date']
     start_time = patient_data['start_time']
 
+
     # begin normal operation
     iteration = 1 # number of entries added to system database
     while True:
         print(f'iteration #{iteration}')
+
 
         # check emergency button
         if emergency_button.pressed() == True: # button pressed
@@ -344,14 +354,14 @@ def main():
         val = get_data(key='supply_replace_count_removed', file='interface')
         if  val > supply_replace_count_removed:
             supply_replace_count_removed = val
-            supply_weight_sensor.zero(replicates=SUPPLY_WEIGHT_REPLICATES) # zero weight sensor
+            supply_weight_sensor.zero(replicates=WEIGHT_CALIBRATION_REPLICATES) # zero weight sensor
 
         val = get_data(key='supply_replace_count_added', file='interface')
         if val > supply_replace_count_added:
             supply_replace_count_added = val
             time.sleep(0.1)
             supply_replace_volume = get_data(key='supply_replace_volume', file='interface')
-            supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=SUPPLY_WEIGHT_REPLICATES) # calibrate weight sensor with known mass
+            supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=WEIGHT_CALIBRATION_REPLICATES) # calibrate weight sensor with known mass
             supply_volume_gross +=  supply_volume_total - supply_volume # update
             supply_volume_total = supply_replace_volume # update
             supply_replace_count += 1 # update
@@ -362,7 +372,7 @@ def main():
         val = get_data(key='waste_replace_count_removed', file='interface')
         if  val > waste_replace_count_removed:
             waste_replace_count_removed = val
-            waste_weight_sensor.zero(replicates=WASTE_WEIGHT_REPLICATES) # zero weight sensor'
+            waste_weight_sensor.zero(replicates=WEIGHT_CALIBRATION_REPLICATES) # zero weight sensor'
 
         val = get_data(key='waste_replace_count_added', file='interface')
         if val > waste_replace_count_added:
@@ -370,16 +380,16 @@ def main():
             time.sleep(0.1)
             waste_replace_volume = get_data(key='waste_replace_volume', file='interface')
             if waste_replace_volume == 1000:
-                known_mass = 10
-            elif waste_replace_volume == 2000:
-                known_mass = 20
-            elif waste_replace_volume == 3000:
-                known_mass = 30
-            elif waste_replace_volume == 4000:
-                known_mass = 40
-            elif waste_replace_volume == 5000:
                 known_mass = 50
-            waste_weight_sensor.calibrate(known_mass=known_mass, replicates=WASTE_WEIGHT_REPLICATES) # calibrate weight sensor with known mass
+            elif waste_replace_volume == 2000:
+                known_mass = 75
+            elif waste_replace_volume == 3000:
+                known_mass = 100
+            elif waste_replace_volume == 4000:
+                known_mass = 125
+            elif waste_replace_volume == 5000:
+                known_mass = 150
+            waste_weight_sensor.calibrate(known_mass=known_mass, replicates=WEIGHT_CALIBRATION_REPLICATES) # calibrate weight sensor with known mass
             waste_volume_gross += waste_volume # update
             waste_volume_total = waste_replace_volume # update
             waste_replace_count += 1 # update
@@ -454,17 +464,25 @@ def main():
         scan = scan / WASTE_DENSITY # convert g to mL
         waste_scans.insert(0, scan)
 
-        if iteration > SUPPLY_WEIGHT_REPLICATES:
+        if iteration > WEIGHT_REPLICATES:
             supply_scans.pop() # remove old data
-            supply_volume = np.average(supply_scans)
+            temp = supply_scans
+            temp.sort()
+            trim = int(len(temp) * (WEIGHT_PERCENT_OUTLIERS/100))
+            temp = temp[trim:-trim]
+            supply_volume = sum(temp)/len(temp)
         else:
             supply_volume = 0
         
         supply_volume_time = time.time()
 
-        if iteration > WASTE_WEIGHT_REPLICATES:
+        if iteration > WEIGHT_REPLICATES:
             waste_scans.pop() # remove old data
-            waste_volume = np.average(waste_scans)
+            temp = waste_scans
+            temp.sort()
+            trim = int(len(temp) * (WEIGHT_PERCENT_OUTLIERS/100))
+            temp = temp[trim:-trim]
+            waste_volume = sum(temp)/len(temp)
         else:
             waste_volume = 0
 
@@ -482,7 +500,7 @@ def main():
         waste_volume = max(0, waste_volume)
 
         # supply_rate, waste_rate
-        if iteration > FLOW_RATE_REPLICATES + max(SUPPLY_WEIGHT_REPLICATES, WASTE_WEIGHT_REPLICATES):
+        if iteration > FLOW_RATE_REPLICATES + max(WEIGHT_REPLICATES, WEIGHT_REPLICATES):
             supply_volumes.pop() # remove old data
             supply_volume_times.pop()
             waste_volumes.pop()
@@ -701,7 +719,7 @@ def main():
             status_message = ALERT_EMERGENCY_BUTTON_MESSAGE
 
         # update light color and speaker sound according to status_level and new_alert
-        if iteration > FLOW_RATE_REPLICATES + max(SUPPLY_WEIGHT_REPLICATES, WASTE_WEIGHT_REPLICATES):
+        if iteration > FLOW_RATE_REPLICATES + WEIGHT_REPLICATES:
             if status_level == 'NORMAL':
                 light.color(color='default')
             elif status_level == 'ALERT':
@@ -710,16 +728,18 @@ def main():
                 light.color(color='orange')
             elif status_level == 'CRITICAL':
                 light.color(color='red')
-        else:
-            light.color(color='default')
-        
-        if iteration > FLOW_RATE_REPLICATES + max(SUPPLY_WEIGHT_REPLICATES, WASTE_WEIGHT_REPLICATES):
+
             if status_level == 'ALERT' and new_alert == True:
                 speaker.play(file=ALERT_ALERT_SOUND)
             elif status_level == 'CAUTION' and new_alert == True:
                 speaker.play(file=ALERT_CAUTION_SOUND)
             elif status_level == 'CRITICAL' and new_alert == True:
                 speaker.play(file=ALERT_CRITICAL_SOUND)
+            
+        else:
+            light.color(color='yellow')
+            status_level = ALERT_STARTUP_STATUS
+            status_message = ALERT_STARTUP_MESSAGE            
 
 
         # add updated system data to database
