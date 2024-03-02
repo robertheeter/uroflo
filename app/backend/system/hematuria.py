@@ -35,10 +35,10 @@ w_red = -81318.9
 b_red = -9016.87
 
 # severity level range parameters (blood concentration percent)
-MAX_CLEAR = 1.0
+MAX_CLEAR = 0.2
 MAX_MILD = 2.0
-MAX_MODERATE = 4.0
-MAX_SEVERE = 8.0 # do not set to 100.0
+MAX_MODERATE = 15.0
+MAX_SEVERE = 30.0 # do not set to 100.0
 
 def hematuria():
 
