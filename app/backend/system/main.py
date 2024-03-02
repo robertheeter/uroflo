@@ -318,7 +318,7 @@ def main():
 
         reset = False
     
-    
+
     # get stored patient data from database and assign to variables
     patient_data = get_data(key='all', file='patient')
     
@@ -474,8 +474,10 @@ def main():
         else:
             supply_volume = 0
         
+        print(f'supply_volume = {supply_volume}')
+        
         supply_volume_time = time.time()
-
+        
         if iteration > WEIGHT_REPLICATES:
             waste_scans.pop() # remove old data
             temp = waste_scans
@@ -485,6 +487,8 @@ def main():
             waste_volume = sum(temp)/len(temp)
         else:
             waste_volume = 0
+        
+        print(f'waste_volume = {waste_volume}')
 
         waste_volume_time = time.time()
 
@@ -500,7 +504,7 @@ def main():
         waste_volume = max(0, waste_volume)
 
         # supply_rate, waste_rate
-        if iteration > FLOW_RATE_REPLICATES + max(WEIGHT_REPLICATES, WEIGHT_REPLICATES):
+        if iteration > FLOW_RATE_REPLICATES + WEIGHT_REPLICATES:
             supply_volumes.pop() # remove old data
             supply_volume_times.pop()
             waste_volumes.pop()
@@ -517,6 +521,9 @@ def main():
         else:
             supply_rate = 0
             waste_rate = 0
+
+        print(f'supply_rate = {supply_rate}')
+        print(f'waste_rate = {waste_rate}')
 
         # supply_percent
         supply_percent = (supply_volume / supply_volume_total) * 100.0
