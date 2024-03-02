@@ -1,7 +1,15 @@
 # UroFlo
 Design of an automated continuous bladder irrigation device at Rice University in partnership with Texas Children's Hospital and Baylor College of Medicine.
 
-## Software installation on Raspberry Pi 4B
+## Software architecture
+To be added.
+
+## User interface dashboard
+![Screenshot of the UroFlo user interface dashboard.](/docs/user_interface.jpg)
+
+## Software installation
+Perform the following commands in a new terminal on Raspberry Pi 4B.
+
 ### Install base dependencies
 ```
 sudo apt update
