@@ -46,6 +46,6 @@ chmod +x run.sh
 ```
 This should run the system scripts (main.py and hematuria.py), Django backend server, React frontend server, and FireFox ESR kiosk browser.
 
-## Folders & Files
+## Folders
 - [`app/`](app/): scripts for integrated device software and interface web application
 - [`docs/`](docs/): project-related documents
