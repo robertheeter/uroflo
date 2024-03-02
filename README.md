@@ -34,13 +34,13 @@ npm install
 ```
 This should install all of the required frontend (JavaScript/CSS) packages.
 
-### Add execute permission to /uroflo/run.sh run script
+### Add execute permission to /uroflo/run.sh
 ```
 cd ../..
 chmod +x run.sh
 ```
 
-### Run app with /uroflo/run.sh run script
+### Run app with the /uroflo/run.sh
 ```
 ./run.sh
 ```
