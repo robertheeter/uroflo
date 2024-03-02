@@ -5,7 +5,7 @@ Design of an automated continuous bladder irrigation device at Rice University i
 To be added.
 
 ## User interface
-![Screenshot of the UroFlo user interface dashboard.](/docs/user_interface.jpg)
+![Screenshot of the UroFlo user interface.](/docs/user_interface.jpg)
 
 ## Installation
 Perform the following commands in a new terminal on Raspberry Pi 4B.
