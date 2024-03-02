@@ -88,6 +88,8 @@ def hematuria():
 
         add_data(data=data, file='hematuria')
         
+        print(f'hematuria_percent = {hematuria_percent}')
+        
         time.sleep(DELAY)
 
 if __name__ == '__main__':
