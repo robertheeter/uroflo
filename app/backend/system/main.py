@@ -466,7 +466,7 @@ def main():
 
         if iteration > WEIGHT_REPLICATES:
             supply_scans.pop() # remove old data
-            temp = supply_scans
+            temp = supply_scans.copy()
             temp.sort()
             trim = int(len(temp) * (WEIGHT_PERCENT_OUTLIERS/100))
             temp = temp[trim:-trim]
@@ -480,7 +480,7 @@ def main():
         
         if iteration > WEIGHT_REPLICATES:
             waste_scans.pop() # remove old data
-            temp = waste_scans
+            temp = waste_scans.copy()
             temp.sort()
             trim = int(len(temp) * (WEIGHT_PERCENT_OUTLIERS/100))
             temp = temp[trim:-trim]
