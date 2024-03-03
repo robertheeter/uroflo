@@ -23,7 +23,7 @@ HEMATURIA_SETPOINT = 0.5
 
 Kp = -0.15
 Ki = 0
-Kd = 0
+Kd = 0.05
 
 linear_actuator = LinearActuator(en_pin=13, in1_pin=19, in2_pin=26)
 spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000)
@@ -98,7 +98,7 @@ for i in range(12):
     if inflow_level_adjust > 0:
         linear_actuator.retract(duty_cycle=100, duration=inflow_level_adjust)
     elif inflow_level_adjust < 0:
-        linear_actuator.extend(duty_cycle=100, duration=abs(inflow_level_adjust))
+        linear_actuator.extend(duty_cycle=100, duration=4*abs(inflow_level_adjust))
 
 
 data_set = [times, percent, adjustment]
