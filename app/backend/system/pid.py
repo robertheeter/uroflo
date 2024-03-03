@@ -18,11 +18,11 @@ from components.linear_actuator import LinearActuator
 import csv
 
 
-INFLOW_LEVEL_ADJUST_LIMIT = 2
+INFLOW_LEVEL_ADJUST_LIMIT = 0.05
 INFLOW_ADJUSTMENT_SIZE = 0.005
 HEMATURIA_SETPOINT = 0.5
 
-Kp = -1
+Kp = -0.25
 Ki = 0
 Kd = 0
 
@@ -97,12 +97,9 @@ for i in range(15):
     times.append(time.time() - start_time)
 
     if inflow_level_adjust > 0:
-#        for _ in range(inflow_level_adjust):
-        linear_actuator.retract(duty_cycle=100, duration=INFLOW_ADJUSTMENT_SIZE)
-
+        linear_actuator.retract(duty_cycle=100, duration=inflow_level_adjust)
     elif inflow_level_adjust < 0:
-#        for _ in range(abs(inflow_level_adjust)):
-        linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_SIZE)
+        linear_actuator.extend(duty_cycle=100, duration=abs(inflow_level_adjust))
 
 
 data_set = [times, percent, adjustment]
