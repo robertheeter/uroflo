@@ -3,7 +3,7 @@
 # add execute permission: chmod +x run.sh
 
 # activate environment
-# cd Documents/uroflo
+cd /home/uroflo/Documents/uroflo
 source venv/bin/activate
 
 # run system
