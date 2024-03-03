@@ -53,7 +53,7 @@ Kp = 1
 Ki = 1
 Kd = 1
 HEMATURIA_SETPOINT = 0.5 # percent blood concentration
-INFLOW_ADJUSTMENT_TIME_LIMIT = 0.01 # +/- maximum adjustment time (seconds) in extension and retraction
+INFLOW_ADJUSTMENT_TIME_MAX = 0.01 # +/- maximum adjustment time (seconds) in extension and retraction
 
 # alert parameters
 ALERT_ALERT_SOUND = 'sound/sonar.mp3'
@@ -130,7 +130,7 @@ def main():
     waste_weight_sensor = WeightSensor(pdsck_pin=14, dout_pin=15, offset=1, scale=1)
     emergency_button = Button(pin=10)
 
-    pid = PID(Kp, Ki, Kd, setpoint=HEMATURIA_SETPOINT, output_limits=(-1*INFLOW_ADJUSTMENT_TIME_LIMIT, INFLOW_ADJUSTMENT_TIME_LIMIT))
+    pid = PID(Kp, Ki, Kd, setpoint=HEMATURIA_SETPOINT, output_limits=(-1*INFLOW_ADJUSTMENT_TIME_MAX, INFLOW_ADJUSTMENT_TIME_MAX))
     regression = LinearRegression()
 
 
@@ -314,14 +314,16 @@ def main():
             time.sleep(0.01)
 
         # wait for replaced tubing (setup)
-        linear_actuator.retract(duty_cycle=100, duration=3) # retract actuator
+        s = time.time()
         while True:
             setup = get_data(key='setup', file='interface')
             if setup == True:
-                linear_actuator.extend(duty_cycle=100, duration=6) # fully extend actuator
+                linear_actuator.extend(duty_cycle=100, duration=min(4, time.time()-s+1)) # fully extend actuator
                 break
+            if ((time.time()-s) < 3):
+                linear_actuator.retract(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME) # retract actuator
             time.sleep(0.01)
-
+        
         reset = False
     
 
@@ -535,9 +537,6 @@ def main():
         else:
             supply_rate = 0
             waste_rate = 0
-
-        print(f'supply_rate = {supply_rate}')
-        print(f'waste_rate = {waste_rate}')
 
         # supply_percent
         supply_percent = (supply_volume / supply_volume_total) * 100.0
@@ -770,11 +769,11 @@ def main():
             'supply_percent': round(supply_percent),
             'supply_volume': round(supply_volume),
             'supply_time': round(supply_time),
-            'supply_rate': round(supply_rate),
+            'supply_rate': round(supply_rate, -1),
             'waste_percent': round(waste_percent),
             'waste_volume': round(waste_volume),
             'waste_time': round(waste_time),
-            'waste_rate': round(waste_rate),
+            'waste_rate': round(waste_rate, -1),
             'status_level': status_level,
             'status_message': status_message,
             'active_time': round(active_time),
