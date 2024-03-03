@@ -1,7 +1,6 @@
 import os
 
-# url = "http://localhost:5173/landing"
-url = "https://google.com"
+url = "http://localhost:5173/landing"
 
 os.system(f"firefox-esr -private --kiosk {url}")
 
