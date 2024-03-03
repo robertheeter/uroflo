@@ -516,16 +516,16 @@ def main():
 
             if iteration > FLOW_RATE_REPLICATES + WEIGHT_REPLICATES:
                 regression.fit(np.array(supply_volume_times).reshape(-1, 1), np.array(supply_volumes).reshape(-1, 1))
-                supply_rate = regression.coef_[0] * -60 # convert mL/s to mL/min
+                supply_rate = regression.coef_[0][0] * -60 # convert mL/s to mL/min
                 supply_rate = max(0, supply_rate)
 
                 plt.figure()
                 plt.plot(supply_volume_times, supply_volumes, marker='o', linestyle='-')
-                plt.title(f'y = {round(regression.coef_[0],2)}x + {round(regression.intercept_,2)}')
+                plt.title(f'y = {round(regression.coef_[0][0],2)}x + {round(regression.intercept_[0],2)}')
                 plt.savefig(f'plot_{iteration}.png')
 
                 regression.fit(np.array(waste_volume_times).reshape(-1, 1), np.array(waste_volumes).reshape(-1, 1))
-                waste_rate = regression.coef_[0] * 60 # convert mL/s to mL/min
+                waste_rate = regression.coef_[0][0] * 60 # convert mL/s to mL/min
                 waste_rate = max(0, waste_rate)
 
             else:
