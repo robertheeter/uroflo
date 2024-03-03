@@ -17,13 +17,14 @@ from components.linear_actuator import LinearActuator
 
 import csv
 
-INFLOW_LEVEL_ADJUST_LIMIT = 10
+
+INFLOW_LEVEL_ADJUST_LIMIT = 2
 INFLOW_ADJUSTMENT_SIZE = 0.005
-HEMATURIA_SETPOINT = 0.4
+HEMATURIA_SETPOINT = 0.5
 
 Kp = -1
-Ki = -0.01
-Kd = -0.1
+Ki = 0
+Kd = 0
 
 linear_actuator = LinearActuator(en_pin=13, in1_pin=19, in2_pin=26)
 spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000)
@@ -40,9 +41,13 @@ red = ['red']
 percent = ['percent']
 adjustment = ['adjustment']
 
+times = []
+start_time = time.time()
+times.append(start_time)
+
 for i in range(15):
 
-    intensities = spectral_sensor.read(replicates=20)
+    intensities = spectral_sensor.read(replicates=60)
 
     w_violet = -721.729
     b_violet = 1367.9
@@ -71,12 +76,12 @@ for i in range(15):
     orange.append(x_orange)
     red.append(x_red)
 
-    print(f"\nviolet: {x_violet}")
-    print(f"blue: {x_blue}")
-    print(f"green: {x_green}")
-    print(f"yellow: {x_yellow}")
-    print(f"orange: {x_orange}")
-    print(f"red: {x_red}")
+ #   print(f"\nviolet: {x_violet}")
+ #   print(f"blue: {x_blue}")
+ #   print(f"green: {x_green}")
+ #   print(f"yellow: {x_yellow}")
+ #   print(f"orange: {x_orange}")
+ #  print(f"red: {x_red}")
 
     hematuria_percent = w_violet*(1/(x_violet - b_violet)) + w_blue*(1/(x_blue - b_blue)) + w_green*(1/(x_green - b_green)) + w_yellow*(1/(x_yellow - b_yellow)) + w_orange*(1/(x_orange - b_orange)) + w_red*(1/(x_red - b_red))
     
@@ -89,6 +94,7 @@ for i in range(15):
     print(f"inflow level adjust: {inflow_level_adjust}")
 
     adjustment.append(inflow_level_adjust)
+    times.append(time.time() - start_time)
 
     if inflow_level_adjust > 0:
 #        for _ in range(inflow_level_adjust):
@@ -98,10 +104,8 @@ for i in range(15):
 #        for _ in range(abs(inflow_level_adjust)):
         linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_SIZE)
 
-    time.sleep(5)
 
-
-data_set = [violet, blue, green, yellow, orange, red, percent, adjustment]
+data_set = [percent, adjustment]
 
 # Transpose the data to convert columns to rows
 data_rows = zip(*data_set)
