@@ -515,7 +515,7 @@ def main():
             waste_volume_times.pop()
 
             if iteration > FLOW_RATE_REPLICATES + WEIGHT_REPLICATES:
-                plt.plot(x_values, y_values, marker='o', linestyle='-')
+                plt.plot(supply_volume_times, supply_volumes, marker='o', linestyle='-')
                 plt.savefig(f'plot_{iteration}.png')
 
                 regression.fit(np.array(supply_volume_times).reshape(-1, 1), np.array(supply_volumes).reshape(-1, 1))
