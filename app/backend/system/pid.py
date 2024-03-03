@@ -44,7 +44,7 @@ times = []
 start_time = time.time()
 times.append(start_time)
 
-for i in range(15):
+for i in range(12):
 
     intensities = spectral_sensor.read(replicates=60)
 
