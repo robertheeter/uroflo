@@ -6,6 +6,13 @@
 cd /home/uroflo/Documents/uroflo
 source venv/bin/activate
 
+# run frontend
+(
+  cd app/frontend || exit
+  npm run dev &
+  sleep 2
+)
+
 # run browser
 (
   cd app/frontend/browser || exit
@@ -25,13 +32,6 @@ source venv/bin/activate
 (
   cd app/backend || exit
   python manage.py runserver &
-  sleep 0.1
-)
-
-# run frontend
-(
-  cd app/frontend || exit
-  npm run dev &
   sleep 0.1
 )
 
