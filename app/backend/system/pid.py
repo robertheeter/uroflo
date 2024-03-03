@@ -23,7 +23,7 @@ HEMATURIA_SETPOINT = 0.5
 
 Kp = -0.15
 Ki = 0
-Kd = 0.03
+Kd = 0.05
 
 linear_actuator = LinearActuator(en_pin=13, in1_pin=19, in2_pin=26)
 spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000)
