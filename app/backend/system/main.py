@@ -24,7 +24,6 @@ import pytz
 from simple_pid import PID
 import board
 from sklearn.linear_model import LinearRegression
-import matplotlib.pyplot as plt
 
 from data import *
 from timer import Timer
@@ -323,7 +322,7 @@ def main():
             if ((time.time()-s) < 3):
                 linear_actuator.retract(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME) # retract actuator
             time.sleep(0.01)
-        
+
         reset = False
     
 
@@ -480,9 +479,7 @@ def main():
             supply_volume = sum(temp)/len(temp)
         else:
             supply_volume = 0
-        
-        print(f'supply_volume = {supply_volume}')
-        
+                
         supply_volume_time = time.time()
         
         if iteration > WEIGHT_REPLICATES:
@@ -494,8 +491,6 @@ def main():
         else:
             waste_volume = 0
         
-        print(f'waste_volume = {waste_volume}')
-
         waste_volume_time = time.time()
 
         supply_volumes.insert(0, supply_volume)
@@ -520,11 +515,6 @@ def main():
                 regression.fit(np.array(supply_volume_times).reshape(-1, 1), np.array(supply_volumes).reshape(-1, 1))
                 supply_rate = regression.coef_[0][0] * -60 # convert mL/s to mL/min
                 supply_rate = max(0, supply_rate)
-
-                plt.figure()
-                plt.plot(supply_volume_times, supply_volumes, marker='o', linestyle='-')
-                plt.title(f'y = {round(regression.coef_[0][0],2)}x + {round(regression.intercept_[0],2)}')
-                plt.savefig(f'plot_{iteration}.png')
 
                 regression.fit(np.array(waste_volume_times).reshape(-1, 1), np.array(waste_volumes).reshape(-1, 1))
                 waste_rate = regression.coef_[0][0] * 60 # convert mL/s to mL/min
