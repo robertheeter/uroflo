@@ -24,6 +24,7 @@ import pytz
 from simple_pid import PID
 import board
 from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
 
 from data import *
 from timer import Timer
@@ -41,7 +42,7 @@ INFLOW_ADJUSTMENT_TIME = 0.01 # sec
 
 WEIGHT_CALIBRATION_REPLICATES = 15
 WEIGHT_REPLICATES = 60
-WEIGHT_PERCENT_OUTLIERS = 5
+WEIGHT_OUTLIERS = 20
 FLOW_RATE_REPLICATES = 60 # number of weight measurements to use for each rate calculation
 
 SUPPLY_DENSITY = 1.0 # g/mL
@@ -119,7 +120,7 @@ def main():
         os.mkdir('data') # make data directory if one does not exist
     except:
         pass
-    
+
     # instantiate components, PID, and linear regression
     light = Light(red_pin=board.D8, green_pin=board.D7, blue_pin=board.D1)
     linear_actuator = LinearActuator(en_pin=13, in1_pin=19, in2_pin=26, freq=1000)
@@ -473,8 +474,7 @@ def main():
             supply_scans.pop() # remove old data
             temp = supply_scans.copy()
             temp.sort()
-            trim = int(len(temp) * (WEIGHT_PERCENT_OUTLIERS/100))
-            temp = temp[trim:-trim]
+            temp = temp[WEIGHT_OUTLIERS:-WEIGHT_OUTLIERS]
             supply_volume = sum(temp)/len(temp)
         else:
             supply_volume = 0
@@ -487,8 +487,7 @@ def main():
             waste_scans.pop() # remove old data
             temp = waste_scans.copy()
             temp.sort()
-            trim = int(len(temp) * (WEIGHT_PERCENT_OUTLIERS/100))
-            temp = temp[trim:-trim]
+            temp = temp[WEIGHT_OUTLIERS:-WEIGHT_OUTLIERS]
             waste_volume = sum(temp)/len(temp)
         else:
             waste_volume = 0
@@ -516,6 +515,9 @@ def main():
             waste_volume_times.pop()
 
             if iteration > FLOW_RATE_REPLICATES + WEIGHT_REPLICATES:
+                plt.plot(x_values, y_values, marker='o', linestyle='-')
+                plt.savefig(f'plot_{iteration}.png')
+
                 regression.fit(np.array(supply_volume_times).reshape(-1, 1), np.array(supply_volumes).reshape(-1, 1))
                 supply_rate = regression.coef_[0][0] * -60 # convert mL/s to mL/min
                 supply_rate = max(0, supply_rate)
