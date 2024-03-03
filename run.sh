@@ -9,7 +9,6 @@ source venv/bin/activate
 # run system
 (
   cd app/backend/system || exit
-  mkdir data &
   python main.py &
   python hematuria.py &
   sleep 2
@@ -29,10 +28,11 @@ source venv/bin/activate
   sleep 2
 )
 
-# run firefox-esr
-firefox-esr -private --kiosk http://localhost:5173/landing
-  # quit firefox-esr kiosk mode: ALT+F4
-  # move forward or back page in firefox-esr kiosk mode: ALT+[left arrow/right arrow]
-  # install firefox-esr: sudo apt install firefox-esr
+# run browser
+(
+  cd app/frontend/browser || exit
+  python kiosk.py
+  sleep 2
+)
 
 wait
