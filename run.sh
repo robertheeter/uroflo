@@ -13,13 +13,6 @@ source venv/bin/activate
   sleep 2
 )
 
-# run browser
-(
-  cd app/frontend/browser || exit
-  python kiosk.py
-  sleep 0.1
-)
-
 # run system
 (
   cd app/backend/system || exit
@@ -32,6 +25,13 @@ source venv/bin/activate
 (
   cd app/backend || exit
   python manage.py runserver &
+  sleep 0.1
+)
+
+# run browser
+(
+  cd app/frontend/browser || exit
+  python kiosk.py
   sleep 0.1
 )
 
