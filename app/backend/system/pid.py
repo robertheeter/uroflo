@@ -105,7 +105,7 @@ for i in range(15):
         linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_SIZE)
 
 
-data_set = [percent, adjustment]
+data_set = [times, percent, adjustment]
 
 # Transpose the data to convert columns to rows
 data_rows = zip(*data_set)
