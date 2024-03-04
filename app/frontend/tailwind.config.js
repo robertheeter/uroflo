@@ -6,7 +6,7 @@ export default {
     extend: {
       animation: {
         moveToLeft: "moveToLeft 1s 1s forwards",
-        fadeInMoveLeft: "fadeInMoveLeft 2s forwards",
+        fadeInMoveLeft: "fadeInMoveLeft 1s forwards",
       },
       keyframes: {
         moveToLeft: {
