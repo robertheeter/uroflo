@@ -10,6 +10,22 @@ To be added.
 ## Installation
 Perform the following commands in a new terminal on Raspberry Pi 4B.
 
+### Configuration modifications
+The following should be added to the bottom of `/boot/config.txt` via `sudo nano /boot/config.txt` to operate the touchscreen and remove the splash background on boot.
+```
+hdmi_force_edid_audio=1
+max_usb_current=1
+hdmi_force_hotplug=1
+config_hdmi_boost=7
+hdmi_group=2
+hdmi_mode=87
+hdmi_drive=2
+display_rotate=0
+hdmi_timings=1024 1 150 18 150 600 1 15 3 15 0 0 0 60 0 60000000 3
+
+disable_splash=1
+```
+
 ### Install base dependencies
 ```
 sudo apt update
@@ -63,6 +79,14 @@ ps
 kill [process ID]
 ```
 Kill the 3 Python processes (main.py, hematuria.py, Django backend server) and Node frontend server processes. A list of processes can be viewed with the `ps` command. Alternatively, reboot the Raspberry Pi.
+
+### Run on boot
+The following should be added to the bottom of `/home/[user]/.bashrc` via `sudo nano ~/.bashrc` to run the application on boot. Ensure that `run.sh` is executable (see above).
+```
+DISPLAY=:0 /home/[user]/Documents/uroflo/run.sh &
+```
+To quit the program after running on boot, use `kill -9 -1`, which should reset the device to the login screen, after which the `.bashrc` file can be modified to not run the application on boot.
+
 
 ## Folders
 - [`app/`](app/): scripts for integrated device software and interface web application
