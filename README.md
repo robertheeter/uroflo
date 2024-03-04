@@ -81,7 +81,7 @@ kill [process ID]
 Kill the 3 Python processes (main.py, hematuria.py, Django backend server) and Node frontend server processes. A list of processes can be viewed with the `ps` command. Alternatively, reboot the Raspberry Pi.
 
 ### Run on boot
-The following should be added to the bottom of `/home/[user]/.bashrc` via `sudo nano ~/.bashrc` to run the application on boot. Ensure that `run.sh` is executable (see above).
+The following should be added to the bottom of `/home/[user]/.bashrc` via `sudo nano ~/.bashrc` to run the application on boot. Ensure that `run.sh` has execute permission (see above).
 ```
 DISPLAY=:0 /home/[user]/Documents/uroflo/run.sh &
 ```
