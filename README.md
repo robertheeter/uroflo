@@ -23,6 +23,7 @@ hdmi_drive=2
 display_rotate=0
 hdmi_timings=1024 1 150 18 150 600 1 15 3 15 0 0 0 60 0 60000000 3
 
+disable_overscan=1
 disable_splash=1
 ```
 
