@@ -37,7 +37,7 @@ from components.weight_sensor import WeightSensor
 
 
 # system parameters
-INFLOW_ADJUSTMENT_TIME = 0.01 # sec
+INFLOW_ADJUSTMENT_TIME = 0.005 # sec
 
 WEIGHT_CALIBRATION_REPLICATES = 15
 WEIGHT_REPLICATES = 60
