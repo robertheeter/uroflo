@@ -8,9 +8,9 @@ source venv/bin/activate
 
 # delete all existing databases
 cd app/backend/system
-rm -r data
+sudo rm -r data
 sleep 1.0
-mkdir data
+sudo mkdir data
 cd ../..
 sleep 1.0
 
