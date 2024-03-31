@@ -16,7 +16,7 @@ Documentation
 
 import time
 import board
-import pwmio
+import RPi.GPIO as GPIO
 import os
 
 
@@ -32,53 +32,49 @@ class Light():
 
     def setup(self):
         print("Light: setup")
-        self.red = pwmio.PWMOut(self.red_pin)
-        self.green = pwmio.PWMOut(self.green_pin)
-        self.blue = pwmio.PWMOut(self.blue_pin)
+        GPIO.setwarnings(False)
+        GPIO.setmode(GPIO.BCM) # BCM mode
 
-    # convert between percent and duty_cycle
-    def duty_cycle(self, percent):
-        return int(percent / 100.0 * 65535.0)
+        GPIO.setup(self.red_pin, GPIO.OUT)
+        GPIO.setup(self.green_pin, GPIO.OUT)
+        # GPIO.setup(self.blue_pin, GPIO.OUT) # not using blue color
+
+        GPIO.output(self.red_pin, GPIO.LOW) # turn off color
+        GPIO.output(self.green_pin, GPIO.LOW) # turn off color
+        # GPIO.output(self.blue_pin, GPIO.LOW) # turn off color; not using blue color
 
     # set LED light to color
     def color(self, color):
-        if color not in ['off', 'default', 'yellow', 'orange', 'red']:
+        if color not in ['off', 'green', 'yellow', 'red']:
             raise Exception(f"Light: color = {color} not available")
         
         if self.verbose:
             print(f"Light: color (color = {color})")
         
         if color == 'off':
-            self.red.duty_cycle = self.duty_cycle(0)
-            self.green.duty_cycle = self.duty_cycle(0)
-            self.blue.duty_cycle = self.duty_cycle(0)
-        
-        elif color == 'default':
-            self.red.duty_cycle = self.duty_cycle(1)
-            self.green.duty_cycle = self.duty_cycle(2.74)
-            self.blue.duty_cycle = self.duty_cycle(4)
+            GPIO.output(self.red_pin, GPIO.LOW) # turn off color
+            GPIO.output(self.green_pin, GPIO.LOW) # turn off color
+            # GPIO.output(self.blue_pin, GPIO.LOW) # turn off color; not using blue color
             
-        elif color == 'yellow':
-            self.red.duty_cycle = self.duty_cycle(20)
-            self.blue.duty_cycle = self.duty_cycle(0)
-            self.green.duty_cycle = self.duty_cycle(10)
+        elif color == 'green':
+            GPIO.output(self.red_pin, GPIO.LOW) # turn off color
+            GPIO.output(self.green_pin, GPIO.HIGH) # turn on color
+            # GPIO.output(self.blue_pin, GPIO.LOW) # turn off color; not using blue color
 
-        elif color == 'orange':
-            self.red.duty_cycle = self.duty_cycle(50)
-            self.blue.duty_cycle = self.duty_cycle(0)
-            self.green.duty_cycle = self.duty_cycle(10)
+        elif color == 'yellow':
+            GPIO.output(self.red_pin, GPIO.HIGH) # turn on color
+            GPIO.output(self.green_pin, GPIO.HIGH) # turn on color
+            # GPIO.output(self.blue_pin, GPIO.LOW) # turn off color; not using blue color
 
         elif color == 'red':
-            self.red.duty_cycle = self.duty_cycle(50)
-            self.blue.duty_cycle = self.duty_cycle(0)
-            self.green.duty_cycle = self.duty_cycle(0)
+            GPIO.output(self.red_pin, GPIO.HIGH) # turn on color
+            GPIO.output(self.green_pin, GPIO.LOW) # turn off color
+            # GPIO.output(self.blue_pin, GPIO.LOW) # turn off color; not using blue color
 
     def shutdown(self):
         print("Light: shutdown")
         self.color(color='off')
-        self.red.deinit()
-        self.green.deinit()
-        self.blue.deinit()
+        GPIO.cleanup()
 
 
 # example implementation
@@ -88,7 +84,7 @@ if __name__ == '__main__':
     light = Light(red_pin=board.D8, green_pin=board.D7, blue_pin=board.D1, verbose=True) # use BOARD.D[GPIO] numbering (BCM) (NOT pin numbering)
     time.sleep(2) # wait for setup
 
-    for color in ['default', 'off', 'yellow', 'orange', 'red']:
+    for color in ['green', 'yellow', 'off', 'red']:
         light.color(color=color)
         time.sleep(4)
     
