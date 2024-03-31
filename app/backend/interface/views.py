@@ -5,6 +5,7 @@ import json
 import random
 from datetime import datetime
 import pytz
+import time
 
 import sys
 sys.path.append('../backend')
@@ -73,6 +74,7 @@ def interface_supply_replace_volume(request):
             data = json.loads(request.body.decode('utf-8'))
             supply_replace_volume = int(data.get('supply_replace_volume', None))
             
+            time.sleep(0.2)
             add_data(data={'supply_replace_volume': supply_replace_volume}, file='interface')
             if VERBOSE:
                 print(f"supply_replace_volume = {supply_replace_volume}")
@@ -135,6 +137,7 @@ def interface_waste_replace_volume(request):
             data = json.loads(request.body.decode('utf-8'))
             waste_replace_volume = int(data.get('waste_replace_volume', None))
             
+            time.sleep(0.2)
             add_data(data={'waste_replace_volume': waste_replace_volume}, file='interface')
             if VERBOSE:
                 print(f"waste_replace_volume = {waste_replace_volume}")
