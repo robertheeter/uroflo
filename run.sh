@@ -8,9 +8,11 @@ source venv/bin/activate
 
 # delete all existing databases
 cd app/backend/system
-python data.py
+rm -r data
+sleep 1.0
 mkdir data
 cd ../..
+sleep 1.0
 
 # run frontend
 (
