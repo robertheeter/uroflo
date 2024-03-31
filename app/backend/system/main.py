@@ -353,6 +353,7 @@ def main():
             supply_replace_count_added = val
             time.sleep(6)
             supply_replace_volume = get_data(key='supply_replace_volume', file='interface')
+            print(F'SUPPLY REPLACE VOLUME = {supply_replace_volume}')
             supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=WEIGHT_CALIBRATION_REPLICATES) # calibrate weight sensor with known mass
             supply_volume_gross +=  supply_volume_total - supply_volume # update
             supply_volume_total = supply_replace_volume # update
@@ -376,6 +377,7 @@ def main():
                 known_mass = 75
             elif waste_replace_volume == 3000:
                 known_mass = 100
+            print(F'WASTE REPLACE VOLUME = {waste_replace_volume}')
             waste_weight_sensor.calibrate(known_mass=known_mass, replicates=WEIGHT_CALIBRATION_REPLICATES) # calibrate weight sensor with known mass
             waste_volume_gross += waste_volume # update
             waste_volume_total = waste_replace_volume # update
