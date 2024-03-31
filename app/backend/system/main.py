@@ -351,7 +351,7 @@ def main():
         val = get_data(key='supply_replace_count_added', file='interface')
         if val > supply_replace_count_added:
             supply_replace_count_added = val
-            time.sleep(0.6)
+            time.sleep(6)
             supply_replace_volume = get_data(key='supply_replace_volume', file='interface')
             supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=WEIGHT_CALIBRATION_REPLICATES) # calibrate weight sensor with known mass
             supply_volume_gross +=  supply_volume_total - supply_volume # update
@@ -368,7 +368,7 @@ def main():
         val = get_data(key='waste_replace_count_added', file='interface')
         if val > waste_replace_count_added:
             waste_replace_count_added = val
-            time.sleep(0.6)
+            time.sleep(6)
             waste_replace_volume = get_data(key='waste_replace_volume', file='interface')
             if waste_replace_volume == 1000:
                 known_mass = 50
@@ -376,10 +376,6 @@ def main():
                 known_mass = 75
             elif waste_replace_volume == 3000:
                 known_mass = 100
-            elif waste_replace_volume == 4000:
-                known_mass = 125
-            elif waste_replace_volume == 5000:
-                known_mass = 150
             waste_weight_sensor.calibrate(known_mass=known_mass, replicates=WEIGHT_CALIBRATION_REPLICATES) # calibrate weight sensor with known mass
             waste_volume_gross += waste_volume # update
             waste_volume_total = waste_replace_volume # update
