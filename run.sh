@@ -45,4 +45,9 @@ sleep 1
   sleep 1
 )
 
+# run mobile website
+(
+  lt --port 8000 --subdomain uroflo
+)
+
 wait
