@@ -112,8 +112,8 @@ def main():
     linear_actuator = LinearActuator(en_pin=13, in1_pin=19, in2_pin=26, freq=1000)
     speaker = Speaker()
     # spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000) # not directly used for measurements in main script
-    supply_weight_sensor = WeightSensor(pdsck_pin=18, dout_pin=23, offset=1, scale=1)
-    waste_weight_sensor = WeightSensor(pdsck_pin=14, dout_pin=15, offset=1, scale=1)
+    supply_weight_sensor = WeightSensor(pdsck_pin=18, dout_pin=23, offset=1, scale=1, verbose=True)
+    waste_weight_sensor = WeightSensor(pdsck_pin=14, dout_pin=15, offset=1, scale=1, verbose=True)
     emergency_button = Button(pin=10)
 
     pid = PID(Kp, Ki, Kd, setpoint=HEMATURIA_SETPOINT, output_limits=(-1*INFLOW_LEVEL_ADJUST_TIME_LIMIT, INFLOW_LEVEL_ADJUST_TIME_LIMIT))
@@ -259,8 +259,8 @@ def main():
             if val > supply_replace_count_added:
                 time.sleep(6)
                 supply_replace_count_added = val
-                print(f'SUPPLY REPLACE VOLUME = {supply_replace_volume}')
                 supply_replace_volume = get_data(key='supply_replace_volume', file='interface')
+                print(f'SUPPLY REPLACE VOLUME = {supply_replace_volume}')
                 supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=WEIGHT_CALIBRATION_REPLICATES) # calibrate weight sensor with known mass
                 supply_volume_total = supply_replace_volume # update
                 supply_replace_count += 1 # update
