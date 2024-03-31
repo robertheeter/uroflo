@@ -48,35 +48,27 @@ SUPPLY_DENSITY = 1.0 # g/mL
 WASTE_DENSITY = 1.0 # g/mL
 
 # PID parameters
-Kp = 1
-Ki = 1
-Kd = 1
-HEMATURIA_SETPOINT = 0.5 # percent blood concentration
-INFLOW_ADJUSTMENT_TIME_MAX = 0.01 # +/- maximum adjustment time (seconds) in extension and retraction
+Kp = -0.15
+Ki = 0
+Kd = 0.05
 
-# alert parameters
-ALERT_ALERT_SOUND = 'sound/sonar.mp3'
-ALERT_CAUTION_SOUND = 'sound/sonar.mp3'
+INFLOW_LEVEL_ADJUST_TIME_LIMIT = 0.05 # +/- maximum adjustment time (seconds) in extension and retraction
+HEMATURIA_SETPOINT = 0.5 # percent blood concentration
+
+# alert parameters (ordered by prescedence)
+ALERT_CAUTION_SOUND = 'sound/echo.mp3'
 ALERT_CRITICAL_SOUND = 'sound/alarm.mp3'
 
 ALERT_STARTUP_STATUS = 'SETUP'
 ALERT_STARTUP_MESSAGE = 'System starting.'
 
 ALERT_SUPPLY_LOW_PERCENT = 10
-ALERT_SUPPLY_LOW_LEVEL = 'ALERT' # if changing, adjust order of alert conditions below
+ALERT_SUPPLY_LOW_LEVEL = 'CAUTION' # if changing, adjust order of alert conditions below
 ALERT_SUPPLY_LOW_MESSAGE = f'Supply bag volume <{ALERT_SUPPLY_LOW_PERCENT}%.'
 
-ALERT_SUPPLY_EMPTY_PERCENT = 5
-ALERT_SUPPLY_EMPTY_LEVEL = 'CAUTION' # if changing, adjust order of alert conditions below
-ALERT_SUPPLY_EMPTY_MESSAGE = f'Supply bag volume <{ALERT_SUPPLY_EMPTY_PERCENT}%.'
-
 ALERT_WASTE_HIGH_PERCENT = 90
-ALERT_WASTE_HIGH_LEVEL = 'ALERT' # if changing, adjust order of alert conditions below
+ALERT_WASTE_HIGH_LEVEL = 'CAUTION' # if changing, adjust order of alert conditions below
 ALERT_WASTE_HIGH_MESSAGE = f'Waste bag volume >{ALERT_WASTE_HIGH_PERCENT}%.'
-
-ALERT_WASTE_FULL_PERCENT = 95
-ALERT_WASTE_FULL_LEVEL = 'CAUTION' # if changing, adjust order of alert conditions below
-ALERT_WASTE_FULL_MESSAGE = f'Waste bag volume >{ALERT_WASTE_FULL_PERCENT}%.'
 
 ALERT_SUPPLY_FLOW_LOW_RATE = 1 # mL/min
 ALERT_SUPPLY_FLOW_LOW_TIME = 5 # min
@@ -95,7 +87,7 @@ ALERT_WASTE_FLOW_LOW_MESSAGE = f'Waste outflow rate <{ALERT_WASTE_FLOW_LOW_RATE}
 
 ALERT_WASTE_FLOW_HIGH_RATE = 200 # mL/min
 ALERT_WASTE_FLOW_HIGH_TIME = 2 # min
-ALERT_WASTE_FLOW_HIGH_LEVEL = 'ALERT' # if changing, adjust order of alert conditions below
+ALERT_WASTE_FLOW_HIGH_LEVEL = 'CAUTION' # if changing, adjust order of alert conditions below
 ALERT_WASTE_FLOW_HIGH_MESSAGE = f'Waste outflow rate >{ALERT_WASTE_FLOW_HIGH_RATE} mL/min for >{ALERT_WASTE_FLOW_HIGH_TIME} min.'
 
 ALERT_FLOW_DISCREPANCY_RATE = 20 # mL/min
@@ -115,11 +107,6 @@ ALERT_EMERGENCY_BUTTON_MESSAGE = 'Emergency button pressed; inflow stopped.'
 # main loop
 def main():
 
-    try:
-        os.mkdir('data') # make data directory if one does not exist
-    except:
-        pass
-
     # instantiate components, PID, and linear regression
     light = Light(red_pin=board.D8, green_pin=board.D7, blue_pin=board.D1)
     linear_actuator = LinearActuator(en_pin=13, in1_pin=19, in2_pin=26, freq=1000)
@@ -129,7 +116,7 @@ def main():
     waste_weight_sensor = WeightSensor(pdsck_pin=14, dout_pin=15, offset=1, scale=1)
     emergency_button = Button(pin=10)
 
-    pid = PID(Kp, Ki, Kd, setpoint=HEMATURIA_SETPOINT, output_limits=(-1*INFLOW_ADJUSTMENT_TIME_MAX, INFLOW_ADJUSTMENT_TIME_MAX))
+    pid = PID(Kp, Ki, Kd, setpoint=HEMATURIA_SETPOINT, output_limits=(-1*INFLOW_LEVEL_ADJUST_TIME_LIMIT, INFLOW_LEVEL_ADJUST_TIME_LIMIT))
     regression = LinearRegression()
 
 
@@ -147,7 +134,7 @@ def main():
             delete_data(file=file)
             create_data(file=file)
     else:
-        light.color(color='default')
+        light.color(color='green')
     
 
     # get stored system data from database and assign to variables
@@ -223,10 +210,8 @@ def main():
 
     # additional variables for checking alert conditions
     alert_supply_low = False
-    alert_supply_empty = False
 
     alert_waste_high = False
-    alert_waste_full = False
 
     alert_supply_flow_low = False
     alert_supply_flow_low_timer = Timer()
@@ -373,7 +358,6 @@ def main():
             supply_volume_total = supply_replace_volume # update
             supply_replace_count += 1 # update
             alert_supply_low = False
-            alert_supply_empty = False
 
         # waste_replace_volume, waste_replace_count_removed, waste_replace_count_added
         val = get_data(key='waste_replace_count_removed', file='interface')
@@ -401,7 +385,6 @@ def main():
             waste_volume_total = waste_replace_volume # update
             waste_replace_count += 1 # update
             alert_waste_high = False
-            alert_waste_full = False
             
         # automatic, inflow_level
         automatic = get_data(key='automatic', file='interface')
@@ -568,9 +551,12 @@ def main():
         # adjust inflow rate
         if alert_emergency_button == False:
             if automatic == True:
-                # output = round(pid(hematuria_percent)) # UPDATE THIS
-                # finish this (needs to move actuator)
-                pass
+                output = pid(hematuria_percent)
+                if output > 0:
+                    linear_actuator.retract(duty_cycle=100, duration=output)
+                elif output < 0:
+                    linear_actuator.extend(duty_cycle=100, duration=2*abs(output))
+
             elif automatic == False:
                 if inflow_level_adjust == 1:
                     linear_actuator.retract(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME)
@@ -578,8 +564,8 @@ def main():
                 elif inflow_level_adjust == -1:
                     linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME)
                     inflow_level_adjust = 0
-                # else:
-                #     time.sleep(INFLOW_ADJUSTMENT_TIME)
+                else:
+                    time.sleep(INFLOW_ADJUSTMENT_TIME)
 
         elif alert_emergency_button == True:
             linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME) # extend actuator
@@ -590,7 +576,7 @@ def main():
         
         new_alert = False
         
-        # ALERT
+        # CAUTION
         # alert_supply_low
         if supply_percent < ALERT_SUPPLY_LOW_PERCENT:
             if alert_supply_low == False:
@@ -625,27 +611,6 @@ def main():
             alert_waste_flow_high = True
             status_level = ALERT_WASTE_FLOW_HIGH_LEVEL
             status_message = ALERT_WASTE_FLOW_HIGH_MESSAGE
-
-        # CAUTION
-        # alert_supply_empty
-        if supply_percent < ALERT_SUPPLY_EMPTY_PERCENT:
-            if alert_supply_empty == False:
-                new_alert = True
-            alert_supply_empty = True
-            status_level = ALERT_SUPPLY_EMPTY_LEVEL
-            status_message = ALERT_SUPPLY_EMPTY_MESSAGE
-        else:
-            alert_supply_empty = False
-        
-        # alert_waste_full
-        if waste_percent > ALERT_WASTE_FULL_PERCENT:
-            if alert_waste_full == False:
-                new_alert = True
-            alert_waste_full = True
-            status_level = ALERT_WASTE_FULL_LEVEL
-            status_message = ALERT_WASTE_FULL_MESSAGE
-        else:
-            alert_waste_full = False
 
         # alert_supply_flow_high
         if supply_rate > ALERT_SUPPLY_FLOW_HIGH_RATE:
@@ -731,16 +696,12 @@ def main():
         # update light color and speaker sound according to status_level and new_alert
         if iteration > FLOW_RATE_REPLICATES + WEIGHT_REPLICATES:
             if status_level == 'NORMAL':
-                light.color(color='default')
-            elif status_level == 'ALERT':
-                light.color(color='yellow')
+                light.color(color='green')
             elif status_level == 'CAUTION':
-                light.color(color='orange')
+                light.color(color='yellow')
             elif status_level == 'CRITICAL':
                 light.color(color='red')
 
-            if status_level == 'ALERT' and new_alert == True:
-                speaker.play(file=ALERT_ALERT_SOUND)
             elif status_level == 'CAUTION' and new_alert == True:
                 speaker.play(file=ALERT_CAUTION_SOUND)
             elif status_level == 'CRITICAL' and new_alert == True:

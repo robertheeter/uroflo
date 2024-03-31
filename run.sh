@@ -6,37 +6,39 @@
 cd /home/uroflo/Documents/uroflo
 source venv/bin/activate
 
-# TEMPORARY delete all existing databases
-python app/backend/system/data.py
-sleep 0.1
+# delete all existing databases
+cd app/backend/system
+python data.py
+mkdir data
+cd ../..
 
 # run frontend
 (
-  cd app/frontend || exit
+  cd frontend || exit
   npm run dev &
   sleep 1.0
 )
 
 # run system
 (
-  cd app/backend/system || exit
+  cd backend/system || exit
   python main.py &
   python hematuria.py &
-  sleep 0.1
+  sleep 1.0
 )
 
 # run backend
 (
-  cd app/backend || exit
+  cd backend || exit
   python manage.py runserver &
-  sleep 0.1
+  sleep 1.0
 )
 
 # run browser
 (
-  cd app/frontend/browser || exit
+  cd frontend/browser || exit
   python kiosk.py
-  sleep 0.1
+  sleep 1.0
 )
 
 wait
