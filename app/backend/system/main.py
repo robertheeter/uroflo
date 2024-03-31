@@ -108,7 +108,7 @@ ALERT_EMERGENCY_BUTTON_MESSAGE = 'Emergency button pressed; inflow stopped.'
 def main():
 
     # instantiate components, PID, and linear regression
-    light = Light(red_pin=board.D8, green_pin=board.D7, blue_pin=board.D1)
+    light = Light(red_pin=8, green_pin=7, blue_pin=1)
     linear_actuator = LinearActuator(en_pin=13, in1_pin=19, in2_pin=26, freq=1000)
     speaker = Speaker()
     # spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000) # not directly used for measurements in main script
