@@ -304,7 +304,7 @@ def main():
             if setup == True:
                 linear_actuator.extend(duty_cycle=100, duration=min(4, time.time()-s+1)) # fully extend actuator
                 break
-            if ((time.time()-s) < 3):
+            if ((time.time()-s) < 6):
                 linear_actuator.retract(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME) # retract actuator
             time.sleep(0.01)
 
