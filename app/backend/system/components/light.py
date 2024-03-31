@@ -15,7 +15,6 @@ Documentation
 '''
 
 import time
-import board
 import RPi.GPIO as GPIO
 import os
 
@@ -81,7 +80,7 @@ class Light():
 if __name__ == '__main__':
     os.chdir('..') # change current directory
     
-    light = Light(red_pin=board.D8, green_pin=board.D7, blue_pin=board.D1, verbose=True) # use BOARD.D[GPIO] numbering (BCM) (NOT pin numbering)
+    light = Light(red_pin=8, green_pin=7, blue_pin=1, verbose=True) # use GPIO numbering (BCM) (NOT pin numbering)
     time.sleep(2) # wait for setup
 
     for color in ['green', 'yellow', 'off', 'red']:
