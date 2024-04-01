@@ -1,11 +1,14 @@
 # UroFlo
 Design of an automated continuous bladder irrigation device at Rice University in partnership with Texas Children's Hospital and Baylor College of Medicine.
 
+
 ## Architecture
 To be added.
 
+
 ## User interface
 ![Screenshot of the UroFlo user interface.](/docs/user_interface.jpg)
+
 
 ## Installation
 Perform the following commands in a new terminal on Raspberry Pi 4B.
@@ -38,7 +41,7 @@ sudo apt install firefox-esr
 ```
 This should install Python, the Node Package Manager (NPM), and the Firefox ESR browser.
 
-### Clone repository, create virtual environment, and install backend dependencies in /uroflo
+### Clone repository and create virtual environment in /uroflo
 ```
 cd /home/[user]/Documents
 git clone https://github.com/teamuroflo/uroflo
@@ -48,9 +51,12 @@ cd uroflo
 python -m venv venv/
 source venv/bin/activate
 ```
+
+### Install backend dependencies in /uroflo
 ```
 pip install -r requirements.txt
 pip install django-cors-headers ## ADD THIS TO REQUIREMENTS.TXT, and check if requirements.txt is comprehensive
+pip install scikit-learn ## ADD THIS TO REQUIREMENTS.TXT, and check if requirements.txt is comprehensive
 ```
 This should install all of the required backend (Python) packages.
 
@@ -79,14 +85,14 @@ Use `ALT+F4` to exit the FireFox ESR kiosk browser.
 ps
 kill [process ID]
 ```
-Kill the 3 Python processes (main.py, hematuria.py, Django backend server) and Node frontend server processes. A list of processes can be viewed with the `ps` command. Alternatively, reboot the Raspberry Pi.
+Kill the 3 Python processes (main.py, hematuria.py, Django backend server) and Node frontend server processes. A list of processes can be viewed with the `ps` command. Alternatively, use `kill -9 -1` to reset the device to the login screen or reboot the Raspberry Pi.
 
-### Run on boot
+### Run on boot (OPTIONAL)
 The following should be added to the bottom of `/home/[user]/.bashrc` via `sudo nano ~/.bashrc` to run the application on boot. Ensure that `run.sh` has execute permission (see above).
 ```
 DISPLAY=:0 /home/[user]/Documents/uroflo/run.sh &
 ```
-To quit the program after running on boot, use `kill -9 -1`, which should reset the device to the login screen, after which the `.bashrc` file can be modified to not run the application on boot.
+To quit the program after running on boot, use `kill -9 -1`, which should reset the device to the login screen, after which the `.bashrc` file can be reverted to not run the application on boot.
 
 
 ## Folders
