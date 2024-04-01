@@ -57,7 +57,7 @@ if __name__ == '__main__':
     speaker = Speaker(verbose=True)
     time.sleep(2) # wait for setup
 
-    for file in ['sound/echo.mp3', 'sound/alarm.mp3']:
+    for file in ['sound/click.mp3', 'sound/echo.mp3', 'sound/alarm.mp3']:
         speaker.play(file=file, volume=1.0)
         time.sleep(10)
 
