@@ -23,7 +23,9 @@ SECRET_KEY = 'django-insecure-4gkr8(c1_)@qowg85wd10rp089tr%%m^e$0kz_!k0y6sng*r)4
 # SECURITY WARNING: do not run with debug turned on in production
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'uroflo.loca.lt'
+]
 
 # Application definition
 INSTALLED_APPS = [
