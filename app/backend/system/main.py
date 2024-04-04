@@ -692,9 +692,9 @@ def main():
             if status_level == 'NORMAL':
                 light.color(color='green')
             elif status_level == 'CAUTION':
-                light.color(color='yellow')
+                light.color(color='green') ## SHOULD BE YELLOW
             elif status_level == 'CRITICAL':
-                light.color(color='red')
+                light.color(color='green') ## SHOULD BE RED
 
             elif status_level == 'CAUTION' and new_alert == True:
                 speaker.play(file=ALERT_CAUTION_SOUND)

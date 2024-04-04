@@ -52,7 +52,7 @@ const mute = () => {
 
 const getStatusColor = (statusLevel) => {
   if (statusLevel === "NORMAL") {
-    return "bg-[#7fb4df]";
+    return "bg-green-500";
   } else if (statusLevel === "ALERT") {
     return "bg-yellow-600";
   } else if (statusLevel === "CAUTION") {
