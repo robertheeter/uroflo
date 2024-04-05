@@ -16,9 +16,9 @@ from system.components.speaker import Speaker
 import os
 os.chdir('system')
 
-TESTING = True
-FIXED = True
-VERBOSE = True
+TEST = False # for backend testing
+DEMO = True # for showcase demoing
+VERBOSE = True # for debugging
 
 speaker = Speaker()
 CLICK_SOUND = 'sound/click.mp3'
@@ -27,50 +27,52 @@ CLICK_SOUND = 'sound/click.mp3'
 @csrf_exempt
 def system(request):
     if request.method == 'GET':
-        if TESTING:
-            if FIXED:
-                    response = JsonResponse({
-                        'hematuria_level': 40,
-                        'hematuria_percent': 5,
-                        
-                        'supply_volume': 889,
-                        'supply_time': 118,
-                        'supply_rate': 22,
-                        
-                        'waste_volume': 1541,
-                        'waste_time': 182,
-                        'waste_rate': 20,
-                        
-                        'status_level': 'NORMAL',
-                        'status_message': 'System and patient normal.',
-                        
-                        'active_time': 153,
+        if TEST:
+            response = JsonResponse({
+                'hematuria_level': random.randint(0, 99),
+                'hematuria_percent': random.uniform(0, 10),
+                
+                'supply_volume': random.randint(0, 6000),
+                'supply_time': random.randint(0, 1000),
+                'supply_rate': random.randint(0, 100),
+                
+                'waste_volume': random.randint(0, 5000),
+                'waste_time': random.randint(0, 1000),
+                'waste_rate': random.randint(0, 100),
+                
+                'status_level': 'CAUTION',
+                'status_message': 'Supply bag volume <10%.',
+                
+                'active_time': random.randint(0, 2000),
 
-                        'supply_volume_total': 1000,
-                        'waste_volume_total': 3000
-                    })
-            else:
-                response = JsonResponse({
-                    'hematuria_level': random.randint(0, 99),
-                    'hematuria_percent': random.uniform(0, 10),
-                    
-                    'supply_volume': random.randint(0, 6000),
-                    'supply_time': random.randint(0, 1000),
-                    'supply_rate': random.randint(0, 100),
-                    
-                    'waste_volume': random.randint(0, 5000),
-                    'waste_time': random.randint(0, 1000),
-                    'waste_rate': random.randint(0, 100),
-                    
-                    'status_level': 'CAUTION',
-                    'status_message': 'Supply bag volume <10%.',
-                    
-                    'active_time': random.randint(0, 2000),
-
-                    'supply_volume_total': 6000,
-                    'waste_volume_total': 5000
-                    })
+                'supply_volume_total': 6000,
+                'waste_volume_total': 5000
+                })
             
+            return response
+        
+        if DEMO:
+            response = JsonResponse({
+                'hematuria_level': 40,
+                'hematuria_percent': 5,
+                
+                'supply_volume': 889,
+                'supply_time': 118,
+                'supply_rate': 22,
+                
+                'waste_volume': 1541,
+                'waste_time': 182,
+                'waste_rate': 20,
+                
+                'status_level': 'NORMAL',
+                'status_message': 'System and patient normal.',
+                
+                'active_time': 153,
+
+                'supply_volume_total': 1000,
+                'waste_volume_total': 3000
+            })
+
             return response
         
         keys = [
@@ -356,12 +358,12 @@ def interface_reset(request):
 @csrf_exempt
 def patient(request):
     if request.method == 'GET':
-        if TESTING:
+        if TEST:
             response = JsonResponse({
                 'firstname': 'JOHN',
                 'lastname': 'DOE',
-                'MRN': random.randint(10000,99999),
-                'DOB': '01/20/1980',
+                'MRN': 1234567890,
+                'DOB': '01/01/1900',
                 'sex': 'M',
                 
                 'contact_A': '(123) 456-7890',
@@ -369,7 +371,7 @@ def patient(request):
                 })
 
             return response
-        
+
         keys = ['firstname', 'lastname', 'MRN', 'DOB', 'sex',
                 'contact_A', 'contact_B']
         

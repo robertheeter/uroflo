@@ -53,14 +53,12 @@ const mute = () => {
 const getStatusColor = (statusLevel) => {
   if (statusLevel === "NORMAL") {
     return "bg-green-500";
-  } else if (statusLevel === "ALERT") {
-    return "bg-yellow-600";
   } else if (statusLevel === "CAUTION") {
-    return "bg-orange-600";
+    return "bg-yellow-600";
   } else if (statusLevel === "CRITICAL") {
     return "bg-red-600";
   } else {
-    return "bg-[#7fb4df]";
+    return "bg-green-500";
   }
 };
 
@@ -68,7 +66,7 @@ const ControlPanel = () => {
   const navigate = useNavigate();
   const [auto, setAuto] = useState(true);
   const [statusLevel, setStatusLevel] = useState("NORMAL");
-  const [statusMessage, setStatusMessage] = useState("System normal");
+  const [statusMessage, setStatusMessage] = useState("System and patient normal.");
   let resetInitiated = false;
 
   useEffect(() => {
