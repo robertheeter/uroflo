@@ -63,6 +63,9 @@ HEMATURIA_SETPOINT = 0.5 # percent blood concentration
 ALERT_CAUTION_SOUND = 'sound/echo.mp3'
 ALERT_CRITICAL_SOUND = 'sound/alarm.mp3'
 
+ALERT_NORMAL_STATUS = 'NORMAL'
+ALERT_NORMAL_MESSAGE = "System and patient normal."
+
 ALERT_STARTUP_STATUS = 'SETUP'
 ALERT_STARTUP_MESSAGE = 'System starting.'
 
@@ -565,14 +568,14 @@ def main():
 
         # adjust inflow rate
         if alert_emergency_button == False:
-            if automatic == True:
+            if automatic == True and DEMO == False:
                 output = pid(hematuria_percent)
                 if output > 0:
                     linear_actuator.retract(duty_cycle=100, duration=output)
                 elif output < 0:
                     linear_actuator.extend(duty_cycle=100, duration=2*abs(output))
 
-            elif automatic == False:
+            else:
                 if inflow_level_adjust == 1:
                     linear_actuator.retract(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME)
                     inflow_level_adjust = 0
@@ -583,11 +586,11 @@ def main():
                     time.sleep(INFLOW_ADJUSTMENT_TIME)
 
         elif alert_emergency_button == True:
-            linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME) # extend actuator
+            linear_actuator.extend(duty_cycle=100, duration=10*INFLOW_ADJUSTMENT_TIME) # extend actuator
 
         # check alert conditions
-        status_level = 'NORMAL'
-        status_message = 'System and patient normal.'
+        status_level = ALERT_NORMAL_STATUS
+        status_message = ALERT_NORMAL_MESSAGE
         
         new_alert = False
         
@@ -712,6 +715,8 @@ def main():
         if iteration > FLOW_RATE_REPLICATES + WEIGHT_REPLICATES:
             if DEMO:
                 light.color(color='green')
+                status_level = ALERT_NORMAL_STATUS
+                status_message = ALERT_NORMAL_MESSAGE
 
             else:
                 if status_level == 'NORMAL':
