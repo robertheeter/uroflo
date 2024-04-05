@@ -18,7 +18,7 @@ os.chdir('system')
 
 TEST = False # for backend testing
 DEMO = True # for showcase demoing
-VERBOSE = True # for debugging
+VERBOSE = False # for debugging
 
 speaker = Speaker()
 CLICK_SOUND = 'sound/click.mp3'

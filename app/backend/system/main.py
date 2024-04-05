@@ -37,8 +37,8 @@ from components.weight_sensor import WeightSensor
 
 
 # script parameters
-DEMO = True
-VERBOSE = True
+DEMO = True # for showcase demoing
+VERBOSE = False # for debugging
 
 # system parameters
 INFLOW_ADJUSTMENT_TIME = 0.005 # sec
