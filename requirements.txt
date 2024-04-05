@@ -9,6 +9,6 @@ pygame==2.5.2
 pytz==2024.1
 RPi.GPIO==0.7.1
 rpimotorlib==3.2
-scikit-learn==1.4.1
+scikit-learn==1.4.0
 setuptools==66.1.1
 simple_pid==2.0.0
