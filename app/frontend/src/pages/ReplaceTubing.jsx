@@ -39,7 +39,7 @@ const ReplaceTubing = () => {
             <FaArrowLeftLong className="text-6xl text-slate-200" />
           </button> */}
           <button
-            className="bg-green-600 w-full h-20 rounded-lg flex justify-center items-center text-3xl text-slate-200"
+            className="bg-green-600 w-full h-20 rounded-lg flex justify-center items-center font-bold text-3xl text-slate-200"
             onClick={done}
           >
             Done

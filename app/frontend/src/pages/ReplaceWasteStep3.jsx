@@ -124,7 +124,7 @@ const ReplaceWasteStep3 = () => {
             disabled={!volume}
           >
             {resetInitiated ? (
-              <FaArrowRightLong className="text-6xl text-slate-200" />
+              <FaArrowRightLong className="text-6xl text-slate-200 font-bold" />
             ) : (
               "Done"
             )}
