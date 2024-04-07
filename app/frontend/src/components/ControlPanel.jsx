@@ -66,12 +66,9 @@ const ControlPanel = () => {
   const navigate = useNavigate();
   const [auto, setAuto] = useState(true);
   const [statusLevel, setStatusLevel] = useState("NORMAL");
-<<<<<<< HEAD
-  const [statusMessage, setStatusMessage] = useState("System and patient normal.");
-=======
-  const [statusMessage, setStatusMessage] = useState("System and patient normal.");
-  let resetInitiated = false;
->>>>>>> 4aaaa01314eb522d240a0c21526e616cd967c8df
+  const [statusMessage, setStatusMessage] = useState(
+    "System and patient normal."
+  );
 
   useEffect(() => {
     const intervalId = setInterval(() => {
