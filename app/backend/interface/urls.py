@@ -6,6 +6,8 @@ urlpatterns = [
     path('system', views.system), # GET
 
     # INTERFACE DATA
+    path('interface/click', views.interface_click), # POST
+
     path('interface/supply_replace_volume', views.interface_supply_replace_volume), # POST
     path('interface/supply_replace_removed', views.interface_supply_replace_removed), # POST
     path('interface/supply_replace_added', views.interface_supply_replace_added), # POST

@@ -52,6 +52,19 @@ def system(request):
             return response
         
         if DEMO:
+            # hematuria_level = 
+            # hematuria_percent = 
+            # supply_volume =
+            # supply_time = 
+            # supply_rate =
+            # waste_volume = 
+            # waste_rate = 
+            # status_level =
+            # status_message = 
+            # active_time = 
+            # supply_volume_total = 
+            # waste_volume_total = 
+            
             response = JsonResponse({
                 'hematuria_level': 40,
                 'hematuria_percent': 5,
@@ -67,7 +80,7 @@ def system(request):
                 'status_level': 'NORMAL',
                 'status_message': 'System and patient normal.',
                 
-                'active_time': 153,
+                'active_time': active_time,
 
                 'supply_volume_total': 1000,
                 'waste_volume_total': 3000
@@ -92,6 +105,18 @@ def system(request):
 
 
 # INTERFACE DATA (interface.db)
+@csrf_exempt
+def interface_click(request):
+    if request.method == 'POST':
+        try:
+            speaker.play(file=CLICK_SOUND)
+            return JsonResponse({'status': 'success', 'message': 'request processed'})
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error', 'message': 'invalid JSON'})
+        
+    else:
+        return JsonResponse({'status': 'error', 'message': 'invalid request method'})
+
 @csrf_exempt
 def interface_supply_replace_volume(request):
     if request.method == 'POST':
