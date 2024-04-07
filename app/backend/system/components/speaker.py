@@ -27,7 +27,7 @@ class Speaker():
 
     def setup(self):
         print("Speaker: setup")
-        pygame.init()
+        pygame.mixer.init()
 
     # play audio from speaker
     def play(self, file, volume=1.0):
@@ -43,11 +43,11 @@ class Speaker():
 
     # stop audio from speaker
     def stop(self):
-        pygame.quit()
+        pygame.mixer.stop()
 
     def shutdown(self):
         print("Speaker: shutdown")
-        self.stop()
+        pygame.mixer.quit()
 
 
 # example implementation

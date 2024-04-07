@@ -42,7 +42,7 @@ VERBOSE = False # for debugging
 
 # system parameters
 # INFLOW_ADJUSTMENT_TIME = 0.005 # sec
-INFLOW_ADJUSTMENT_TIME = 0.01 # sec # FOR DEMO
+INFLOW_ADJUSTMENT_TIME = 0.02 # sec # FOR DEMO
 
 WEIGHT_CALIBRATION_REPLICATES = 15
 WEIGHT_REPLICATES = 60
@@ -344,12 +344,13 @@ def main():
 
 
         # check emergency button
-        if emergency_button.pressed() == True: # button pressed
-            while True:
-                if emergency_button.pressed() == False: # button released
-                    alert_emergency_button = not alert_emergency_button
-                    break
-                time.sleep(0.01)
+        if iteration > FLOW_RATE_REPLICATES + WEIGHT_REPLICATES:
+            if emergency_button.pressed() == True: # button pressed
+                while True:
+                    if emergency_button.pressed() == False: # button released
+                        alert_emergency_button = not alert_emergency_button
+                        break
+                    time.sleep(0.01)
     
 
         # get and check user interface data from database
