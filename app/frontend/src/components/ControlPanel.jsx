@@ -66,8 +66,9 @@ const ControlPanel = () => {
   const navigate = useNavigate();
   const [auto, setAuto] = useState(true);
   const [statusLevel, setStatusLevel] = useState("NORMAL");
-  const [statusMessage, setStatusMessage] = useState("System and patient normal.");
-  let resetInitiated = false;
+  const [statusMessage, setStatusMessage] = useState(
+    "System and patient normal."
+  );
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -111,7 +112,6 @@ const ControlPanel = () => {
   };
 
   const reset = () => {
-    resetInitiated = true;
     const url = "http://localhost:8000/interface/reset";
     const data = {
       reset: "TRUE",
@@ -124,7 +124,22 @@ const ControlPanel = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
-    navigate("/start", { state: { resetInitiated } });
+    navigate("/landing");
+  };
+
+  const click = () => {
+    const url = "http://localhost:8000/interface/click";
+    const data = {
+      click: "TRUE",
+    };
+    axios
+      .post(url, data)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   const replaceSupply = () => {
@@ -151,13 +166,19 @@ const ControlPanel = () => {
       <div className="flex flex-row justify-center items-center gap-x-6 w-full">
         <button
           className="flex items-center justify-center text-center rounded-lg font-bold bg-slate-200 text-slate-950 text-2xl w-[45%] h-[90px] px-3 py-1"
-          onClick={replaceSupply}
+          onClick={() => {
+            replaceSupply();
+            click();
+          }}
         >
           REPLACE SUPPLY
         </button>
         <button
           className="flex items-center justify-center text-center rounded-lg font-bold bg-slate-200 text-slate-950 text-2xl w-[45%] h-[90px] px-3 py-1"
-          onClick={replaceWaste}
+          onClick={() => {
+            replaceWaste();
+            click();
+          }}
         >
           REPLACE WASTE
         </button>
