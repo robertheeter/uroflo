@@ -54,11 +54,11 @@ const getStatusColor = (statusLevel) => {
   if (statusLevel === "NORMAL") {
     return "bg-green-500";
   } else if (statusLevel === "CAUTION") {
-    return "bg-yellow-600";
+    return "bg-yellow-500";
   } else if (statusLevel === "CRITICAL") {
-    return "bg-red-600";
+    return "bg-red-500";
   } else {
-    return "bg-green-500";
+    return "bg-yellow-500";
   }
 };
 
