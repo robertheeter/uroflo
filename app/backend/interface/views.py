@@ -16,8 +16,9 @@ from system.components.speaker import Speaker
 import os
 os.chdir('system')
 
-TESTING = False
-VERBOSE = True
+TEST = False # for backend testing
+DEMO = True # for showcase demoing
+VERBOSE = False # for debugging
 
 speaker = Speaker()
 CLICK_SOUND = 'sound/click.mp3'
@@ -26,7 +27,7 @@ CLICK_SOUND = 'sound/click.mp3'
 @csrf_exempt
 def system(request):
     if request.method == 'GET':
-        if TESTING:
+        if TEST:
             response = JsonResponse({
                 'hematuria_level': random.randint(0, 99),
                 'hematuria_percent': random.uniform(0, 10),
@@ -50,6 +51,43 @@ def system(request):
             
             return response
         
+        if DEMO:
+            # hematuria_level = 
+            # hematuria_percent = 
+            # supply_volume =
+            # supply_time = 
+            # supply_rate =
+            # waste_volume = 
+            # waste_rate = 
+            # status_level =
+            # status_message = 
+            # active_time = 
+            # supply_volume_total = 
+            # waste_volume_total = 
+            
+            response = JsonResponse({
+                'hematuria_level': 40,
+                'hematuria_percent': 5,
+                
+                'supply_volume': 889,
+                'supply_time': 118,
+                'supply_rate': 22,
+                
+                'waste_volume': 1541,
+                'waste_time': 182,
+                'waste_rate': 20,
+                
+                'status_level': 'NORMAL',
+                'status_message': 'System and patient normal.',
+                
+                'active_time': active_time,
+
+                'supply_volume_total': 1000,
+                'waste_volume_total': 3000
+            })
+
+            return response
+        
         keys = [
             'hematuria_level', 'hematuria_percent',
             'supply_volume', 'supply_time', 'supply_rate',
@@ -67,6 +105,18 @@ def system(request):
 
 
 # INTERFACE DATA (interface.db)
+@csrf_exempt
+def interface_click(request):
+    if request.method == 'POST':
+        try:
+            speaker.play(file=CLICK_SOUND)
+            return JsonResponse({'status': 'success', 'message': 'request processed'})
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error', 'message': 'invalid JSON'})
+        
+    else:
+        return JsonResponse({'status': 'error', 'message': 'invalid request method'})
+
 @csrf_exempt
 def interface_supply_replace_volume(request):
     if request.method == 'POST':
@@ -333,12 +383,12 @@ def interface_reset(request):
 @csrf_exempt
 def patient(request):
     if request.method == 'GET':
-        if TESTING:
+        if TEST:
             response = JsonResponse({
                 'firstname': 'JOHN',
                 'lastname': 'DOE',
-                'MRN': random.randint(10000,99999),
-                'DOB': '01/20/1980',
+                'MRN': 1234567890,
+                'DOB': '01/01/1900',
                 'sex': 'M',
                 
                 'contact_A': '(123) 456-7890',
@@ -346,7 +396,7 @@ def patient(request):
                 })
 
             return response
-        
+
         keys = ['firstname', 'lastname', 'MRN', 'DOB', 'sex',
                 'contact_A', 'contact_B']
         

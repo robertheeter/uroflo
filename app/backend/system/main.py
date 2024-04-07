@@ -36,6 +36,10 @@ from components.speaker import Speaker
 from components.weight_sensor import WeightSensor
 
 
+# script parameters
+DEMO = True # for showcase demoing
+VERBOSE = False # for debugging
+
 # system parameters
 INFLOW_ADJUSTMENT_TIME = 0.005 # sec
 
@@ -58,6 +62,9 @@ HEMATURIA_SETPOINT = 0.5 # percent blood concentration
 # alert parameters (ordered by prescedence)
 ALERT_CAUTION_SOUND = 'sound/echo.mp3'
 ALERT_CRITICAL_SOUND = 'sound/alarm.mp3'
+
+ALERT_NORMAL_STATUS = 'NORMAL'
+ALERT_NORMAL_MESSAGE = "System and patient normal."
 
 ALERT_STARTUP_STATUS = 'SETUP'
 ALERT_STARTUP_MESSAGE = 'System starting.'
@@ -108,13 +115,13 @@ ALERT_EMERGENCY_BUTTON_MESSAGE = 'Emergency button pressed; inflow stopped.'
 def main():
 
     # instantiate components, PID, and linear regression
-    light = Light(red_pin=8, green_pin=7, blue_pin=1)
-    linear_actuator = LinearActuator(en_pin=13, in1_pin=19, in2_pin=26, freq=1000)
-    speaker = Speaker()
+    light = Light(red_pin=8, green_pin=7, blue_pin=1, verbose=VERBOSE)
+    linear_actuator = LinearActuator(en_pin=13, in1_pin=19, in2_pin=26, freq=1000, verbose=VERBOSE)
+    speaker = Speaker(verbose=VERBOSE)
     # spectral_sensor = SpectralSensor(led_pin=4, use_led=True, sensor_type='VIS', max=48000) # not directly used for measurements in main script
-    supply_weight_sensor = WeightSensor(pdsck_pin=18, dout_pin=23, offset=1, scale=1, verbose=True)
-    waste_weight_sensor = WeightSensor(pdsck_pin=14, dout_pin=15, offset=1, scale=1, verbose=True)
-    emergency_button = Button(pin=10)
+    supply_weight_sensor = WeightSensor(pdsck_pin=18, dout_pin=23, offset=1, scale=1, verbose=VERBOSE)
+    waste_weight_sensor = WeightSensor(pdsck_pin=14, dout_pin=15, offset=1, scale=1, verbose=VERBOSE)
+    emergency_button = Button(pin=10, verbose=VERBOSE)
 
     pid = PID(Kp, Ki, Kd, setpoint=HEMATURIA_SETPOINT, output_limits=(-1*INFLOW_LEVEL_ADJUST_TIME_LIMIT, INFLOW_LEVEL_ADJUST_TIME_LIMIT))
     regression = LinearRegression()
@@ -126,6 +133,9 @@ def main():
         if not exists_data(file=file):
             reset = True
             break
+
+    if VERBOSE:
+        print('reset = {reset}')
     
     # initialize new data if reset
     if reset == True:
@@ -236,7 +246,6 @@ def main():
 
     # perform reset if reset
     if reset == True:
-        print('reset')
 
         # wait for patient info update (NOT NECESSARY, can be removed)
         while True:
@@ -260,7 +269,8 @@ def main():
                 time.sleep(0.4)
                 supply_replace_count_added = val
                 supply_replace_volume = get_data(key='supply_replace_volume', file='interface')
-                print(f'SUPPLY REPLACE VOLUME = {supply_replace_volume}')
+                if VERBOSE:
+                    print(f'supply_replace_volume = {supply_replace_volume}')
                 supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=WEIGHT_CALIBRATION_REPLICATES) # calibrate weight sensor with known mass
                 supply_volume_total = supply_replace_volume # update
                 supply_replace_count += 1 # update
@@ -288,7 +298,8 @@ def main():
                     known_mass = 75
                 elif waste_replace_volume == 3000:
                     known_mass = 100
-                print(f'WASTE REPLACE VOLUME = {waste_replace_volume}')
+                if VERBOSE:
+                    print(f'waste_replace_volume = {waste_replace_volume}')
                 waste_weight_sensor.calibrate(known_mass=known_mass, replicates=WEIGHT_CALIBRATION_REPLICATES) # calibrate weight sensor with known mass
                 waste_volume_total = waste_replace_volume # update
                 waste_replace_count += 1 # update
@@ -327,7 +338,8 @@ def main():
     # begin normal operation
     iteration = 1 # number of entries added to system database
     while True:
-        print(f'iteration #{iteration}')
+        if VERBOSE:
+            print(f'iteration = {iteration}')
 
 
         # check emergency button
@@ -351,6 +363,8 @@ def main():
             supply_replace_count_added = val
             time.sleep(0.4)
             supply_replace_volume = get_data(key='supply_replace_volume', file='interface')
+            if VERBOSE:
+                print(f'supply_replace_volume = {supply_replace_volume}')
             supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=WEIGHT_CALIBRATION_REPLICATES) # calibrate weight sensor with known mass
             supply_volume_gross +=  supply_volume_total - supply_volume # update
             supply_volume_total = supply_replace_volume # update
@@ -374,6 +388,8 @@ def main():
                 known_mass = 75
             elif waste_replace_volume == 3000:
                 known_mass = 100
+            if VERBOSE:
+                print(f'waste_replace_volume = {waste_replace_volume}')
             waste_weight_sensor.calibrate(known_mass=known_mass, replicates=WEIGHT_CALIBRATION_REPLICATES) # calibrate weight sensor with known mass
             waste_volume_gross += waste_volume # update
             waste_volume_total = waste_replace_volume # update
@@ -386,9 +402,13 @@ def main():
         if val > inflow_level:
             inflow_level_adjust = 1
             inflow_level += 1
+            if VERBOSE:
+                print(f'inflow_level_adjust = {inflow_level_adjust}')
         elif val < inflow_level:
             inflow_level_adjust = -1
             inflow_level -= 1
+            if VERBOSE:
+                print(f'inflow_level_adjust = {inflow_level_adjust}')
         else:
             inflow_level_adjust = 0
 
@@ -397,6 +417,8 @@ def main():
         val = get_data(key='mute_count', file='interface')
         if val > mute_count:
             mute = True
+            if VERBOSE:
+                print(f'mute = {mute}')
         mute_count = val
 
         if mute == True:
@@ -425,6 +447,8 @@ def main():
         if reset == True:
             for file in ['system', 'interface', 'patient', 'hematuria']:
                 delete_data(file=file)
+            if VERBOSE:
+                print(f'reset = {reset}')
             break
         
         
@@ -544,14 +568,14 @@ def main():
 
         # adjust inflow rate
         if alert_emergency_button == False:
-            if automatic == True:
+            if automatic == True and DEMO == False:
                 output = pid(hematuria_percent)
                 if output > 0:
                     linear_actuator.retract(duty_cycle=100, duration=output)
                 elif output < 0:
                     linear_actuator.extend(duty_cycle=100, duration=2*abs(output))
 
-            elif automatic == False:
+            else:
                 if inflow_level_adjust == 1:
                     linear_actuator.retract(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME)
                     inflow_level_adjust = 0
@@ -562,11 +586,11 @@ def main():
                     time.sleep(INFLOW_ADJUSTMENT_TIME)
 
         elif alert_emergency_button == True:
-            linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME) # extend actuator
+            linear_actuator.extend(duty_cycle=100, duration=10*INFLOW_ADJUSTMENT_TIME) # extend actuator
 
         # check alert conditions
-        status_level = 'NORMAL'
-        status_message = 'System and patient normal.'
+        status_level = ALERT_NORMAL_STATUS
+        status_message = ALERT_NORMAL_MESSAGE
         
         new_alert = False
         
@@ -689,22 +713,28 @@ def main():
 
         # update light color and speaker sound according to status_level and new_alert
         if iteration > FLOW_RATE_REPLICATES + WEIGHT_REPLICATES:
-            if status_level == 'NORMAL':
+            if DEMO:
                 light.color(color='green')
-            elif status_level == 'CAUTION':
-                light.color(color='yellow')
-            elif status_level == 'CRITICAL':
-                light.color(color='red')
+                status_level = ALERT_NORMAL_STATUS
+                status_message = ALERT_NORMAL_MESSAGE
 
-            elif status_level == 'CAUTION' and new_alert == True:
-                speaker.play(file=ALERT_CAUTION_SOUND)
-            elif status_level == 'CRITICAL' and new_alert == True:
-                speaker.play(file=ALERT_CRITICAL_SOUND)
+            else:
+                if status_level == 'NORMAL':
+                    light.color(color='green')
+                elif status_level == 'CAUTION':
+                    light.color(color='yellow')
+                elif status_level == 'CRITICAL':
+                    light.color(color='red')
+
+                elif status_level == 'CAUTION' and new_alert == True:
+                    speaker.play(file=ALERT_CAUTION_SOUND)
+                elif status_level == 'CRITICAL' and new_alert == True:
+                    speaker.play(file=ALERT_CRITICAL_SOUND)
             
         else:
             light.color(color='yellow')
             status_level = ALERT_STARTUP_STATUS
-            status_message = ALERT_STARTUP_MESSAGE            
+            status_message = ALERT_STARTUP_MESSAGE
 
 
         # add updated system data to database

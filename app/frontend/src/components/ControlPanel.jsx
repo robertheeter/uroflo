@@ -52,15 +52,13 @@ const mute = () => {
 
 const getStatusColor = (statusLevel) => {
   if (statusLevel === "NORMAL") {
-    return "bg-[#7fb4df]";
-  } else if (statusLevel === "ALERT") {
-    return "bg-yellow-600";
+    return "bg-green-500";
   } else if (statusLevel === "CAUTION") {
-    return "bg-orange-600";
+    return "bg-yellow-600";
   } else if (statusLevel === "CRITICAL") {
     return "bg-red-600";
   } else {
-    return "bg-[#7fb4df]";
+    return "bg-green-500";
   }
 };
 
@@ -68,8 +66,12 @@ const ControlPanel = () => {
   const navigate = useNavigate();
   const [auto, setAuto] = useState(true);
   const [statusLevel, setStatusLevel] = useState("NORMAL");
-  const [statusMessage, setStatusMessage] = useState("System normal");
+<<<<<<< HEAD
+  const [statusMessage, setStatusMessage] = useState("System and patient normal.");
+=======
+  const [statusMessage, setStatusMessage] = useState("System and patient normal.");
   let resetInitiated = false;
+>>>>>>> 4aaaa01314eb522d240a0c21526e616cd967c8df
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -113,7 +115,6 @@ const ControlPanel = () => {
   };
 
   const reset = () => {
-    resetInitiated = true;
     const url = "http://localhost:8000/interface/reset";
     const data = {
       reset: "TRUE",
@@ -126,7 +127,22 @@ const ControlPanel = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
-    navigate("/start", { state: { resetInitiated } });
+    navigate("/landing");
+  };
+
+  const click = () => {
+    const url = "http://localhost:8000/interface/click";
+    const data = {
+      click: "TRUE",
+    };
+    axios
+      .post(url, data)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   const replaceSupply = () => {
@@ -153,13 +169,19 @@ const ControlPanel = () => {
       <div className="flex flex-row justify-center items-center gap-x-6 w-full">
         <button
           className="flex items-center justify-center text-center rounded-lg font-bold bg-slate-200 text-slate-950 text-2xl w-[45%] h-[90px] px-3 py-1"
-          onClick={replaceSupply}
+          onClick={() => {
+            replaceSupply();
+            click();
+          }}
         >
           REPLACE SUPPLY
         </button>
         <button
           className="flex items-center justify-center text-center rounded-lg font-bold bg-slate-200 text-slate-950 text-2xl w-[45%] h-[90px] px-3 py-1"
-          onClick={replaceWaste}
+          onClick={() => {
+            replaceWaste();
+            click();
+          }}
         >
           REPLACE WASTE
         </button>
