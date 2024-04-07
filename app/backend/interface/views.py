@@ -17,7 +17,7 @@ import os
 os.chdir('system')
 
 TEST = False # for backend testing
-DEMO = True # for showcase demoing
+DEMO = False # for showcase demoing
 VERBOSE = False # for debugging
 
 speaker = Speaker()

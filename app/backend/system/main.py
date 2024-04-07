@@ -37,7 +37,7 @@ from components.weight_sensor import WeightSensor
 
 
 # script parameters
-DEMO = True # for showcase demoing
+DEMO = False # for showcase demoing
 VERBOSE = False # for debugging
 
 # system parameters
