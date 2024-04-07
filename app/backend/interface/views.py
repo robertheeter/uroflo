@@ -80,7 +80,7 @@ def system(request):
                 'status_level': 'NORMAL',
                 'status_message': 'System and patient normal.',
                 
-                'active_time': active_time,
+                'active_time': 153,
 
                 'supply_volume_total': 1000,
                 'waste_volume_total': 3000
