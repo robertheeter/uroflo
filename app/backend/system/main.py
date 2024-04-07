@@ -568,7 +568,7 @@ def main():
 
         # adjust inflow rate
         if alert_emergency_button == False:
-            if automatic == True and DEMO == False:
+            if automatic == True:
                 output = pid(hematuria_percent)
                 if output > 0:
                     linear_actuator.retract(duty_cycle=100, duration=output)
@@ -587,7 +587,7 @@ def main():
 
         elif alert_emergency_button == True:
             linear_actuator.extend(duty_cycle=100, duration=10*INFLOW_ADJUSTMENT_TIME) # extend actuator
-
+        
         # check alert conditions
         status_level = ALERT_NORMAL_STATUS
         status_message = ALERT_NORMAL_MESSAGE
@@ -708,28 +708,23 @@ def main():
 
         # alert_emergency_button
         if alert_emergency_button == True:
+            new_alert = False
             status_level = ALERT_EMERGENCY_BUTTON_LEVEL
             status_message = ALERT_EMERGENCY_BUTTON_MESSAGE
 
         # update light color and speaker sound according to status_level and new_alert
         if iteration > FLOW_RATE_REPLICATES + WEIGHT_REPLICATES:
-            if DEMO:
+            if status_level == 'NORMAL':
                 light.color(color='green')
-                status_level = ALERT_NORMAL_STATUS
-                status_message = ALERT_NORMAL_MESSAGE
+            elif status_level == 'CAUTION':
+                light.color(color='yellow')
+            elif status_level == 'CRITICAL':
+                light.color(color='red')
 
-            else:
-                if status_level == 'NORMAL':
-                    light.color(color='green')
-                elif status_level == 'CAUTION':
-                    light.color(color='yellow')
-                elif status_level == 'CRITICAL':
-                    light.color(color='red')
-
-                elif status_level == 'CAUTION' and new_alert == True:
-                    speaker.play(file=ALERT_CAUTION_SOUND)
-                elif status_level == 'CRITICAL' and new_alert == True:
-                    speaker.play(file=ALERT_CRITICAL_SOUND)
+            if status_level == 'CAUTION' and new_alert == True:
+                speaker.play(file=ALERT_CAUTION_SOUND)
+            elif status_level == 'CRITICAL' and new_alert == True:
+                speaker.play(file=ALERT_CRITICAL_SOUND)
             
         else:
             light.color(color='yellow')
