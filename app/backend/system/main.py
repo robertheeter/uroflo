@@ -412,6 +412,10 @@ def main():
                 print(f'inflow_level_adjust = {inflow_level_adjust}')
         else:
             inflow_level_adjust = 0
+        
+        if alert_emergency_button == True:
+            inflow_level = val
+            inflow_level_adjust = 0
 
         # mute_count
         mute = False
