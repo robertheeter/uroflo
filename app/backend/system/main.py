@@ -41,7 +41,8 @@ DEMO = False # for showcase demoing
 VERBOSE = False # for debugging
 
 # system parameters
-INFLOW_ADJUSTMENT_TIME = 0.005 # sec
+# INFLOW_ADJUSTMENT_TIME = 0.005 # sec
+INFLOW_ADJUSTMENT_TIME = 0.01 # sec # FOR DEMO
 
 WEIGHT_CALIBRATION_REPLICATES = 15
 WEIGHT_REPLICATES = 60
