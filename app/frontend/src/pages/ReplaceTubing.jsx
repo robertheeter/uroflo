@@ -27,21 +27,6 @@ const ReplaceTubing = () => {
     navigate("/home");
   };
 
-  const click = () => {
-    const url = "http://localhost:8000/interface/click";
-    const data = {
-      click: "TRUE",
-    };
-    axios
-      .post(url, data)
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
-
   return (
     <div className="w-screen h-screen bg-slate-950 flex flex-col justify-center items-center">
       <div className="w-[50%] h-[60%] bg-slate-800 rounded-2xl flex flex-col justify-between items-center pt-16 pb-10">
@@ -55,10 +40,7 @@ const ReplaceTubing = () => {
           </button> */}
           <button
             className="bg-green-600 w-full h-20 rounded-lg flex justify-center items-center text-3xl text-slate-200"
-            onClick={() => {
-              done();
-              click();
-            }}
+            onClick={done}
           >
             Done
           </button>

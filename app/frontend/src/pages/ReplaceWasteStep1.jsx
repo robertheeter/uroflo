@@ -61,10 +61,7 @@ const ReplaceWasteStep1 = () => {
           </button> */}
           <button
             className="bg-green-600 w-full h-20 rounded-lg flex justify-center items-center"
-            onClick={() => {
-              next();
-              click();
-            }}
+            onClick={next}
           >
             <FaArrowRightLong className="text-6xl text-slate-200" />
           </button>

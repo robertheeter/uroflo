@@ -63,6 +63,7 @@ const getStatusColor = (statusLevel) => {
 };
 
 const ControlPanel = () => {
+  let resetInitiated = false;
   const navigate = useNavigate();
   const [auto, setAuto] = useState(true);
   const [statusLevel, setStatusLevel] = useState("NORMAL");
