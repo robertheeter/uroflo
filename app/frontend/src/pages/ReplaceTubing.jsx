@@ -55,10 +55,7 @@ const ReplaceTubing = () => {
           </button> */}
           <button
             className="bg-green-600 w-full h-20 rounded-lg flex justify-center items-center text-3xl text-slate-200"
-            onClick={() => {
-              done();
-              click();
-            }}
+            onClick={done}
           >
             Done
           </button>
