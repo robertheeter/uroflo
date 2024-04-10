@@ -37,7 +37,7 @@ from components.weight_sensor import WeightSensor
 
 
 # script parameters
-DEMO = False # for showcase demoing
+DEMO = True # for showcase demoing
 VERBOSE = False # for debugging
 
 # system parameters
@@ -718,6 +718,10 @@ def main():
             status_level = ALERT_EMERGENCY_BUTTON_LEVEL
             status_message = ALERT_EMERGENCY_BUTTON_MESSAGE
 
+        if DEMO == True:
+            status_level = ALERT_NORMAL_STATUS
+            status_message = ALERT_NORMAL_MESSAGE
+        
         # update light color and speaker sound according to status_level and new_alert
         if iteration > FLOW_RATE_REPLICATES + WEIGHT_REPLICATES:
             if status_level == 'NORMAL':
