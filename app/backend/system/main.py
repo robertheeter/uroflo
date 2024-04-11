@@ -793,8 +793,8 @@ def main():
             elif status_level == 'CRITICAL':
                 light.color(color='red')
 
-            if status_level == 'NORMAL':
-                speaker.stop()
+            # if status_level == 'NORMAL':
+            #     speaker.stop()
             if status_level == 'CAUTION' and new_alert == True:
                 speaker.play(file=ALERT_CAUTION_SOUND)
             elif status_level == 'CRITICAL' and new_alert == True:
