@@ -77,7 +77,7 @@ def hematuria():
             elif hematuria_yellow < C0P3_C0P0_THRESHOLD:
                 hematuria_percent = random.uniform(0.2, 0.4) # 0.3% DEMO
             else:
-                hematuria_percent = random.uniform(0.0, 0.11) # NO TUBING DEMO
+                hematuria_percent = random.uniform(0.0, 0.14) # NO TUBING DEMO
 
         # get estimated hematuria severity level from blood concentration
         if hematuria_percent < MAX_CLEAR:
