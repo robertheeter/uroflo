@@ -247,6 +247,7 @@ def main():
 
     retraction_count = 0 # FOR DEMO
 
+    
     # perform reset if reset
     if reset == True:
 
