@@ -18,7 +18,7 @@ from components.spectral_sensor import SpectralSensor
 
 
 # sensor/script parameters
-VERBOSE = True
+VERBOSE = False
 DEMO = True
 SPECTRAL_REPLICATES = 20
 DELAY = 0 # delay between iterations (seconds)
