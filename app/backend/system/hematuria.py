@@ -24,8 +24,8 @@ SPECTRAL_REPLICATES = 20
 DELAY = 0 # delay between iterations (seconds)
 
 if DEMO:
-    C5P0_C0P5_THRESHOLD = 15000 # yellow channel threshold between 5.0% and 0.5% FOR DEMO
-    C0P5_C0P0_THRESHOLD = 26500 # yellow channel threshold between 0.5% and 0.0% FOR DEMO
+    C5P0_C0P2_THRESHOLD = 15000 # yellow channel threshold between 5.0% and 0.2% FOR DEMO
+    C0P2_C0P0_THRESHOLD = 26500 # yellow channel threshold between 0.2% and 0.0% FOR DEMO
 
 # regression parameters
 w_violet = -721.729
@@ -73,10 +73,10 @@ def hematuria():
             hematuria_percent = max(0, hematuria_percent) # set minimum hematuria percent to 0.0%
 
         if DEMO:
-            if hematuria_yellow < C5P0_C0P5_THRESHOLD:
+            if hematuria_yellow < C5P0_C0P2_THRESHOLD:
                 hematuria_percent = random.uniform(4.01, 6.01) # 5% DEMO
-            elif hematuria_yellow < C0P5_C0P0_THRESHOLD:
-                hematuria_percent = random.uniform(0.41, 0.61) # 0.5% DEMO
+            elif hematuria_yellow < C0P2_C0P0_THRESHOLD:
+                hematuria_percent = random.uniform(0.12, 0.39) # 0.5% DEMO
             else:
                 hematuria_percent = random.uniform(0.0, 0.11) # NO TUBING DEMO
 

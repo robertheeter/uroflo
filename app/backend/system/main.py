@@ -42,7 +42,7 @@ VERBOSE = True # for debugging
 
 # system parameters
 # INFLOW_ADJUSTMENT_TIME = 0.005 # sec
-INFLOW_ADJUSTMENT_TIME = 0.05 # sec # FOR DEMO
+INFLOW_ADJUSTMENT_TIME = 0.1 # sec # FOR DEMO
 
 WEIGHT_CALIBRATION_REPLICATES = 15
 WEIGHT_REPLICATES = 60
@@ -601,11 +601,11 @@ def main():
                 if DEMO: # FOR DEMO
                     if hematuria_percent < 0.7:
                         retraction_count = 0
-                        linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME) # FOR DEMO
+                        linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME/2) # FOR DEMO
                     else:
-                        if retraction_count <= 10:
+                        if retraction_count < 10:
                             retraction_count += 1
-                            linear_actuator.retract(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME) # FOR DEMO
+                            linear_actuator.retract(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME/2) # FOR DEMO
                 else:
                     output = pid(hematuria_percent)
                     if output > 0:
@@ -793,9 +793,9 @@ def main():
             elif status_level == 'CRITICAL':
                 light.color(color='red')
 
-            # if status_level == 'NORMAL':
-            #     speaker.stop()
-            if status_level == 'CAUTION' and new_alert == True:
+            if status_level == 'NORMAL':
+                speaker.stop()
+            elif status_level == 'CAUTION' and new_alert == True:
                 speaker.play(file=ALERT_CAUTION_SOUND)
             elif status_level == 'CRITICAL' and new_alert == True:
                 speaker.play(file=ALERT_CRITICAL_SOUND)
