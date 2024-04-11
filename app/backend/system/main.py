@@ -113,7 +113,7 @@ ALERT_EMERGENCY_BUTTON_MESSAGE = 'Emergency button pressed; inflow stopped.'
 
 
 # main loop
-def main():
+def uroflo():
 
     # instantiate components, PID, and linear regression
     light = Light(red_pin=8, green_pin=7, blue_pin=1, verbose=VERBOSE)
@@ -475,8 +475,12 @@ def main():
         # reset
         reset = get_data(key='reset', file='interface')
         if reset == True:
-            for file in ['system', 'interface', 'patient', 'hematuria']:
-                delete_data(file=file)
+            os.system('sudo rm -r data')
+            time.sleep(1)
+            os.system('mkdir data')
+
+            # for file in ['system', 'interface', 'patient', 'hematuria']:
+            #     delete_data(file=file)
             if VERBOSE:
                 print(f'reset = {reset}')
             break
@@ -870,5 +874,5 @@ def main():
 
 if __name__ == '__main__':
     while True:
-        main() # run main loop
+        uroflo() # run main loop
         time.sleep(2)
