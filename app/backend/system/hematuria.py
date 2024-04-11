@@ -17,7 +17,9 @@ from components.spectral_sensor import SpectralSensor
 
 
 # sensor/script parameters
-SPECTRAL_REPLICATES = 60
+VERBOSE = True
+DEMO = True
+SPECTRAL_REPLICATES = 20
 DELAY = 0 # delay between iterations (seconds)
 
 # regression parameters
@@ -60,8 +62,8 @@ def hematuria():
 
         # get predicted blood concentration from regression parameters and truncate
         hematuria_percent = w_violet*(1/(hematuria_violet - b_violet)) + w_blue*(1/(hematuria_blue - b_blue)) + w_green*(1/(hematuria_green - b_green)) + w_yellow*(1/(hematuria_yellow - b_yellow)) + w_orange*(1/(hematuria_orange - b_orange)) + w_red*(1/(hematuria_red - b_red))
-        hematuria_percent = min(100, hematuria_percent) # set maximum hematuria percent to 100.0%
-        hematuria_percent = max(0, hematuria_percent) # set minimum hematuria percent to 0.0%
+        # hematuria_percent = min(100, hematuria_percent) # set maximum hematuria percent to 100.0%
+        # hematuria_percent = max(0, hematuria_percent) # set minimum hematuria percent to 0.0%
 
         # get estimated hematuria severity level from blood concentration
         if hematuria_percent < MAX_CLEAR:
@@ -88,7 +90,8 @@ def hematuria():
 
         add_data(data=data, file='hematuria')
         
-        print(f'hematuria_percent = {hematuria_percent}')
+        if VERBOSE:
+            print(f'hematuria_percent = {hematuria_percent}')
 
         time.sleep(DELAY)
 
