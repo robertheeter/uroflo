@@ -362,6 +362,7 @@ def main():
                     if emergency_button.pressed() == False: # button released
                         alert_emergency_button = not alert_emergency_button
                         if alert_emergency_button == False:
+                            speaker.stop()
                             alert_emergency = False
                         break
                     time.sleep(0.01)
@@ -800,8 +801,10 @@ def main():
             if status_level == 'NORMAL':
                 speaker.stop()
             elif status_level == 'CAUTION' and new_alert == True:
+                speaker.stop()
                 speaker.play(file=ALERT_CAUTION_SOUND)
             elif status_level == 'CRITICAL' and new_alert == True:
+                speaker.stop()
                 speaker.play(file=ALERT_CRITICAL_SOUND)
             
         else:
