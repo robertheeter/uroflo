@@ -243,7 +243,7 @@ def main():
     alert_hematuria_timer = Timer()
 
     alert_emergency_button = False
-
+    alert_emergency = False
 
     # perform reset if reset
     if reset == True:
@@ -358,6 +358,8 @@ def main():
                 while True:
                     if emergency_button.pressed() == False: # button released
                         alert_emergency_button = not alert_emergency_button
+                        if alert_emergency_button == False:
+                            alert_emergency = False
                         break
                     time.sleep(0.01)
     
@@ -732,7 +734,9 @@ def main():
 
         # alert_emergency_button
         if alert_emergency_button == True:
-            new_alert = False
+            if alert_emergency == False:
+                new_alert = True
+            alert_emergency = True
             status_level = ALERT_EMERGENCY_BUTTON_LEVEL
             status_message = ALERT_EMERGENCY_BUTTON_MESSAGE
 
@@ -762,7 +766,9 @@ def main():
 
             # alert_emergency_button FOR DEMO
             if alert_emergency_button == True:
-                new_alert = True
+                if alert_emergency == False:
+                    new_alert = True
+                alert_emergency = True
                 status_level = ALERT_EMERGENCY_BUTTON_LEVEL
                 status_message = ALERT_EMERGENCY_BUTTON_MESSAGE
         
