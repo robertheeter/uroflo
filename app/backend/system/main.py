@@ -595,15 +595,19 @@ def main():
         
         active_time = diff.total_seconds() / 60
 
+        if DEMO:
+            if hematuria_percent < 1:
+                retraction_count = 0 # FOR DEMO
+        
         # adjust inflow rate
         if alert_emergency_button == False:
             if automatic == True:
                 if DEMO: # FOR DEMO
-                    if hematuria_percent < 0.7:
+                    if hematuria_percent < 1:
                         retraction_count = 0
                         linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME/2) # FOR DEMO
                     else:
-                        if retraction_count < 10:
+                        if retraction_count < 20:
                             retraction_count += 1
                             linear_actuator.retract(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME/2) # FOR DEMO
                 else:
