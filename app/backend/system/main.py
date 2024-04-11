@@ -40,8 +40,6 @@ from components.weight_sensor import WeightSensor
 DEMO = True # for showcase demoing
 VERBOSE = True # for debugging
 
-retraction_count = 0 # FOR DEMO
-
 # system parameters
 # INFLOW_ADJUSTMENT_TIME = 0.005 # sec
 INFLOW_ADJUSTMENT_TIME = 0.05 # sec # FOR DEMO
@@ -129,7 +127,7 @@ def main():
     pid = PID(Kp, Ki, Kd, setpoint=HEMATURIA_SETPOINT, output_limits=(-1*INFLOW_LEVEL_ADJUST_TIME_LIMIT, INFLOW_LEVEL_ADJUST_TIME_LIMIT))
     regression = LinearRegression()
 
-
+    
     # check if reset
     reset = False
     for file in ['system', 'interface', 'patient', 'hematuria']:
@@ -246,6 +244,8 @@ def main():
 
     alert_emergency_button = False
     alert_emergency = False
+
+    retraction_count = 0 # FOR DEMO
 
     # perform reset if reset
     if reset == True:
