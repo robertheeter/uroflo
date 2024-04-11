@@ -91,7 +91,8 @@ def hematuria():
         add_data(data=data, file='hematuria')
         
         if VERBOSE:
-            print(f'hematuria_percent = {hematuria_percent}')
+            # print(f'hematuria_percent = {hematuria_percent}')
+            print(f'DATA\n:{data}\n')
 
         time.sleep(DELAY)
 
