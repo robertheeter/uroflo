@@ -10,6 +10,7 @@ Documentation
 '''
 
 import time
+import random
 
 from data import *
 
@@ -21,6 +22,10 @@ VERBOSE = True
 DEMO = True
 SPECTRAL_REPLICATES = 20
 DELAY = 0 # delay between iterations (seconds)
+
+if DEMO:
+    C5P0_C0P5_THRESHOLD = 15000 # yellow channel threshold between 5.0% and 0.5% FOR DEMO
+    C0P5_C0P0_THRESHOLD = 26500 # yellow channel threshold between 0.5% and 0.0% FOR DEMO
 
 # regression parameters
 w_violet = -721.729
@@ -37,9 +42,9 @@ w_red = -81318.9
 b_red = -9016.87
 
 # severity level range parameters (blood concentration percent)
-MAX_CLEAR = 0.2
-MAX_MILD = 2.0
-MAX_MODERATE = 15.0
+MAX_CLEAR = 0.4
+MAX_MILD = 4.0
+MAX_MODERATE = 25.0
 MAX_SEVERE = 30.0 # do not set to 100.0
 
 def hematuria():
@@ -62,8 +67,18 @@ def hematuria():
 
         # get predicted blood concentration from regression parameters and truncate
         hematuria_percent = w_violet*(1/(hematuria_violet - b_violet)) + w_blue*(1/(hematuria_blue - b_blue)) + w_green*(1/(hematuria_green - b_green)) + w_yellow*(1/(hematuria_yellow - b_yellow)) + w_orange*(1/(hematuria_orange - b_orange)) + w_red*(1/(hematuria_red - b_red))
-        # hematuria_percent = min(100, hematuria_percent) # set maximum hematuria percent to 100.0%
-        # hematuria_percent = max(0, hematuria_percent) # set minimum hematuria percent to 0.0%
+        
+        if not DEMO:
+            hematuria_percent = min(100, hematuria_percent) # set maximum hematuria percent to 100.0%
+            hematuria_percent = max(0, hematuria_percent) # set minimum hematuria percent to 0.0%
+
+        if DEMO:
+            if hematuria_yellow < C5P0_C0P5_THRESHOLD:
+                hematuria_percent = random.uniform(4.01, 6.01) # 5% DEMO
+            elif hematuria_yellow < C0P5_C0P0_THRESHOLD:
+                hematuria_percent = random.uniform(0.41, 0.61) # 0.5% DEMO
+            else:
+                hematuria_percent = random.uniform(0.0, 0.11) # NO TUBING DEMO
 
         # get estimated hematuria severity level from blood concentration
         if hematuria_percent < MAX_CLEAR:
@@ -91,8 +106,8 @@ def hematuria():
         add_data(data=data, file='hematuria')
         
         if VERBOSE:
-            # print(f'hematuria_percent = {hematuria_percent}')
-            print(f'DATA\n:{data}\n')
+            print(f'hematuria_percent = {hematuria_percent}')
+            # print(f'data = \n:{data}\n')
 
         time.sleep(DELAY)
 
