@@ -51,43 +51,6 @@ def system(request):
             
             return response
         
-        if DEMO:
-            # hematuria_level = 
-            # hematuria_percent = 
-            # supply_volume =
-            # supply_time = 
-            # supply_rate =
-            # waste_volume = 
-            # waste_rate = 
-            # status_level =
-            # status_message = 
-            # active_time = 
-            # supply_volume_total = 
-            # waste_volume_total = 
-            
-            response = JsonResponse({
-                'hematuria_level': 40,
-                'hematuria_percent': 5,
-                
-                'supply_volume': 889,
-                'supply_time': 118,
-                'supply_rate': 22,
-                
-                'waste_volume': 1541,
-                'waste_time': 182,
-                'waste_rate': 20,
-                
-                'status_level': 'NORMAL',
-                'status_message': 'System and patient normal.',
-                
-                'active_time': 153,
-
-                'supply_volume_total': 1000,
-                'waste_volume_total': 3000
-            })
-
-            return response
-        
         keys = [
             'hematuria_level', 'hematuria_percent',
             'supply_volume', 'supply_time', 'supply_rate',
@@ -97,6 +60,13 @@ def system(request):
             ]
         
         data = get_data(key=keys, file='system', n=1, order='DESC')
+
+        if DEMO:
+            data['supply_time'] = 213  # FOR DEMO
+            data['supply_rate'] = 5 # FOR DEMO
+            data['waste_time'] = 197 # FOR DEMO
+            data['waste_rate'] = 5 # FOR DEMO
+        
         response = JsonResponse(data)
         return response
     

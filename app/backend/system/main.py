@@ -272,6 +272,10 @@ def main():
                 supply_replace_volume = get_data(key='supply_replace_volume', file='interface')
                 if VERBOSE:
                     print(f'supply_replace_volume = {supply_replace_volume}')
+                
+                if DEMO:
+                    supply_replace_volume = 1000 # FOR DEMO
+
                 supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=WEIGHT_CALIBRATION_REPLICATES) # calibrate weight sensor with known mass
                 supply_volume_total = supply_replace_volume # update
                 supply_replace_count += 1 # update
@@ -299,6 +303,11 @@ def main():
                     known_mass = 75
                 elif waste_replace_volume == 3000:
                     known_mass = 100
+                
+                if DEMO:
+                    known_mass = 1000 # FOR DEMO
+                    waste_replace_volume = 2000 # FOR DEMO
+                
                 if VERBOSE:
                     print(f'waste_replace_volume = {waste_replace_volume}')
                 waste_weight_sensor.calibrate(known_mass=known_mass, replicates=WEIGHT_CALIBRATION_REPLICATES) # calibrate weight sensor with known mass
@@ -367,6 +376,10 @@ def main():
             supply_replace_volume = get_data(key='supply_replace_volume', file='interface')
             if VERBOSE:
                 print(f'supply_replace_volume = {supply_replace_volume}')
+
+            if DEMO:
+                supply_replace_volume = 1000 # FOR DEMO
+            
             supply_weight_sensor.calibrate(known_mass=supply_replace_volume, replicates=WEIGHT_CALIBRATION_REPLICATES) # calibrate weight sensor with known mass
             supply_volume_gross +=  supply_volume_total - supply_volume # update
             supply_volume_total = supply_replace_volume # update
@@ -390,6 +403,11 @@ def main():
                 known_mass = 75
             elif waste_replace_volume == 3000:
                 known_mass = 100
+            
+            if DEMO:
+                known_mass = 1000 # FOR DEMO
+                waste_replace_volume = 2000 # FOR DEMO
+
             if VERBOSE:
                 print(f'waste_replace_volume = {waste_replace_volume}')
             waste_weight_sensor.calibrate(known_mass=known_mass, replicates=WEIGHT_CALIBRATION_REPLICATES) # calibrate weight sensor with known mass
@@ -718,9 +736,35 @@ def main():
             status_level = ALERT_EMERGENCY_BUTTON_LEVEL
             status_message = ALERT_EMERGENCY_BUTTON_MESSAGE
 
-        if DEMO == True:
+        if DEMO:
             status_level = ALERT_NORMAL_STATUS
             status_message = ALERT_NORMAL_MESSAGE
+
+            # alert_supply_low FOR DEMO
+            if supply_percent < ALERT_SUPPLY_LOW_PERCENT:
+                if alert_supply_low == False:
+                    new_alert = True
+                alert_supply_low = True
+                status_level = ALERT_SUPPLY_LOW_LEVEL
+                status_message = ALERT_SUPPLY_LOW_MESSAGE
+            else:
+                alert_supply_low = False
+
+            # alert_waste_high FOR DEMO
+            if waste_percent > ALERT_WASTE_HIGH_PERCENT:
+                if alert_waste_high == False:
+                    new_alert = True
+                alert_waste_high = True
+                status_level = ALERT_WASTE_HIGH_LEVEL
+                status_message = ALERT_WASTE_HIGH_MESSAGE
+            else:
+                alert_waste_high = False
+
+            # alert_emergency_button FOR DEMO
+            if alert_emergency_button == True:
+                new_alert = True
+                status_level = ALERT_EMERGENCY_BUTTON_LEVEL
+                status_message = ALERT_EMERGENCY_BUTTON_MESSAGE
         
         # update light color and speaker sound according to status_level and new_alert
         if iteration > FLOW_RATE_REPLICATES + WEIGHT_REPLICATES:
