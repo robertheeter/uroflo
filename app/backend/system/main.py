@@ -40,6 +40,9 @@ from components.weight_sensor import WeightSensor
 DEMO = True # for showcase demoing
 VERBOSE = False # for debugging
 
+if DEMO:
+    retraction_count = 0 # FOR DEMO
+
 # system parameters
 # INFLOW_ADJUSTMENT_TIME = 0.005 # sec
 INFLOW_ADJUSTMENT_TIME = 0.05 # sec # FOR DEMO
@@ -595,11 +598,20 @@ def main():
         # adjust inflow rate
         if alert_emergency_button == False:
             if automatic == True:
-                output = pid(hematuria_percent)
-                if output > 0:
-                    linear_actuator.retract(duty_cycle=100, duration=output)
-                elif output < 0:
-                    linear_actuator.extend(duty_cycle=100, duration=2*abs(output))
+                if DEMO: # FOR DEMO
+                    if hematuria_percent < 0.7:
+                        retraction_count = 0
+                        linear_actuator.extend(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME) # FOR DEMO
+                    else:
+                        if retraction_count <= 10:
+                            retraction_count += 1
+                            linear_actuator.retract(duty_cycle=100, duration=INFLOW_ADJUSTMENT_TIME) # FOR DEMO
+                else:
+                    output = pid(hematuria_percent)
+                    if output > 0:
+                        linear_actuator.retract(duty_cycle=100, duration=output)
+                    elif output < 0:
+                        linear_actuator.extend(duty_cycle=100, duration=2*abs(output))
 
             else:
                 if inflow_level_adjust == 1:
