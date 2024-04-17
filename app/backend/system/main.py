@@ -563,6 +563,9 @@ def uroflo():
             supply_rate = 0
             waste_rate = 0
 
+        supply_rate = inflow_level*20
+        waste_rate = 0
+
         # supply_percent
         supply_percent = (supply_volume / supply_volume_total) * 100.0
 
