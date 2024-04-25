@@ -62,11 +62,10 @@ def system(request):
         data = get_data(key=keys, file='system', n=1, order='DESC')
 
         if DEMO:
-            # data['supply_time'] = 213  # FOR DEMO
-            # data['supply_rate'] = 15 # FOR DEMO
-            # data['waste_time'] = 197 # FOR DEMO
-            # data['waste_rate'] = 15 # FOR DEMO
-            pass
+            data['supply_time'] = 213  # FOR DEMO
+            data['supply_rate'] = 15 # FOR DEMO
+            data['waste_time'] = 197 # FOR DEMO
+            data['waste_rate'] = 15 # FOR DEMO
         
         response = JsonResponse(data)
         return response

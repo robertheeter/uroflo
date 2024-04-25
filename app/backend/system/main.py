@@ -432,8 +432,7 @@ def uroflo():
                 print(f'inflow_level_adjust = {inflow_level_adjust}')
         elif val < inflow_level:
             inflow_level_adjust = -1
-            if inflow_level > 0:
-                inflow_level -= 1
+            inflow_level -= 1
             if VERBOSE:
                 print(f'inflow_level_adjust = {inflow_level_adjust}')
         else:
@@ -563,11 +562,6 @@ def uroflo():
         else:
             supply_rate = 0
             waste_rate = 0
-
-        supply_rate = inflow_level*20
-        if supply_rate < 0:
-            supply_rate = 0
-        waste_rate = 0
 
         # supply_percent
         supply_percent = (supply_volume / supply_volume_total) * 100.0
