@@ -17,12 +17,7 @@ const Time = () => {
       <img src={UroFloLogo} alt="Description of Image" className="w-[65%]" />
       <div className="text-xl flex flex-col items-end">
         <p>
-          {currentDateTime.toLocaleDateString()}{" "}
-          {currentDateTime.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false,
-          })}
+          4/24/2024 23:42
         </p>
       </div>
     </div>
