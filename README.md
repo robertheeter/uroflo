@@ -55,8 +55,6 @@ source venv/bin/activate
 ### Install backend dependencies in /uroflo
 ```
 pip install -r requirements.txt
-pip install django-cors-headers ## ADD THIS TO REQUIREMENTS.TXT, and check if requirements.txt is comprehensive
-pip install scikit-learn ## ADD THIS TO REQUIREMENTS.TXT, and check if requirements.txt is comprehensive
 ```
 This should install all of the required backend (Python) packages.
 
