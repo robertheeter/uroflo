@@ -77,7 +77,7 @@ Run the following bash commands in a new terminal.
 curl https://get.telebit.io/ | bash
 ~/telebit http 8000
 ```
-`8000` refers to the port that is used for the local Django backend server (update with the appropriate port if necessary). The arbitrary forwarding URL that Telebit generates should be copied into the `API_URL` variable in the `src/config.js` file in the `uroflo-remote` repository where the demo.uroflo.io webpage is created.
+`8000` refers to the port that is used for the local Django backend server (update with the appropriate port if necessary). The arbitrary forwarding URL that Telebit generates should be copied into the `API_URL` variable in the `src/config.js` file in the `uroflo-remote` repository where the demo.uroflo.io webpage is created. Deploy any new changes.
 ```
 const API_URL = "https://telebit-url-here.telebit.io";
 ```
