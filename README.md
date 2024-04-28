@@ -11,7 +11,7 @@ To be added.
 
 
 ## Installation
-Perform the following commands in a new terminal on Raspberry Pi 4B.
+Perform the following commands on a Raspberry Pi 4B terminal.
 
 ### Configuration modifications
 The following should be added to the bottom of `/boot/config.txt` via `sudo nano /boot/config.txt` to operate the touchscreen and remove the splash background on boot.
@@ -71,23 +71,24 @@ cd ../..
 chmod +x run.sh
 ```
 
-### Run demo.uroflo.io interface (OPTIONAL)
+### Run demo.uroflo.io remote interface (OPTIONAL)
 Run the following bash commands in a new terminal.
 ```
 curl https://get.telebit.io/ | bash
 ~/telebit http 8000
 ```
-`8000` refers to the port that is used for the local Django backend server. The arbitrary forwarding URL that Telebit generates should be copied into the API_URL variable in the `src/config.js` file in the `uroflo-remote` repository where the demo.uroflo.io webpage is created.
+`8000` refers to the port that is used for the local Django backend server (update with the appropriate port if necessary). The arbitrary forwarding URL that Telebit generates should be copied into the `API_URL` variable in the `src/config.js` file in the `uroflo-remote` repository where the demo.uroflo.io webpage is created.
 ```
 const API_URL = "https://telebit-url-here.telebit.io";
 ```
 
 ### Run app with /uroflo/run.sh
-Run the following 
+Run the following shell script in a new terminal.
 ```
+cd /home/[user]/Documents/uroflo
 ./run.sh
 ```
-This should run the system scripts (main.py and hematuria.py), Django backend server, React frontend server, and FireFox ESR kiosk browser.
+This should automatically run the system scripts (main.py and hematuria.py), Django backend server, React frontend server, and FireFox ESR kiosk browser.
 
 ### Quit app
 Use `ALT+F4` to exit the FireFox ESR kiosk browser.
