@@ -66,7 +66,6 @@ def system(request):
             data['supply_rate'] = 15 # FOR DEMO
             data['waste_time'] = 197 # FOR DEMO
             data['waste_rate'] = 15 # FOR DEMO
-            data['active_time'] = 725 # what are we doin
         
         response = JsonResponse(data)
         return response
