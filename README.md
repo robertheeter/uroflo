@@ -73,7 +73,19 @@ cd ../..
 chmod +x run.sh
 ```
 
+### Run demo.uroflo.io interface (OPTIONAL)
+Run the following bash commands in a new terminal.
+```
+curl https://get.telebit.io/ | bash
+~/telebit http 8000
+```
+`8000` refers to the port that is used for the local Django backend server. The arbitrary forwarding URL that Telebit generates should be copied into the API_URL variable in the `src/config.js` file in the `uroflo-remote` repository where the demo.uroflo.io webpage is created.
+```
+const API_URL = "https://telebit-url-here.telebit.io";
+```
+
 ### Run app with /uroflo/run.sh
+Run the following 
 ```
 ./run.sh
 ```
@@ -93,7 +105,6 @@ The following should be added to the bottom of `/home/[user]/.bashrc` via `sudo 
 DISPLAY=:0 /home/[user]/Documents/uroflo/run.sh &
 ```
 To quit the program after running on boot, use `kill -9 -1`, which should reset the device to the login screen, after which the `.bashrc` file can be reverted to not run the application on boot.
-
 
 ## Folders
 - [`app/`](app/): scripts for integrated device software and interface web application
